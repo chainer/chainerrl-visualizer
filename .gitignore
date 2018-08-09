@@ -5,3 +5,5 @@ visualize_atari/__pycache__
 visualize_atari/results
 visualize_atari/.ipynb_checkpoints
 debuggable_qfunc/.ipynb_checkpoints
+semi-mdp/.ipynb_checkpoints
+semi-mdp/__pycache__
