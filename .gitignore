@@ -14,5 +14,6 @@ appv0/venv
 appv0/.idea/
 
 appv0/dist/
+appv0/build/
 appv0/*.egg-info
 appv0/*.egg
