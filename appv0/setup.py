@@ -12,6 +12,6 @@ setup(name="chainerrlui",
       description="UI tool for chainerrl",
       entry_points={
           "console_scripts": [
-              "chainerrlui=chainerrlui.app:main"
+              "chainerrlui=chainerrlui.main:main"
           ]
       })
