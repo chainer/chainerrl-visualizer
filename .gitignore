@@ -9,11 +9,3 @@ experiments/visualize_atari/.idea/
 experiments/visualize_atari/.DS_Store
 experiments/debuggable_qfunc/__pycache__
 experiments/debuggable_qfunc/.ipynb_checkpoints/
-
-appv0/venv
-appv0/.idea/
-
-appv0/dist/
-appv0/build/
-appv0/*.egg-info
-appv0/*.egg
