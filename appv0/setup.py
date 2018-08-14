@@ -7,6 +7,11 @@ setup(name="chainerrlui",
       version="0.1",
       packages=find_packages(exclude=("tests", "docs")),
       install_requires=dependencies,
+      package_data={
+          "chainerrlui": {
+              "templates/*",
+          }
+      },
       author="sykwer",
       author_email="sykwer@gmail.com",
       description="UI tool for chainerrl",
