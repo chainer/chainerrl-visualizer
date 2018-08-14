@@ -10,7 +10,9 @@ def create_app():
     app = Flask(__name__)
 
     @app.route("/")
-    def index():
+    @app.route("/projects/<int:project_id>")
+    @app.route("/experiments/<int:experiment_id>")
+    def index(**kwargs):
         return render_template("index.html")
 
     return app
