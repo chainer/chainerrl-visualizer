@@ -6,24 +6,16 @@ class ExperimentAPI(MethodView):
     def get(self, project_id=None, id=None):
         return jsonify({
             'experiment': {
-                project_id: project_id,
-                id: id,
+                'project_id': project_id,
+                'id': id,
             }
         })
 
-    def post(selfs, project_id=None, id=None):
-        result_path = request.args.get('result_path')
-        model_name = request.args.get('model_name')
-        seed = request.args.get('seed')
-
+    def post(self, project_id=None, id=None):
         return jsonify({
             'experiment': {
-                project_id: project_id,
-                id: id,
+                'project_id': project_id,
+                'id': id,
             },
-            'info': {
-                result_path: result_path,
-                model_name: model_name,
-                seed: seed,
-            }
+            'info': request.get_json(),
         })

@@ -1,11 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Card, CardBody, CardTitle, CardText, InputGroup, Input, InputGroupAddon, Button,
 } from 'reactstrap';
+import { connect } from 'react-redux';
+
+import { requestRollout } from '../actions';
 
 /* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/destructuring-assignment */
 
-export default class DetailContainer extends React.Component {
+class DetailContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -94,7 +99,7 @@ export default class DetailContainer extends React.Component {
                           <Input value={seed} onChange={this.handleSeedChange} />
                         </InputGroup>
                         <br />
-                        <Button>Rollout</Button>
+                        <Button onClick={() => { this.props.requestRollout(resultPath, modelName, seed); }}>Rollout</Button>
                       </Col>
                       <Col>
                         create saliency map
@@ -110,3 +115,11 @@ export default class DetailContainer extends React.Component {
     );
   }
 }
+
+DetailContainer.propTypes = {
+  requestRollout: PropTypes.func.isRequired,
+};
+
+export default connect(null, {
+  requestRollout,
+})(DetailContainer);

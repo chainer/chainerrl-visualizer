@@ -1,20 +1,25 @@
 import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import rootReducer from '../reducers';
+import rootSaga from '../sagas';
 import ProjectsContainer from '../containers/ProjectsContainer';
 import ExperimentsContainer from '../containers/ExperimentsContainer';
 import DetailContainer from '../containers/DetailContainer';
 
-const middlewares = [thunk];
+const sagaMiddleware = createSagaMiddleware();
+const middlewares = [sagaMiddleware];
+
 const store = createStore(
   rootReducer,
   {},
   applyMiddleware(...middlewares)
 );
+
+sagaMiddleware.run(rootSaga);
 
 const Root = () => (
   <Provider store={store}>

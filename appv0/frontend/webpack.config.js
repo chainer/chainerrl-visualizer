@@ -8,7 +8,10 @@ const targets = {
 };
 
 module.exports = {
-  entry: './src/index.jsx',
+  entry: [
+    'babel-polyfill',
+    './src/index.jsx',
+  ],
   output: {
     path: distDir,
     filename: 'chainerrlui.js',
