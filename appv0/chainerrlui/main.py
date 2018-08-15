@@ -11,7 +11,7 @@ def create_app():
 
     @app.route("/")
     @app.route("/projects/<int:project_id>")
-    @app.route("/experiments/<int:experiment_id>")
+    @app.route("/projects/<int:project_id>/experiments/<int:experiment_id>")
     def index(**kwargs):
         return render_template("index.html")
 

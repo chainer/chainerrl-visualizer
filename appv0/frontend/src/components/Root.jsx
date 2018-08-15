@@ -21,8 +21,8 @@ const Root = () => (
     <BrowserRouter>
       <div>
         <Switch>
+          <Route path="/projects/:projectId/experiments/:experimentId" component={DetailContainer} />
           <Route path="/projects/:projectId" component={ExperimentsContainer} />
-          <Route path="/experiments/:experimentId" component={DetailContainer} />
           <Route path="/" component={ProjectsContainer} />
         </Switch>
       </div>
