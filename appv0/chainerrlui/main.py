@@ -5,6 +5,8 @@ from gevent.pywsgi import WSGIServer
 from flask import Flask
 from flask import render_template
 
+from chainerrlui.views.experiment import ExperimentAPI
+
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +16,12 @@ def create_app():
     @app.route("/projects/<int:project_id>/experiments/<int:experiment_id>")
     def index(**kwargs):
         return render_template("index.html")
+
+    app.add_url_rule(
+        "/api/projects/<int:project_id>/experiments/<int:id>",
+        view_func=ExperimentAPI.as_view('experiment_resource'),
+        methods=["GET", "POST"]
+    )
 
     return app
 
