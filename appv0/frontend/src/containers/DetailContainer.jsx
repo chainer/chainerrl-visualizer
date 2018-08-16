@@ -5,7 +5,7 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { requestRollout } from '../actions';
+import { requestRollout, startGetLog } from '../actions';
 
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/destructuring-assignment */
@@ -100,6 +100,8 @@ class DetailContainer extends React.Component {
                         </InputGroup>
                         <br />
                         <Button onClick={() => { this.props.requestRollout(resultPath, modelName, seed); }}>Rollout</Button>
+                        &nbsp;
+                        <Button onClick={() => { this.props.startGetLog(resultPath); }}>Get Log</Button>
                       </Col>
                       <Col>
                         create saliency map
@@ -110,6 +112,13 @@ class DetailContainer extends React.Component {
               </Card>
             </Col>
           </Row>
+          <Row>
+            <Col>
+              {this.props.log.map((data) => (
+                <p>{data.qvalue1}</p>
+              ))}
+            </Col>
+          </Row>
         </Container>
       </div>
     );
@@ -117,9 +126,18 @@ class DetailContainer extends React.Component {
 }
 
 DetailContainer.propTypes = {
+  log: PropTypes.arrayOf(
+    PropTypes.any
+  ).isRequired,
   requestRollout: PropTypes.func.isRequired,
+  startGetLog: PropTypes.func.isRequired,
 };
 
-export default connect(null, {
+const mapStateToProps = (state) => ({
+  log: state.log,
+});
+
+export default connect(mapStateToProps, {
   requestRollout,
+  startGetLog,
 })(DetailContainer);
