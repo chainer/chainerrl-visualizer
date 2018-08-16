@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import {
   Container, Row, Col, Card, CardBody, CardTitle, CardText, InputGroup, Input, InputGroupAddon, Button,
 } from 'reactstrap';
+import {
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip,
+} from 'recharts';
 import { connect } from 'react-redux';
 
-import { requestRollout, startGetLog } from '../actions';
+import {
+  requestRollout, startGetLog, changeSliceLeft, changeSliceRight,
+} from '../actions';
 
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/destructuring-assignment */
@@ -52,6 +57,12 @@ class DetailContainer extends React.Component {
       modelName,
       seed,
     } = this.state;
+
+    const {
+      log,
+      sliceLeft,
+      sliceRight,
+    } = this.props;
 
     return (
       <div>
@@ -112,11 +123,51 @@ class DetailContainer extends React.Component {
               </Card>
             </Col>
           </Row>
+          <br />
+          <br />
           <Row>
             <Col>
-              {this.props.log.map((data) => (
-                <p>{data.qvalue1}</p>
-              ))}
+              <LineChart
+                width={1000}
+                height={800}
+                data={log}
+                margin={{
+                  top: 5, right: 30, left: 0, bottom: 5,
+                }}
+              >
+                <Line type="monotone" dataKey="qvalue1" stroke="red" />
+                <Line type="monotone" dataKey="qvalue2" stroke="blue" />
+                <Line type="monotone" dataKey="qvalue3" stroke="pink" />
+                <Line type="monotone" dataKey="qvalue4" stroke="green" />
+                <CartesianGrid strokeDasharray="5 5" />
+                <XAxis dataKey="step" />
+                <YAxis />
+                <Tooltip />
+              </LineChart>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Card>
+                <CardBody>
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">left</InputGroupAddon>
+                    <Input type="number" step="10" value={sliceLeft} onInput={(e) => { this.props.changeSliceLeft(e.target.value); }} />
+                  </InputGroup>
+                  <br />
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">right</InputGroupAddon>
+                    <Input type="number" step="10" value={sliceRight} onInput={(e) => { this.props.changeSliceRight(e.target.value); }} />
+                  </InputGroup>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col>
+              <Card>
+                <CardBody>
+                  <CardTitle>prev step / next step</CardTitle>
+                </CardBody>
+              </Card>
             </Col>
           </Row>
         </Container>
@@ -129,15 +180,23 @@ DetailContainer.propTypes = {
   log: PropTypes.arrayOf(
     PropTypes.any
   ).isRequired,
+  sliceLeft: PropTypes.number.isRequired,
+  sliceRight: PropTypes.number.isRequired,
   requestRollout: PropTypes.func.isRequired,
   startGetLog: PropTypes.func.isRequired,
+  changeSliceRight: PropTypes.func.isRequired,
+  changeSliceLeft: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  log: state.log,
+  log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
+  sliceLeft: state.sliceLeft,
+  sliceRight: state.sliceRight,
 });
 
 export default connect(mapStateToProps, {
   requestRollout,
   startGetLog,
+  changeSliceRight,
+  changeSliceLeft,
 })(DetailContainer);
