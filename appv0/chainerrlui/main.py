@@ -3,7 +3,7 @@ import signal
 import gevent
 from gevent.pywsgi import WSGIServer
 from flask import Flask
-from flask import render_template
+from flask import render_template, request, send_file
 
 from chainerrlui.views.experiment import ExperimentAPI
 
@@ -22,6 +22,12 @@ def create_app():
         view_func=ExperimentAPI.as_view('experiment_resource'),
         methods=["GET", "POST"]
     )
+
+    @app.route('/images')
+    def get_image():
+        result_path = "/Users/sykwer/work/i18-sykwer/experiments/visualize_atari/results/211288/20180804T155228.325999"
+        filename = result_path + "/rollout/images/step" + request.args.get("step") + ".png"
+        return send_file(filename, mimetype="image/image")
 
     return app
 

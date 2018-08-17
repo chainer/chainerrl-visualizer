@@ -64,7 +64,6 @@ class DetailContainer extends React.Component {
 
     const {
       log,
-      reward,
       stat,
       sliceLeft,
       sliceRight,
@@ -157,14 +156,9 @@ class DetailContainer extends React.Component {
             <Col>
               <Card>
                 <CardBody>
-                  <CardTitle>reward</CardTitle>
-                  <CardBody>{reward}</CardBody>
-                </CardBody>
-              </Card>
-              <br />
-              <Card>
-                <CardBody>
                   <CardTitle>env render</CardTitle>
+                  <CardText>{`step: ${xFocus}`}</CardText>
+                  <img src={`http://localhost:5001/images?step=${xFocus}`} alt="env render" height={400} />
                 </CardBody>
               </Card>
               <br />
@@ -220,7 +214,6 @@ DetailContainer.propTypes = {
   log: PropTypes.arrayOf(
     PropTypes.any
   ).isRequired,
-  reward: PropTypes.number.isRequired,
   stat: PropTypes.any.isRequired,
   sliceLeft: PropTypes.number.isRequired,
   sliceRight: PropTypes.number.isRequired,
@@ -232,18 +225,6 @@ DetailContainer.propTypes = {
   changeXFocus: PropTypes.func.isRequired,
 };
 
-const exstractReward = (log, xFocus) => {
-  const isFocused = (elem) => (
-    parseInt(elem.step, 10) === xFocus
-  );
-
-  const data = log.filter(isFocused)[0];
-  if (data === undefined) {
-    return 0;
-  }
-
-  return data.reward;
-};
 
 const exstractStat = (log, xFocus) => {
   const isFocused = (elem) => (
@@ -261,7 +242,6 @@ const exstractStat = (log, xFocus) => {
 
 const mapStateToProps = (state) => ({
   log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
-  reward: exstractReward(state.log, state.xFocus),
   stat: exstractStat(state.log, state.xFocus),
   sliceLeft: state.sliceLeft,
   sliceRight: state.sliceRight,
