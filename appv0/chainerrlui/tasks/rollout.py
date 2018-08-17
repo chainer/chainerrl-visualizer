@@ -1,5 +1,5 @@
 from chainerrl.action_value import DiscreteActionValue
-from chainerrl import agents, experiments, explorers, links, misc, replay_buffer
+from chainerrl import agents, explorers, links, replay_buffer
 from chainer import functions as F
 from chainer import links as L
 from chainer import optimizers
