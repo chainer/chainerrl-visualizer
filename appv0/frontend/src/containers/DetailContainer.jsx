@@ -15,6 +15,7 @@ import {
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable class-methods-use-this */
+/* eslint-disable react/forbid-prop-types */
 
 class DetailContainer extends React.Component {
   constructor(props) {
@@ -63,6 +64,8 @@ class DetailContainer extends React.Component {
 
     const {
       log,
+      reward,
+      stat,
       sliceLeft,
       sliceRight,
       xFocus,
@@ -71,7 +74,7 @@ class DetailContainer extends React.Component {
     return (
       <div>
         <br />
-        <Container>
+        <Container fluid>
           <Row>
             <Col>
               <Card>
@@ -151,6 +154,36 @@ class DetailContainer extends React.Component {
                 <Tooltip />
               </LineChart>
             </Col>
+            <Col>
+              <Card>
+                <CardBody>
+                  <CardTitle>reward</CardTitle>
+                  <CardBody>{reward}</CardBody>
+                </CardBody>
+              </Card>
+              <br />
+              <Card>
+                <CardBody>
+                  <CardTitle>env render</CardTitle>
+                </CardBody>
+              </Card>
+              <br />
+              <Card>
+                <CardBody>
+                  <CardTitle>statistic description</CardTitle>
+                  {
+                    Object.keys(stat).map((key) => (
+                      <CardText>
+                        {key}
+:
+                        {' '}
+                        {stat[key]}
+                      </CardText>
+                    ))
+                  }
+                </CardBody>
+              </Card>
+            </Col>
           </Row>
           <Row>
             <Col>
@@ -187,6 +220,8 @@ DetailContainer.propTypes = {
   log: PropTypes.arrayOf(
     PropTypes.any
   ).isRequired,
+  reward: PropTypes.number.isRequired,
+  stat: PropTypes.any.isRequired,
   sliceLeft: PropTypes.number.isRequired,
   sliceRight: PropTypes.number.isRequired,
   xFocus: PropTypes.number.isRequired,
@@ -197,8 +232,37 @@ DetailContainer.propTypes = {
   changeXFocus: PropTypes.func.isRequired,
 };
 
+const exstractReward = (log, xFocus) => {
+  const isFocused = (elem) => (
+    parseInt(elem.step, 10) === xFocus
+  );
+
+  const data = log.filter(isFocused)[0];
+  if (data === undefined) {
+    return 0;
+  }
+
+  return data.reward;
+};
+
+const exstractStat = (log, xFocus) => {
+  const isFocused = (elem) => (
+    parseInt(elem.step, 10) === xFocus
+  );
+
+  const data = log.filter(isFocused)[0];
+  if (data === undefined) {
+    return {};
+  }
+
+  return data;
+};
+
+
 const mapStateToProps = (state) => ({
   log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
+  reward: exstractReward(state.log, state.xFocus),
+  stat: exstractStat(state.log, state.xFocus),
   sliceLeft: state.sliceLeft,
   sliceRight: state.sliceRight,
   xFocus: state.xFocus,
