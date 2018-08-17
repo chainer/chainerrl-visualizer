@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
-import { SUCCESS_GET_LOG, CHAGNE_SLICE_RIGHT, CHANGE_SLICE_LEFT } from '../actions';
+import {
+  SUCCESS_GET_LOG, CHAGNE_SLICE_RIGHT, CHANGE_SLICE_LEFT, CHANGE_X_FOCUS,
+} from '../actions';
 
 const log = (state = [], action) => {
   switch (action.type) {
@@ -32,10 +34,24 @@ const sliceRight = (state = 0, action) => {
   }
 };
 
+const xFocus = (state = 0, action) => {
+  switch (action.type) {
+    case CHANGE_X_FOCUS:
+      if (action.x === undefined) {
+        return 0;
+      }
+
+      return action.x;
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   log,
   sliceLeft,
   sliceRight,
+  xFocus,
 });
 
 export default rootReducer;

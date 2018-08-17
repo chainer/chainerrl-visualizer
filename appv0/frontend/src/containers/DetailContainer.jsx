@@ -9,11 +9,12 @@ import {
 import { connect } from 'react-redux';
 
 import {
-  requestRollout, startGetLog, changeSliceLeft, changeSliceRight,
+  requestRollout, startGetLog, changeSliceLeft, changeSliceRight, changeXFocus,
 } from '../actions';
 
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/destructuring-assignment */
+/* eslint-disable class-methods-use-this */
 
 class DetailContainer extends React.Component {
   constructor(props) {
@@ -22,6 +23,8 @@ class DetailContainer extends React.Component {
     this.handleModelChange = this.handleModelChange.bind(this);
     this.handleSeedChange = this.handleSeedChange.bind(this);
     this.handlePathChange = this.handlePathChange.bind(this);
+
+    this.lineChart = React.createRef();
 
     this.state = {
       resultPath: '/Users/sykwer/work/i18-sykwer/experiments/visualize_atari/results/211288/20180804T155228.325999',
@@ -62,6 +65,7 @@ class DetailContainer extends React.Component {
       log,
       sliceLeft,
       sliceRight,
+      xFocus,
     } = this.props;
 
     return (
@@ -134,6 +138,8 @@ class DetailContainer extends React.Component {
                 margin={{
                   top: 5, right: 30, left: 0, bottom: 5,
                 }}
+                ref={this.lineChart}
+                onMouseMove={() => { this.props.changeXFocus(this.lineChart.current.state.activeLabel); }}
               >
                 <Line type="monotone" dataKey="qvalue1" stroke="red" />
                 <Line type="monotone" dataKey="qvalue2" stroke="blue" />
@@ -166,6 +172,7 @@ class DetailContainer extends React.Component {
               <Card>
                 <CardBody>
                   <CardTitle>prev step / next step</CardTitle>
+                  <CardText>{xFocus}</CardText>
                 </CardBody>
               </Card>
             </Col>
@@ -182,16 +189,19 @@ DetailContainer.propTypes = {
   ).isRequired,
   sliceLeft: PropTypes.number.isRequired,
   sliceRight: PropTypes.number.isRequired,
+  xFocus: PropTypes.number.isRequired,
   requestRollout: PropTypes.func.isRequired,
   startGetLog: PropTypes.func.isRequired,
   changeSliceRight: PropTypes.func.isRequired,
   changeSliceLeft: PropTypes.func.isRequired,
+  changeXFocus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
   sliceLeft: state.sliceLeft,
   sliceRight: state.sliceRight,
+  xFocus: state.xFocus,
 });
 
 export default connect(mapStateToProps, {
@@ -199,4 +209,5 @@ export default connect(mapStateToProps, {
   startGetLog,
   changeSliceRight,
   changeSliceLeft,
+  changeXFocus,
 })(DetailContainer);

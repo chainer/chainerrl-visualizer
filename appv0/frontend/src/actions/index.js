@@ -3,6 +3,7 @@ export const START_GET_LOG = 'START_GET_LOG';
 export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
 export const CHANGE_SLICE_LEFT = 'CHANGE_SLICE_LEFT';
 export const CHAGNE_SLICE_RIGHT = 'CHANGE_SLICE_RIGHT';
+export const CHANGE_X_FOCUS = 'CHANGE_X_FOCUS';
 
 export const requestRollout = (resultPath, modelName, seed) => ({
   type: REQUEST_ROLLOUT,
@@ -29,4 +30,9 @@ export const changeSliceLeft = (idx) => ({
 export const changeSliceRight = (idx) => ({
   type: CHAGNE_SLICE_RIGHT,
   idx,
+});
+
+export const changeXFocus = (x) => ({
+  type: CHANGE_X_FOCUS,
+  x,
 });
