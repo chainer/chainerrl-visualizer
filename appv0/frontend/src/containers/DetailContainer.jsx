@@ -24,6 +24,8 @@ class DetailContainer extends React.Component {
     this.handleModelChange = this.handleModelChange.bind(this);
     this.handleSeedChange = this.handleSeedChange.bind(this);
     this.handlePathChange = this.handlePathChange.bind(this);
+    this.handleFromStepChange = this.handleFromStepChange.bind(this);
+    this.handleToStepChange = this.handleToStepChange.bind(this);
 
     this.lineChart = React.createRef();
 
@@ -31,6 +33,8 @@ class DetailContainer extends React.Component {
       resultPath: '/Users/sykwer/work/i18-sykwer/experiments/visualize_atari/results/211288/20180804T155228.325999',
       modelName: '10000000_finish',
       seed: 1,
+      fromStep: 0,
+      toStep: 0,
     };
   }
 
@@ -55,11 +59,27 @@ class DetailContainer extends React.Component {
     });
   }
 
+  handleFromStepChange(e) {
+    const { value } = e.target;
+    this.setState({
+      fromStep: value,
+    });
+  }
+
+  handleToStepChange(e) {
+    const { value } = e.target;
+    this.setState({
+      toStep: value,
+    });
+  }
+
   render() {
     const {
       resultPath,
       modelName,
       seed,
+      toStep,
+      fromStep,
     } = this.state;
 
     const {
@@ -97,31 +117,50 @@ class DetailContainer extends React.Component {
             <Col>
               <Card>
                 <CardBody>
-                  <CardTitle>Rollout 1 episode</CardTitle>
                   <Container>
                     <Row>
                       <Col>
-                        <InputGroup>
-                          <InputGroupAddon addonType="prepend">result path</InputGroupAddon>
-                          <Input value={resultPath} onChange={this.handlePathChange} />
-                        </InputGroup>
-                        <br />
-                        <InputGroup>
-                          <InputGroupAddon addonType="prepend">model name</InputGroupAddon>
-                          <Input value={modelName} onChange={this.handleModelChange} />
-                        </InputGroup>
-                        <br />
-                        <InputGroup>
-                          <InputGroupAddon addonType="prepend">seed</InputGroupAddon>
-                          <Input value={seed} onChange={this.handleSeedChange} />
-                        </InputGroup>
-                        <br />
-                        <Button onClick={() => { this.props.requestRollout(resultPath, modelName, seed); }}>Rollout</Button>
-                        &nbsp;
-                        <Button onClick={() => { this.props.startGetLog(resultPath); }}>Get Log</Button>
+                        <Card>
+                          <CardBody>
+                            <CardTitle>Create saliency map</CardTitle>
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">result path</InputGroupAddon>
+                              <Input value={resultPath} onChange={this.handlePathChange} />
+                            </InputGroup>
+                            <br />
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">model name</InputGroupAddon>
+                              <Input value={modelName} onChange={this.handleModelChange} />
+                            </InputGroup>
+                            <br />
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">seed</InputGroupAddon>
+                              <Input value={seed} onChange={this.handleSeedChange} />
+                            </InputGroup>
+                            <br />
+                            <Button onClick={() => { this.props.requestRollout(resultPath, modelName, seed); }}>Rollout</Button>
+                            &nbsp;
+                            <Button onClick={() => { this.props.startGetLog(resultPath); }}>Get Log</Button>
+                          </CardBody>
+                        </Card>
                       </Col>
                       <Col>
-                        create saliency map
+                        <Card>
+                          <CardBody>
+                            <CardTitle>Create saliency map</CardTitle>
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">from step</InputGroupAddon>
+                              <Input type="number" step="10" value={fromStep} onChange={this.handleFromStepChange} />
+                            </InputGroup>
+                            <br />
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">to step</InputGroupAddon>
+                              <Input type="number" step="10" value={toStep} onChange={this.handleToStepChange} />
+                            </InputGroup>
+                            <br />
+                            <Button onClick={() => { console.log(fromStep, toStep); }}>Create</Button>
+                          </CardBody>
+                        </Card>
                       </Col>
                     </Row>
                   </Container>
