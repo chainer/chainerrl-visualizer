@@ -1,0 +1,8 @@
+Flask
+chainer
+gevent
+gym
+gym[all]
+chainerrl
+chainer
+opencv-python
