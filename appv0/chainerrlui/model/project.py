@@ -26,6 +26,8 @@ class Project(DB_BASE):
             "id": self.id,
             "name": self.name,
             "path": self.path,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
         }
 
     @classmethod

@@ -10,6 +10,7 @@ from alembic.config import Config
 from alembic.command import upgrade
 
 from chainerrlui.views.experiment import ExperimentAPI
+from chainerrlui.views.project import ProjectAPI
 from chainerrlui.model.project import Project
 from chainerrlui import DB_DIR, PACKAGE_DIR, DB_FILE_PATH
 from chainerrlui import DB_SESSION
@@ -23,6 +24,13 @@ def create_app():
     @app.route("/projects/<int:project_id>/experiments/<int:experiment_id>")
     def index(**kwargs):
         return render_template("index.html")
+
+    app.add_url_rule(
+        "/api/projects",
+        defaults={"id": None},
+        view_func=ProjectAPI.as_view("project_resource"),
+        methods=["GET"],
+    )
 
     app.add_url_rule(
         "/api/projects/<int:project_id>/experiments/<int:id>",
