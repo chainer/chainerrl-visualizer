@@ -6,6 +6,8 @@ import { postRollout, getRolloutLog } from '../services';
 import {
   successGetLog, startGetLog, REQUEST_ROLLOUT, START_GET_LOG,
 } from '../actions';
+import projectsSaga from './projects';
+
 
 function* requestRolloutFlow() {
   const action = yield take(REQUEST_ROLLOUT);
@@ -24,6 +26,8 @@ function* getLogFlow() {
 }
 
 function* rootSaga() {
+  yield fork(projectsSaga);
+
   yield fork(requestRolloutFlow);
   yield fork(getLogFlow);
 }

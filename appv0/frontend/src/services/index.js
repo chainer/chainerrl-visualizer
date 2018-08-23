@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-/* eslint-disable import/prefer-default-export */
+export const getProjectsList = () => (
+  axios.get('api/projects').then(
+    (res) => res.data.projects
+  )
+);
 
 export const postRollout = (resultPath, modelName, seed) => (
   axios.post('http://localhost:5001/api/projects/1/experiments/1', {

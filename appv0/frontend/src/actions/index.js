@@ -1,3 +1,15 @@
+export const START_FETCH_PROJECTS = 'START_FETCH_PROJECTS';
+export const SUCCESS_FETCH_PROJECTS = 'SUCCESS_FETCH_PROJECTS';
+
+export const startFetchProjects = () => ({
+  type: START_FETCH_PROJECTS,
+});
+
+export const successFetchProjects = (projects) => ({
+  type: SUCCESS_FETCH_PROJECTS,
+  projects,
+});
+
 export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
 export const START_GET_LOG = 'START_GET_LOG';
 export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
