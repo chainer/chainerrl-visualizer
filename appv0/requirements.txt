@@ -6,3 +6,5 @@ gym[all]
 chainerrl
 chainer
 opencv-python
+sqlalchemy
+alembic
