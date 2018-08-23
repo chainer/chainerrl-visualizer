@@ -10,7 +10,9 @@ from alembic.config import Config
 from alembic.command import upgrade
 
 from chainerrlui.views.experiment import ExperimentAPI
+from chainerrlui.model.project import Project
 from chainerrlui import DB_DIR, PACKAGE_DIR, DB_FILE_PATH
+from chainerrlui import DB_SESSION
 
 
 def create_app():
@@ -98,6 +100,22 @@ def handle_db(args):
         upgrade_db()
 
 
+def handle_project_create(args):
+    project_path = os.path.abspath(args.project_dir)
+    project_name = args.project_name
+
+    if project_name is None:
+        project_name = project_path
+
+    project = DB_SESSION.query(Project).filter_by(path=project_path).first()
+
+    if project is None:
+        Project.create(path=project_path, name=project_name)
+        print("Project named {} has created at %{} successfully!".format(project_name, project_name))
+    else:
+        print("Project already exists at {}".format(project_path))
+
+
 def create_parser():
     parser = argparse.ArgumentParser(description="chainerrlui commands")
     subparsers = parser.add_subparsers()
@@ -111,6 +129,14 @@ def create_parser():
     db_parser = subparsers.add_parser("db", help="See `chainerrlui db -h`")
     db_parser.add_argument("type", choices=["create", "drop", "status", "upgrade", "revision"])
     db_parser.set_defaults(handler=handle_db)
+
+    project_parser = subparsers.add_parser("project", help="See `chainerrlui project -h`")
+    project_subparsers = project_parser.add_subparsers()
+
+    project_create_parser = project_subparsers.add_parser("create", help="See `chainerrlui project create -h`")
+    project_create_parser.add_argument("-d", "--project-dir", required=True, type=str, help="project directory")
+    project_create_parser.add_argument("-n", "--project-name", type=str, help="project name", default=None)
+    project_create_parser.set_defaults(handler=handle_project_create)
 
     return parser
 

@@ -1,5 +1,7 @@
 import os
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 CHAINERRLUI_ENV = os.getenv("CHAINERRLUI_ENV", "production")
 CHAINERRLUI_ROOT = os.path.abspath(os.path.expanduser(os.getenv("CHAINERRLUI_ROOT", "~/.chainerrlui")))
@@ -14,4 +16,10 @@ DB_ENGINE = create_engine(
     convert_unicode=True,
     connect_args={"check_same_thread": False},
     echo=(CHAINERRLUI_ENV == "development"),
+)
+
+DB_BASE = declarative_base()
+
+DB_SESSION = scoped_session(
+    sessionmaker(autocommit=False, autoflush=False, bind=DB_ENGINE)
 )
