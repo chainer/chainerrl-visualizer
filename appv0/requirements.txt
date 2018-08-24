@@ -8,3 +8,4 @@ chainer
 opencv-python
 sqlalchemy
 alembic
+jsonlines
