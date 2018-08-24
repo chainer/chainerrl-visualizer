@@ -206,7 +206,7 @@ class DetailContainer extends React.Component {
                   <CardTitle>statistic description</CardTitle>
                   {
                     Object.keys(stat).map((key) => (
-                      <CardText>
+                      <CardText key={key}>
                         {key}
 :
                         {' '}
@@ -224,12 +224,12 @@ class DetailContainer extends React.Component {
                 <CardBody>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">left</InputGroupAddon>
-                    <Input type="number" step="10" value={sliceLeft} onInput={(e) => { this.props.changeSliceLeft(e.target.value); }} />
+                    <Input type="number" step="10" value={sliceLeft} onInput={(e) => { this.props.changeSliceLeft(parseInt(e.target.value, 10)); }} />
                   </InputGroup>
                   <br />
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">right</InputGroupAddon>
-                    <Input type="number" step="10" value={sliceRight} onInput={(e) => { this.props.changeSliceRight(e.target.value); }} />
+                    <Input type="number" step="10" value={sliceRight} onInput={(e) => { this.props.changeSliceRight(parseInt(e.target.value, 10)); }} />
                   </InputGroup>
                 </CardBody>
               </Card>
