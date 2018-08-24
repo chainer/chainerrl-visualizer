@@ -32,9 +32,18 @@ def create_app():
         methods=["GET"],
     )
 
+    experiment_resource = ExperimentAPI.as_view("experiment_resource")
+
+    app.add_url_rule(
+        "/api/projects/<int:project_id>/experiments",
+        defaults={"id": None},
+        view_func=experiment_resource,
+        methods=["GET"],
+    )
+
     app.add_url_rule(
         "/api/projects/<int:project_id>/experiments/<int:id>",
-        view_func=ExperimentAPI.as_view('experiment_resource'),
+        view_func=experiment_resource,
         methods=["GET", "POST"]
     )
 
