@@ -33,7 +33,7 @@ class Experiment(DB_BASE):
             "log": [],
             "command": "",
             "args": {},
-            "obj": {},
+            "environ": {},
         }
 
         log_file_name = os.path.join(self.path, "log.jsonl")

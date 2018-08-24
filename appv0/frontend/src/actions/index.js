@@ -10,6 +10,19 @@ export const successFetchProjects = (projects) => ({
   projects,
 });
 
+export const START_FETCH_EXPERIMENTS = 'START_FETCH_EXPERIMENTS';
+export const SUCCESS_FETCH_EXPERIMENTS = 'SUCCESS_FETCH_EXPERIMENTS';
+
+export const startFetchExperiments = (projectId) => ({
+  type: START_FETCH_EXPERIMENTS,
+  projectId,
+});
+
+export const successFetchExperiments = (experiments) => ({
+  type: SUCCESS_FETCH_EXPERIMENTS,
+  experiments,
+});
+
 export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
 export const START_GET_LOG = 'START_GET_LOG';
 export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
