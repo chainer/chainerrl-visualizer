@@ -12,6 +12,7 @@ export const successFetchProjects = (projects) => ({
 
 export const START_FETCH_EXPERIMENTS = 'START_FETCH_EXPERIMENTS';
 export const SUCCESS_FETCH_EXPERIMENTS = 'SUCCESS_FETCH_EXPERIMENTS';
+export const CHANGE_LEFT_Y_AXIS = 'CHANGE_LEFT_Y_AXIS';
 
 export const startFetchExperiments = (projectId) => ({
   type: START_FETCH_EXPERIMENTS,
@@ -21,6 +22,11 @@ export const startFetchExperiments = (projectId) => ({
 export const successFetchExperiments = (experiments) => ({
   type: SUCCESS_FETCH_EXPERIMENTS,
   experiments,
+});
+
+export const changeLeftYAxis = (key) => ({
+  type: CHANGE_LEFT_Y_AXIS,
+  key,
 });
 
 export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';

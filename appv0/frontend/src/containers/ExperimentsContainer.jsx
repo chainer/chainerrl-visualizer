@@ -8,7 +8,7 @@ import {
   LineChart, XAxis, YAxis, CartesianGrid, Line, ResponsiveContainer,
 } from 'recharts';
 
-import { startFetchExperiments } from '../actions';
+import { startFetchExperiments, changeLeftYAxis } from '../actions';
 
 class ExperimentsContainer extends React.Component {
   componentDidMount() {
@@ -17,7 +17,7 @@ class ExperimentsContainer extends React.Component {
   }
 
   render() {
-    const { experiments, keys } = this.props;
+    const { experiments, keys, leftYAxis } = this.props;
 
     let data;
     if (experiments.length > 0) {
@@ -25,8 +25,6 @@ class ExperimentsContainer extends React.Component {
     } else {
       data = [];
     }
-
-    console.log(keys);
 
     return (
       <Container fluid>
@@ -40,7 +38,13 @@ class ExperimentsContainer extends React.Component {
                     keys.map((key) => (
                       <div key={key}>
                         <Label check>
-                          <Input type="radio" name="yaxis" />
+                          <Input
+                            type="radio"
+                            name="yaxis"
+                            value={key}
+                            checked={key === leftYAxis}
+                            onChange={(e) => { this.props.changeLeftYAxis(e.target.value); }} /* eslint-disable-line react/destructuring-assignment */
+                          />
                           {' '}
                           {key}
                         </Label>
@@ -57,20 +61,7 @@ class ExperimentsContainer extends React.Component {
                 <XAxis dataKey="steps" />
                 <YAxis />
                 <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                {
-                  /*
-                  keys.filter((key) => {
-                    if (key === 'steps' || key === 'episodes' || key === 'elapsed') {
-                      return false;
-                    }
-
-                    return true;
-                  }).map((key) => (
-                    <Line type="monotone" dataKey={key} key={{ key }} />
-                  ))
-                  */
-                }
-                <Line type="monotone" dot={false} dataKey="average_q" />
+                <Line type="monotone" dot={false} dataKey={leftYAxis} />
               </LineChart>
             </ResponsiveContainer>
           </Col>
@@ -94,12 +85,15 @@ ExperimentsContainer.propTypes = {
     })
   ).isRequired,
   keys: PropTypes.arrayOf(PropTypes.string).isRequired,
+  leftYAxis: PropTypes.string.isRequired,
   startFetchExperiments: PropTypes.func.isRequired,
+  changeLeftYAxis: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
   const ret = {
     experiments: state.experiments,
+    leftYAxis: state.leftYAxis,
   };
 
   if (state.experiments.length > 0 && state.experiments[0].log.length > 0) {
@@ -113,4 +107,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   startFetchExperiments,
+  changeLeftYAxis,
 })(ExperimentsContainer);
