@@ -20,7 +20,13 @@ class ExperimentAPI(MethodView):
             return jsonify({
                 "experiments": [experiment.serialize for experiment in experiments]
             })
+        else:
+            experiment = DB_SESSION.query(Experiment).filter_by(id=id).first()
+            exp_dict = experiment.serialize
+            del exp_dict["log"]
+            return jsonify(exp_dict)
 
+        """ code for `Get Log` command
         result_path = request.args.get('result_path')
 
         if result_path is not None:
@@ -38,6 +44,7 @@ class ExperimentAPI(MethodView):
                 'id': id,
             }
         })
+        """
 
     def post(self, project_id=None, id=None):
         data = request.get_json()
