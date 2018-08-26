@@ -9,7 +9,12 @@ import {
 import { connect } from 'react-redux';
 
 import {
-  requestRollout, startGetLog, changeSliceLeft, changeSliceRight, changeXFocus,
+  startFetchExperiment,
+  requestRollout,
+  startGetLog,
+  changeSliceLeft,
+  changeSliceRight,
+  changeXFocus,
 } from '../actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -36,6 +41,11 @@ class DetailContainer extends React.Component {
       fromStep: 0,
       toStep: 0,
     };
+  }
+
+  componentDidMount() {
+    const { projectId, experimentId } = this.props.match.params; /* eslint-disable-line react/destructuring-assignment */
+    this.props.startFetchExperiment(projectId, experimentId); /* eslint-disable-line react/destructuring-assignment */
   }
 
   handlePathChange(e) {
@@ -83,12 +93,39 @@ class DetailContainer extends React.Component {
     } = this.state;
 
     const {
+      experiment,
       log,
       stat,
       sliceLeft,
       sliceRight,
       xFocus,
     } = this.props;
+
+    const environ = (experiment.environ) ? experiment.environ : {};
+    const environList = Object.keys(environ).map((key) => (
+      <p key={key}>
+        <strong>
+          (
+          {key}
+          )
+        </strong>
+        {' '}
+        {environ[key]}
+      </p>
+    ));
+
+    const args = (experiment.args) ? experiment.args : {};
+    const argsList = Object.keys(args).map((key) => (
+      <p key={key}>
+        <strong>
+          (
+          {key}
+          )
+        </strong>
+        {' '}
+        {args[key]}
+      </p>
+    ));
 
     return (
       <div>
@@ -99,15 +136,54 @@ class DetailContainer extends React.Component {
               <Card>
                 <CardBody>
                   <CardTitle>Summary</CardTitle>
-                  <CardText>Summary content</CardText>
+                  {
+                    (experiment.id) ? (
+                      <div>
+                        <p>
+                          <strong>
+                            (experiment id)
+                          </strong>
+                          {' '}
+                          {experiment.id}
+                        </p>
+                        <p>
+                          <strong>
+                            (experiment name)
+                          </strong>
+                          {' '}
+                          {experiment.name}
+                        </p>
+                        <p>
+                          <strong>
+                            (command)
+                          </strong>
+                          {' '}
+                          {experiment.command}
+                        </p>
+                      </div>
+                    ) : (
+                      <p>Not loaded</p>
+                    )
+                  }
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col>
+              <Card>
+                <CardBody>
+                  <CardTitle>Args</CardTitle>
+                  {argsList}
                 </CardBody>
               </Card>
             </Col>
             <Col>
               <Card>
                 <CardBody>
-                  <CardTitle>Args</CardTitle>
-                  <CardText>Args content</CardText>
+                  <CardTitle>Environ</CardTitle>
+                  {environList}
                 </CardBody>
               </Card>
             </Col>
@@ -250,6 +326,8 @@ class DetailContainer extends React.Component {
 }
 
 DetailContainer.propTypes = {
+  match: PropTypes.any.isRequired, /* eslint-disable-line react/forbid-prop-types */
+  experiment: PropTypes.object.isRequired,
   log: PropTypes.arrayOf(
     PropTypes.any
   ).isRequired,
@@ -257,6 +335,7 @@ DetailContainer.propTypes = {
   sliceLeft: PropTypes.number.isRequired,
   sliceRight: PropTypes.number.isRequired,
   xFocus: PropTypes.number.isRequired,
+  startFetchExperiment: PropTypes.func.isRequired,
   requestRollout: PropTypes.func.isRequired,
   startGetLog: PropTypes.func.isRequired,
   changeSliceRight: PropTypes.func.isRequired,
@@ -280,6 +359,7 @@ const exstractStat = (log, xFocus) => {
 
 
 const mapStateToProps = (state) => ({
+  experiment: state.experiment,
   log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
   stat: exstractStat(state.log, state.xFocus),
   sliceLeft: state.sliceLeft,
@@ -288,6 +368,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
+  startFetchExperiment,
   requestRollout,
   startGetLog,
   changeSliceRight,

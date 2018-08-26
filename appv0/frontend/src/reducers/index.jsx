@@ -1,6 +1,13 @@
 import { combineReducers } from 'redux';
 import {
-  SUCCESS_FETCH_PROJECTS, SUCCESS_FETCH_EXPERIMENTS, SUCCESS_GET_LOG, CHAGNE_SLICE_RIGHT, CHANGE_SLICE_LEFT, CHANGE_X_FOCUS, CHANGE_LEFT_Y_AXIS,
+  SUCCESS_FETCH_PROJECTS,
+  SUCCESS_FETCH_EXPERIMENTS,
+  SUCCESS_GET_LOG,
+  SUCCESS_FETCH_EXPERIMENT,
+  CHAGNE_SLICE_RIGHT,
+  CHANGE_SLICE_LEFT,
+  CHANGE_X_FOCUS,
+  CHANGE_LEFT_Y_AXIS,
 } from '../actions';
 
 const projects = (state = [], action) => {
@@ -40,6 +47,15 @@ const leftYAxis = (state = '', action) => {
       }
 
       return state;
+    default:
+      return state;
+  }
+};
+
+const experiment = (state = {}, action) => {
+  switch (action.type) {
+    case SUCCESS_FETCH_EXPERIMENT:
+      return action.experiment;
     default:
       return state;
   }
@@ -85,6 +101,7 @@ const rootReducer = combineReducers({
   experiments,
   log,
   leftYAxis,
+  experiment,
   sliceLeft,
   sliceRight,
   xFocus,

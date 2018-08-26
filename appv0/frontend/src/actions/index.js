@@ -29,6 +29,20 @@ export const changeLeftYAxis = (key) => ({
   key,
 });
 
+export const START_FETCH_EXPERIMENT = 'START_FETCH_EXPERIMENT';
+export const SUCCESS_FETCH_EXPERIMENT = 'SUCCESS_FETCH_EXPERIMENT';
+
+export const startFetchExperiment = (projectId, experimentId) => ({
+  type: START_FETCH_EXPERIMENT,
+  projectId,
+  experimentId,
+});
+
+export const successFetchExperiment = (experiment) => ({
+  type: SUCCESS_FETCH_EXPERIMENT,
+  experiment,
+});
+
 export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
 export const START_GET_LOG = 'START_GET_LOG';
 export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';

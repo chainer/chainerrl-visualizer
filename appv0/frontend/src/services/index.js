@@ -12,6 +12,12 @@ export const getExperimentsList = (projectId) => (
   )
 );
 
+export const getExperiment = (projectId, experimentId) => (
+  axios.get(`http://localhost:5001/api/projects/${projectId}/experiments/${experimentId}`).then(
+    (res) => res.data
+  )
+);
+
 export const postRollout = (resultPath, modelName, seed) => (
   axios.post('http://localhost:5001/api/projects/1/experiments/1', {
     result_path: resultPath,
