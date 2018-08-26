@@ -11,6 +11,7 @@ from alembic.command import upgrade
 
 from chainerrlui.views.experiment import ExperimentAPI
 from chainerrlui.views.project import ProjectAPI
+from chainerrlui.views.rollout import RolloutAPI
 from chainerrlui.model.project import Project
 from chainerrlui import DB_DIR, PACKAGE_DIR, DB_FILE_PATH
 from chainerrlui import DB_SESSION
@@ -45,6 +46,12 @@ def create_app():
         "/api/projects/<int:project_id>/experiments/<int:id>",
         view_func=experiment_resource,
         methods=["GET", "POST"]
+    )
+
+    app.add_url_rule(
+        "/api/experiments/<int:experiment_id>/rollouts",
+        view_func=RolloutAPI.as_view("rollout_resource"),
+        methods=["POST"],
     )
 
     @app.route('/images')

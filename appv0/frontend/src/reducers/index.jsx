@@ -4,6 +4,7 @@ import {
   SUCCESS_FETCH_EXPERIMENTS,
   SUCCESS_GET_LOG,
   SUCCESS_FETCH_EXPERIMENT,
+  SUCCESS_ROLLOUT,
   CHAGNE_SLICE_RIGHT,
   CHANGE_SLICE_LEFT,
   CHANGE_X_FOCUS,
@@ -61,6 +62,15 @@ const experiment = (state = {}, action) => {
   }
 };
 
+const rolloutDir = (state = '', action) => {
+  switch (action.type) {
+    case SUCCESS_ROLLOUT:
+      return action.rolloutDir;
+    default:
+      return state;
+  }
+};
+
 const sliceLeft = (state = 0, action) => {
   switch (action.type) {
     case CHANGE_SLICE_LEFT:
@@ -102,6 +112,7 @@ const rootReducer = combineReducers({
   log,
   leftYAxis,
   experiment,
+  rolloutDir,
   sliceLeft,
   sliceRight,
   xFocus,

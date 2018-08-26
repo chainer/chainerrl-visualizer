@@ -34,6 +34,8 @@ class Experiment(DB_BASE):
             "command": "",
             "args": {},
             "environ": {},
+            "agents": [],
+            "envs": [],
         }
 
         log_file_name = os.path.join(self.path, "log.jsonl")
@@ -59,6 +61,20 @@ class Experiment(DB_BASE):
             with jsonlines.open(environ_file_name) as reader:
                 for obj in reader:
                     experiment["environ"] = obj
+
+        """
+        for env_dill in os.listdir(os.path.join(self.path, "envs")):
+            experiment["envs"].append({
+                "path": os.path.join(self.path, 'envs', env_dill),
+                "name": env_dill,
+            })
+
+        for agent_dill in os.listdir(os.path.join(self.path, "agents")):
+            experiment["agents"].append({
+                "path": os.path.join(self.path, "agents", agent_dill),
+                "name": agent_dill,
+            })
+        """
 
         return experiment
 

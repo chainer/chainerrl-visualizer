@@ -17,6 +17,8 @@ import {
   changeXFocus,
 } from '../actions';
 
+const path = require('path');
+
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable class-methods-use-this */
@@ -26,18 +28,12 @@ class DetailContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleModelChange = this.handleModelChange.bind(this);
-    this.handleSeedChange = this.handleSeedChange.bind(this);
-    this.handlePathChange = this.handlePathChange.bind(this);
     this.handleFromStepChange = this.handleFromStepChange.bind(this);
     this.handleToStepChange = this.handleToStepChange.bind(this);
 
     this.lineChart = React.createRef();
 
     this.state = {
-      resultPath: '/Users/sykwer/work/i18-sykwer/experiments/visualize_atari/results/211288/20180804T155228.325999',
-      modelName: '10000000_finish',
-      seed: 1,
       fromStep: 0,
       toStep: 0,
     };
@@ -46,27 +42,6 @@ class DetailContainer extends React.Component {
   componentDidMount() {
     const { projectId, experimentId } = this.props.match.params; /* eslint-disable-line react/destructuring-assignment */
     this.props.startFetchExperiment(projectId, experimentId); /* eslint-disable-line react/destructuring-assignment */
-  }
-
-  handlePathChange(e) {
-    const { value } = e.target;
-    this.setState({
-      resultPath: value,
-    });
-  }
-
-  handleModelChange(e) {
-    const { value } = e.target;
-    this.setState({
-      modelName: value,
-    });
-  }
-
-  handleSeedChange(e) {
-    const { value } = e.target;
-    this.setState({
-      seed: value,
-    });
   }
 
   handleFromStepChange(e) {
@@ -85,15 +60,13 @@ class DetailContainer extends React.Component {
 
   render() {
     const {
-      resultPath,
-      modelName,
-      seed,
       toStep,
       fromStep,
     } = this.state;
 
     const {
       experiment,
+      rolloutDir,
       log,
       stat,
       sliceLeft,
@@ -226,25 +199,18 @@ class DetailContainer extends React.Component {
                       <Col>
                         <Card>
                           <CardBody>
-                            <CardTitle>Create saliency map</CardTitle>
-                            <InputGroup>
-                              <InputGroupAddon addonType="prepend">result path</InputGroupAddon>
-                              <Input value={resultPath} onChange={this.handlePathChange} />
-                            </InputGroup>
-                            <br />
-                            <InputGroup>
-                              <InputGroupAddon addonType="prepend">model name</InputGroupAddon>
-                              <Input value={modelName} onChange={this.handleModelChange} />
-                            </InputGroup>
-                            <br />
-                            <InputGroup>
-                              <InputGroupAddon addonType="prepend">seed</InputGroupAddon>
-                              <Input value={seed} onChange={this.handleSeedChange} />
-                            </InputGroup>
-                            <br />
-                            <Button onClick={() => { this.props.requestRollout(resultPath, modelName, seed); }}>Rollout</Button>
+                            <CardTitle>Rollout 1 episode</CardTitle>
+                            <CardText>
+                              <strong>(Env) </strong>
+                              {experiment.envs ? experiment.envs[0].name : ''}
+                            </CardText>
+                            <CardText>
+                              <strong>(Agent) </strong>
+                              {experiment.agents ? experiment.agents[0].name : ''}
+                            </CardText>
+                            <Button onClick={() => { this.props.requestRollout(experiment); }}>Rollout</Button>
                             &nbsp;
-                            <Button onClick={() => { this.props.startGetLog(resultPath); }}>Get Log</Button>
+                            <Button onClick={() => { this.props.startGetLog(path.join(rolloutDir, 'log.jsonl')); }}>Get Log</Button>
                           </CardBody>
                         </Card>
                       </Col>
@@ -356,6 +322,7 @@ class DetailContainer extends React.Component {
 DetailContainer.propTypes = {
   match: PropTypes.any.isRequired, /* eslint-disable-line react/forbid-prop-types */
   experiment: PropTypes.object.isRequired,
+  rolloutDir: PropTypes.string.isRequired,
   log: PropTypes.arrayOf(
     PropTypes.any
   ).isRequired,
@@ -388,6 +355,7 @@ const exstractStat = (log, xFocus) => {
 
 const mapStateToProps = (state) => ({
   experiment: state.experiment,
+  rolloutDir: state.rolloutDir,
   log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
   stat: exstractStat(state.log, state.xFocus),
   sliceLeft: state.sliceLeft,

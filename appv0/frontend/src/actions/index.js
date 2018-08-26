@@ -31,6 +31,10 @@ export const changeLeftYAxis = (key) => ({
 
 export const START_FETCH_EXPERIMENT = 'START_FETCH_EXPERIMENT';
 export const SUCCESS_FETCH_EXPERIMENT = 'SUCCESS_FETCH_EXPERIMENT';
+export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
+export const SUCCESS_ROLLOUT = 'SUCCESS_ROLLOUT';
+export const START_GET_LOG = 'START_GET_LOG';
+export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
 
 export const startFetchExperiment = (projectId, experimentId) => ({
   type: START_FETCH_EXPERIMENT,
@@ -43,18 +47,21 @@ export const successFetchExperiment = (experiment) => ({
   experiment,
 });
 
-export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
-export const START_GET_LOG = 'START_GET_LOG';
-export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
-export const CHANGE_SLICE_LEFT = 'CHANGE_SLICE_LEFT';
-export const CHAGNE_SLICE_RIGHT = 'CHANGE_SLICE_RIGHT';
-export const CHANGE_X_FOCUS = 'CHANGE_X_FOCUS';
-
-export const requestRollout = (resultPath, modelName, seed) => ({
+export const requestRollout = (experiment) => ({
   type: REQUEST_ROLLOUT,
-  resultPath,
-  modelName,
-  seed,
+  experimentId: experiment.id,
+  agentPath: experiment.agents[0].path,
+  envPath: experiment.envs[0].path,
+});
+
+export const successRollout = (rolloutDir) => ({
+  type: SUCCESS_ROLLOUT,
+  rolloutDir,
+});
+
+export const startGetLog = (rolloutLogPath) => ({
+  type: START_GET_LOG,
+  rolloutLogPath,
 });
 
 export const successGetLog = (log) => ({
@@ -62,10 +69,9 @@ export const successGetLog = (log) => ({
   log,
 });
 
-export const startGetLog = (resultPath) => ({
-  type: START_GET_LOG,
-  resultPath,
-});
+export const CHANGE_SLICE_LEFT = 'CHANGE_SLICE_LEFT';
+export const CHAGNE_SLICE_RIGHT = 'CHANGE_SLICE_RIGHT';
+export const CHANGE_X_FOCUS = 'CHANGE_X_FOCUS';
 
 export const changeSliceLeft = (idx) => ({
   type: CHANGE_SLICE_LEFT,
