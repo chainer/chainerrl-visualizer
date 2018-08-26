@@ -22,9 +22,7 @@ class ExperimentAPI(MethodView):
             })
         else:
             experiment = DB_SESSION.query(Experiment).filter_by(id=id).first()
-            exp_dict = experiment.serialize
-            del exp_dict["log"]
-            return jsonify(exp_dict)
+            return jsonify(experiment.serialize)
 
         """ code for `Get Log` command
         result_path = request.args.get('result_path')

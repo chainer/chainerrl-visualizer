@@ -160,6 +160,34 @@ class DetailContainer extends React.Component {
                           {' '}
                           {experiment.command}
                         </p>
+                        <p>
+                          <strong>
+                            (experiment path)
+                          </strong>
+                          {' '}
+                          {experiment.path}
+                        </p>
+                        <p>
+                          <strong>
+                            (steps)
+                          </strong>
+                          {' '}
+                          {experiment.log[experiment.log.length - 1].steps}
+                        </p>
+                        <p>
+                          <strong>
+                            (episodes)
+                          </strong>
+                          {' '}
+                          {experiment.log[experiment.log.length - 1].episodes}
+                        </p>
+                        <p>
+                          <strong>
+                            (elapsed time)
+                          </strong>
+                          {' '}
+                          {experiment.log[experiment.log.length - 1].elapsed}
+                        </p>
                       </div>
                     ) : (
                       <p>Not loaded</p>
