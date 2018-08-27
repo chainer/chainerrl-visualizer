@@ -262,7 +262,7 @@ class DetailContainer extends React.Component {
                 }
                 <CartesianGrid strokeDasharray="5 5" />
                 <XAxis dataKey="steps" />
-                <YAxis />
+                <YAxis domain={['dataMin', 'dataMax']} />
                 <Tooltip />
                 <ReferenceLine x={xFocus} stroke="green" />
               </LineChart>
