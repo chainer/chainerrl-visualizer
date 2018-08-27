@@ -94,7 +94,7 @@ def upgrade_db():
     def get_migration_config():
         migration_conf = Config()
         migration_conf.set_main_option(
-            "script_location", os.path.join(PACKAGE_DIR, "alembic")
+            "script_location", os.path.join(PACKAGE_DIR, "migration")
         )
         return migration_conf
 
