@@ -9,6 +9,8 @@ import {
   CHANGE_SLICE_LEFT,
   CHANGE_X_FOCUS,
   CHANGE_LEFT_Y_AXIS,
+  FOCUS_PREV_STEP,
+  FOCUS_NEXT_STEP,
 } from '../actions';
 
 const projects = (state = [], action) => {
@@ -103,6 +105,10 @@ const xFocus = (state = 0, action) => {
       }
 
       return action.x;
+    case FOCUS_NEXT_STEP:
+      return state + 1;
+    case FOCUS_PREV_STEP:
+      return state - 1;
     default:
       return state;
   }

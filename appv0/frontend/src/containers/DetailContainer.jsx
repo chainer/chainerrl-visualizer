@@ -4,7 +4,7 @@ import {
   Container, Row, Col, Card, CardBody, CardTitle, CardText, InputGroup, Input, InputGroupAddon, Button,
 } from 'reactstrap';
 import {
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip,
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 import { connect } from 'react-redux';
 
@@ -15,6 +15,8 @@ import {
   changeSliceLeft,
   changeSliceRight,
   changeXFocus,
+  focusNextStep,
+  focusPrevStep,
 } from '../actions';
 
 const path = require('path');
@@ -197,7 +199,7 @@ class DetailContainer extends React.Component {
                 <CardBody>
                   <Container>
                     <Row>
-                      <Col>
+                      <Col xs="6">
                         <Card>
                           <CardBody>
                             <CardTitle>Rollout 1 episode</CardTitle>
@@ -214,7 +216,7 @@ class DetailContainer extends React.Component {
                           </CardBody>
                         </Card>
                       </Col>
-                      <Col>
+                      <Col xs="6">
                         <Card>
                           <CardBody>
                             <CardTitle>Create saliency map</CardTitle>
@@ -261,6 +263,7 @@ class DetailContainer extends React.Component {
                 <XAxis dataKey="steps" />
                 <YAxis />
                 <Tooltip />
+                <ReferenceLine x={xFocus} stroke="green" />
               </LineChart>
             </Col>
             <Col>
@@ -284,7 +287,7 @@ class DetailContainer extends React.Component {
                 <CardBody>
                   <CardTitle>statistic description</CardTitle>
                   {
-                    Object.keys(stat).map((key) => (
+                    Object.keys(stat).filter((key) => key !== 'qvalues' && key !== 'image_path').map((key) => (
                       <CardText key={key}>
                         {key}
 :
@@ -317,7 +320,9 @@ class DetailContainer extends React.Component {
               <Card>
                 <CardBody>
                   <CardTitle>prev step / next step</CardTitle>
-                  <CardText>{xFocus}</CardText>
+                  <Button onClick={() => { this.props.focusPrevStep(); }}>-1</Button>
+                  {'  '}
+                  <Button onClick={() => { this.props.focusNextStep(); }}>+1</Button>
                 </CardBody>
               </Card>
             </Col>
@@ -346,6 +351,8 @@ DetailContainer.propTypes = {
   changeSliceRight: PropTypes.func.isRequired,
   changeSliceLeft: PropTypes.func.isRequired,
   changeXFocus: PropTypes.func.isRequired,
+  focusPrevStep: PropTypes.func.isRequired,
+  focusNextStep: PropTypes.func.isRequired,
 };
 
 
@@ -381,4 +388,6 @@ export default connect(mapStateToProps, {
   changeSliceRight,
   changeSliceLeft,
   changeXFocus,
+  focusPrevStep,
+  focusNextStep,
 })(DetailContainer);

@@ -35,6 +35,8 @@ export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
 export const SUCCESS_ROLLOUT = 'SUCCESS_ROLLOUT';
 export const START_GET_LOG = 'START_GET_LOG';
 export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
+export const FOCUS_PREV_STEP = 'FOCUS_PREV_STEP';
+export const FOCUS_NEXT_STEP = 'FOCUS_NEXT_STEP';
 
 export const startFetchExperiment = (projectId, experimentId) => ({
   type: START_FETCH_EXPERIMENT,
@@ -87,4 +89,12 @@ export const changeSliceRight = (idx) => ({
 export const changeXFocus = (x) => ({
   type: CHANGE_X_FOCUS,
   x,
+});
+
+export const focusPrevStep = () => ({
+  type: FOCUS_PREV_STEP,
+});
+
+export const focusNextStep = () => ({
+  type: FOCUS_NEXT_STEP,
 });
