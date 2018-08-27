@@ -35,8 +35,13 @@ export const REQUEST_ROLLOUT = 'REQUEST_ROLLOUT';
 export const SUCCESS_ROLLOUT = 'SUCCESS_ROLLOUT';
 export const START_GET_LOG = 'START_GET_LOG';
 export const SUCCESS_GET_LOG = 'SUCCESS_GET_LOG';
+export const CHANGE_SLICE_LEFT = 'CHANGE_SLICE_LEFT';
+export const CHAGNE_SLICE_RIGHT = 'CHANGE_SLICE_RIGHT';
+export const CHANGE_X_FOCUS = 'CHANGE_X_FOCUS';
 export const FOCUS_PREV_STEP = 'FOCUS_PREV_STEP';
 export const FOCUS_NEXT_STEP = 'FOCUS_NEXT_STEP';
+export const START_SALIENCY = 'START_SALIENCY';
+export const SUCCESS_SALIENCY = 'SUCCESS_SALIENCY';
 
 export const startFetchExperiment = (projectId, experimentId) => ({
   type: START_FETCH_EXPERIMENT,
@@ -72,10 +77,6 @@ export const successGetLog = (log) => ({
   log,
 });
 
-export const CHANGE_SLICE_LEFT = 'CHANGE_SLICE_LEFT';
-export const CHAGNE_SLICE_RIGHT = 'CHANGE_SLICE_RIGHT';
-export const CHANGE_X_FOCUS = 'CHANGE_X_FOCUS';
-
 export const changeSliceLeft = (idx) => ({
   type: CHANGE_SLICE_LEFT,
   idx,
@@ -97,4 +98,19 @@ export const focusPrevStep = () => ({
 
 export const focusNextStep = () => ({
   type: FOCUS_NEXT_STEP,
+});
+
+export const startSaliency = (experimentId, fromStep, toStep, seed) => ({
+  type: START_SALIENCY,
+  experimentId,
+  fromStep,
+  toStep,
+  seed,
+});
+
+export const successSaliency = (fromStep, toStep, imagePaths) => ({
+  type: SUCCESS_SALIENCY,
+  fromStep,
+  toStep,
+  imagePaths,
 });

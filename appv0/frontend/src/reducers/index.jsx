@@ -11,6 +11,7 @@ import {
   CHANGE_LEFT_Y_AXIS,
   FOCUS_PREV_STEP,
   FOCUS_NEXT_STEP,
+  SUCCESS_SALIENCY,
 } from '../actions';
 
 const projects = (state = [], action) => {
@@ -35,6 +36,12 @@ const log = (state = [], action) => {
   switch (action.type) {
     case SUCCESS_GET_LOG:
       return action.log;
+    case SUCCESS_SALIENCY:
+      const newLog = state.map((elem) => Object.assign({}, elem)); /* eslint-disable-line no-case-declarations */
+      for (let idx = action.fromStep; idx <= action.toStep; idx++) {
+        newLog[idx].image_path = action.imagePaths[idx - action.fromStep];
+      }
+      return newLog;
     default:
       return state;
   }

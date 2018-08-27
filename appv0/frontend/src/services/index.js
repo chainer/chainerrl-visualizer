@@ -31,3 +31,11 @@ export const getRolloutLog = (logPath) => (
     (res) => res.data.log
   )
 );
+
+export const postSaliency = (experimentId, fromStep, toStep, seed) => (
+  axios.post(`http://localhost:5001/api/experiments/${experimentId}/saliency`, {
+    from_step: fromStep,
+    to_step: toStep,
+    seed,
+  }).then((res) => res.data.image_paths)
+);

@@ -13,6 +13,7 @@ from chainerrlui.views.experiment import ExperimentAPI
 from chainerrlui.views.project import ProjectAPI
 from chainerrlui.views.rollout import RolloutAPI
 from chainerrlui.views.rollout_log import RolloutLogAPI
+from chainerrlui.views.saliency import SaliencyAPI
 from chainerrlui.model.project import Project
 from chainerrlui import DB_DIR, PACKAGE_DIR, DB_FILE_PATH
 from chainerrlui import DB_SESSION
@@ -59,6 +60,12 @@ def create_app():
         "/api/rollout_logs",
         view_func=RolloutLogAPI.as_view("rollout_log_resource"),
         methods=["GET"],
+    )
+
+    app.add_url_rule(
+        "/api/experiments/<int:experiment_id>/saliency",
+        view_func=SaliencyAPI.as_view("saliency_resource"),
+        methods=["POST"]
     )
 
     @app.route('/images')

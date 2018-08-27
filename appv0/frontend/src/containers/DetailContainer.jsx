@@ -17,6 +17,7 @@ import {
   changeXFocus,
   focusNextStep,
   focusPrevStep,
+  startSaliency,
 } from '../actions';
 
 const path = require('path');
@@ -230,7 +231,7 @@ class DetailContainer extends React.Component {
                               <Input type="number" step="10" value={toStep} onChange={this.handleToStepChange} />
                             </InputGroup>
                             <br />
-                            <Button onClick={() => { console.log(fromStep, toStep); }}>Create</Button>
+                            <Button onClick={() => { this.props.startSaliency(experiment.id, fromStep, toStep, 0); }}>Create</Button>
                           </CardBody>
                         </Card>
                       </Col>
@@ -353,6 +354,7 @@ DetailContainer.propTypes = {
   changeXFocus: PropTypes.func.isRequired,
   focusPrevStep: PropTypes.func.isRequired,
   focusNextStep: PropTypes.func.isRequired,
+  startSaliency: PropTypes.func.isRequired,
 };
 
 
@@ -390,4 +392,5 @@ export default connect(mapStateToProps, {
   changeXFocus,
   focusPrevStep,
   focusNextStep,
+  startSaliency,
 })(DetailContainer);
