@@ -20,12 +20,16 @@ import {
   startSaliency,
 } from '../actions';
 
+import SummaryCard from '../components/detail/SummaryCard';
+import ArgsCard from '../components/detail/ArgsCard';
+import EnvironCard from '../components/detail/EnvironCard';
+
 const path = require('path');
 
-/* eslint-disable react/prefer-stateless-function */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/forbid-prop-types */
+
 
 class DetailContainer extends React.Component {
   constructor(props) {
@@ -43,8 +47,8 @@ class DetailContainer extends React.Component {
   }
 
   componentDidMount() {
-    const { projectId, experimentId } = this.props.match.params; /* eslint-disable-line react/destructuring-assignment */
-    this.props.startFetchExperiment(projectId, experimentId); /* eslint-disable-line react/destructuring-assignment */
+    const { projectId, experimentId } = this.props.match.params;
+    this.props.startFetchExperiment(projectId, experimentId);
   }
 
   handleFromStepChange(e) {
@@ -78,119 +82,22 @@ class DetailContainer extends React.Component {
       xFocus,
     } = this.props;
 
-    const environ = (experiment.environ) ? experiment.environ : {};
-    const environList = Object.keys(environ).map((key) => (
-      <p key={key}>
-        <strong>
-          (
-          {key}
-          )
-        </strong>
-        {' '}
-        {environ[key]}
-      </p>
-    ));
-
-    const args = (experiment.args) ? experiment.args : {};
-    const argsList = Object.keys(args).map((key) => (
-      <p key={key}>
-        <strong>
-          (
-          {key}
-          )
-        </strong>
-        {' '}
-        {args[key]}
-      </p>
-    ));
-
     return (
       <div>
         <br />
         <Container fluid>
           <Row>
             <Col>
-              <Card>
-                <CardBody>
-                  <CardTitle>Summary</CardTitle>
-                  {
-                    (experiment.id) ? (
-                      <div>
-                        <p>
-                          <strong>
-                            (experiment id)
-                          </strong>
-                          {' '}
-                          {experiment.id}
-                        </p>
-                        <p>
-                          <strong>
-                            (experiment name)
-                          </strong>
-                          {' '}
-                          {experiment.name}
-                        </p>
-                        <p>
-                          <strong>
-                            (command)
-                          </strong>
-                          {' '}
-                          {experiment.command}
-                        </p>
-                        <p>
-                          <strong>
-                            (experiment path)
-                          </strong>
-                          {' '}
-                          {experiment.path}
-                        </p>
-                        <p>
-                          <strong>
-                            (steps)
-                          </strong>
-                          {' '}
-                          {experiment.log[experiment.log.length - 1].steps}
-                        </p>
-                        <p>
-                          <strong>
-                            (episodes)
-                          </strong>
-                          {' '}
-                          {experiment.log[experiment.log.length - 1].episodes}
-                        </p>
-                        <p>
-                          <strong>
-                            (elapsed time)
-                          </strong>
-                          {' '}
-                          {experiment.log[experiment.log.length - 1].elapsed}
-                        </p>
-                      </div>
-                    ) : (
-                      <p>Not loaded</p>
-                    )
-                  }
-                </CardBody>
-              </Card>
+              <SummaryCard experiment={experiment} />
             </Col>
           </Row>
           <br />
           <Row>
             <Col>
-              <Card>
-                <CardBody>
-                  <CardTitle>Args</CardTitle>
-                  {argsList}
-                </CardBody>
-              </Card>
+              <ArgsCard experiment={experiment} />
             </Col>
             <Col>
-              <Card>
-                <CardBody>
-                  <CardTitle>Environ</CardTitle>
-                  {environList}
-                </CardBody>
-              </Card>
+              <EnvironCard experiment={experiment} />
             </Col>
           </Row>
           <br />

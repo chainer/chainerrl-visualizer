@@ -12,15 +12,17 @@ import ReactTable from 'react-table';
 
 import { startFetchExperiments, changeLeftYAxis } from '../actions';
 
+/* eslint-disable react/destructuring-assignment */
+
 class ExperimentsContainer extends React.Component {
   componentDidMount() {
-    const { projectId } = this.props.match.params; /* eslint-disable-line react/destructuring-assignment */
-    this.props.startFetchExperiments(projectId); /* eslint-disable-line react/destructuring-assignment */
+    const { projectId } = this.props.match.params;
+    this.props.startFetchExperiments(projectId);
   }
 
   render() {
     const { experiments, keys, leftYAxis } = this.props;
-    const { projectId } = this.props.match.params; /* eslint-disable-line react/destructuring-assignment */
+    const { projectId } = this.props.match.params;
 
     let log;
     if (experiments.length > 0) {
@@ -91,7 +93,7 @@ class ExperimentsContainer extends React.Component {
                             name="yaxis"
                             value={key}
                             checked={key === leftYAxis}
-                            onChange={(e) => { this.props.changeLeftYAxis(e.target.value); }} /* eslint-disable-line react/destructuring-assignment */
+                            onChange={(e) => { this.props.changeLeftYAxis(e.target.value); }}
                           />
                           {' '}
                           {key}
