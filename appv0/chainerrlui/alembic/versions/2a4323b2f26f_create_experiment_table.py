@@ -25,6 +25,7 @@ def upgrade():
         sa.Column("project_id", sa.Integer(), nullable=False),
         sa.Column("name", sa.String(512), nullable=False),
         sa.Column("path", sa.String(512), nullable=False),
+        sa.Column("rollout_path", sa.String(512), default=""),
         sa.Column("created_at", sa.DateTime(), nullable=False, server_default=now),
         sa.Column("updated_at", sa.DateTime(), nullable=False, server_default=now),
         sa.UniqueConstraint("path"),

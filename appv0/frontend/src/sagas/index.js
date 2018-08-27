@@ -12,9 +12,9 @@ import detailSaga from './detail';
 
 function* getLogFlow() {
   const action = yield take(START_GET_LOG);
-  const { resultPath } = action;
+  const { rolloutLogPath } = action;
 
-  const log = yield call(getRolloutLog, resultPath);
+  const log = yield call(getRolloutLog, rolloutLogPath);
 
   yield put(successGetLog(log));
 }

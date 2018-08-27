@@ -24,6 +24,8 @@ def upgrade():
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("name", sa.String(length=512), nullable=False),
         sa.Column("path", sa.String(length=512), nullable=False),
+        sa.Column("agent_class", sa.String(length=512), nullable=False),
+        sa.Column("env_name", sa.String(length=512), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False, server_default=now),
         sa.Column("updated_at", sa.DateTime(), nullable=False, server_default=now),
         sa.UniqueConstraint("path"),

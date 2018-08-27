@@ -50,8 +50,9 @@ export const successFetchExperiment = (experiment) => ({
 export const requestRollout = (experiment) => ({
   type: REQUEST_ROLLOUT,
   experimentId: experiment.id,
-  agentPath: experiment.agents[0].path,
-  envPath: experiment.envs[0].path,
+  envName: experiment.env_name,
+  agentClass: experiment.agent_class,
+  seed: experiment.args.seed,
 });
 
 export const successRollout = (rolloutDir) => ({

@@ -12,6 +12,7 @@ from alembic.command import upgrade
 from chainerrlui.views.experiment import ExperimentAPI
 from chainerrlui.views.project import ProjectAPI
 from chainerrlui.views.rollout import RolloutAPI
+from chainerrlui.views.rollout_log import RolloutLogAPI
 from chainerrlui.model.project import Project
 from chainerrlui import DB_DIR, PACKAGE_DIR, DB_FILE_PATH
 from chainerrlui import DB_SESSION
@@ -52,6 +53,12 @@ def create_app():
         "/api/experiments/<int:experiment_id>/rollouts",
         view_func=RolloutAPI.as_view("rollout_resource"),
         methods=["POST"],
+    )
+
+    app.add_url_rule(
+        "/api/rollout_logs",
+        view_func=RolloutLogAPI.as_view("rollout_log_resource"),
+        methods=["GET"],
     )
 
     @app.route('/images')
@@ -131,10 +138,13 @@ def handle_project_create(args):
     if project_name is None:
         project_name = project_path
 
+    agent_class = args.agent_class
+    env_name = args.env_name
+
     project = DB_SESSION.query(Project).filter_by(path=project_path).first()
 
     if project is None:
-        Project.create(path=project_path, name=project_name)
+        Project.create(path=project_path, name=project_name, agent_class=agent_class, env_name=env_name)
         print("Project named {} has created at %{} successfully!".format(project_name, project_name))
     else:
         print("Project already exists at {}".format(project_path))
@@ -160,6 +170,8 @@ def create_parser():
     project_create_parser = project_subparsers.add_parser("create", help="See `chainerrlui project create -h`")
     project_create_parser.add_argument("-d", "--project-dir", required=True, type=str, help="project directory")
     project_create_parser.add_argument("-n", "--project-name", type=str, help="project name", default=None)
+    project_create_parser.add_argument("-a", "--agent-class", type=str, required=True, help="chainerrl agent class name")
+    project_create_parser.add_argument("-e", "--env-name", type=str, required=True, help="atari environment name")
     project_create_parser.set_defaults(handler=handle_project_create)
 
     return parser

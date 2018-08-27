@@ -201,16 +201,15 @@ class DetailContainer extends React.Component {
                           <CardBody>
                             <CardTitle>Rollout 1 episode</CardTitle>
                             <CardText>
-                              <strong>(Env) </strong>
-                              {experiment.envs ? experiment.envs[0].name : ''}
-                            </CardText>
-                            <CardText>
-                              <strong>(Agent) </strong>
-                              {experiment.agents ? experiment.agents[0].name : ''}
+                              <strong>
+                                (Rollout path)
+                                {' '}
+                              </strong>
+                              {rolloutDir}
                             </CardText>
                             <Button onClick={() => { this.props.requestRollout(experiment); }}>Rollout</Button>
                             &nbsp;
-                            <Button onClick={() => { this.props.startGetLog(path.join(rolloutDir, 'log.jsonl')); }}>Get Log</Button>
+                            <Button onClick={() => { this.props.startGetLog(path.join(rolloutDir, 'rollout_log.jsonl')); }}>Get Log</Button>
                           </CardBody>
                         </Card>
                       </Col>
@@ -252,12 +251,13 @@ class DetailContainer extends React.Component {
                 ref={this.lineChart}
                 onMouseMove={() => { this.props.changeXFocus(this.lineChart.current.state.activeLabel); }}
               >
-                <Line type="monotone" dataKey="qvalue1" stroke="red" />
-                <Line type="monotone" dataKey="qvalue2" stroke="blue" />
-                <Line type="monotone" dataKey="qvalue3" stroke="pink" />
-                <Line type="monotone" dataKey="qvalue4" stroke="green" />
+                {
+                  log.length > 0 && log[0].qvalues && log[0].qvalues.map((qvalue, idx) => (
+                    <Line type="monotone" dataKey={(v) => v.qvalues[idx]} key={idx} /> /* eslint-disable-line react/no-array-index-key */
+                  ))
+                }
                 <CartesianGrid strokeDasharray="5 5" />
-                <XAxis dataKey="step" />
+                <XAxis dataKey="steps" />
                 <YAxis />
                 <Tooltip />
               </LineChart>

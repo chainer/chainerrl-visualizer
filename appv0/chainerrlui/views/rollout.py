@@ -11,12 +11,13 @@ from chainerrlui.tasks.rollout import rollout
 class RolloutAPI(MethodView):
     def post(self, experiment_id=None):
         data = request.get_json()
-        agent_path = data["agent_path"]
-        env_path = data["env_path"]
+        env_name = data["env_name"]
+        agent_class = data["agent_class"]
+        seed = data["seed"]
 
         experiment = DB_SESSION.query(Experiment).filter_by(id=experiment_id).first()
 
-        rollout_dir = rollout(experiment.path, agent_path, env_path)
+        rollout_dir = rollout(experiment, env_name, agent_class, seed)
 
         return jsonify({
             "rollout_dir": rollout_dir,

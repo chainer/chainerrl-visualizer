@@ -18,15 +18,16 @@ export const getExperiment = (projectId, experimentId) => (
   )
 );
 
-export const postRollout = (experimentId, agentPath, envPath) => (
+export const postRollout = (experimentId, envName, agentClass, seed) => (
   axios.post(`http://localhost:5001/api/experiments/${experimentId}/rollouts`, {
-    agent_path: agentPath,
-    env_path: envPath,
+    env_name: envName,
+    agent_class: agentClass,
+    seed,
   }).then((res) => res.data.rollout_dir)
 );
 
 export const getRolloutLog = (logPath) => (
-  axios.get(`http://localhost:5001/api/projects/1/experiments/1?result_path=${logPath}`).then(
+  axios.get(`http://localhost:5001/api/rollout_logs?path=${logPath}`).then(
     (res) => res.data.log
   )
 );

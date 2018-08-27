@@ -14,9 +14,11 @@ function* fetchExperimentFlow() {
 
 function* requestRolloutFlow() {
   const action = yield take(REQUEST_ROLLOUT);
-  const { experimentId, agentPath, envPath } = action;
+  const {
+    experimentId, envName, agentClass, seed,
+  } = action;
 
-  const rolloutDir = yield call(postRollout, experimentId, agentPath, envPath);
+  const rolloutDir = yield call(postRollout, experimentId, envName, agentClass, seed);
   yield put(successRollout(rolloutDir));
 }
 

@@ -4,6 +4,7 @@ import os
 import jsonlines
 
 from chainerrlui import DB_SESSION, DB_BASE
+from chainerrlui.model.project import Project
 
 
 class Experiment(DB_BASE):
@@ -13,6 +14,7 @@ class Experiment(DB_BASE):
     project_id = Column(Integer, ForeignKey("project.id"))
     name = Column(String(512))
     path = Column(String(512))
+    rollout_path = Column(String(512))
     created_at = Column(DateTime, default=datetime.datetime.now())
     updated_at = Column(DateTime, default=datetime.datetime.now())
 
@@ -26,10 +28,15 @@ class Experiment(DB_BASE):
 
     @property
     def serialize(self):
+        project = DB_SESSION.query(Project).filter_by(id=self.project_id).first()
+
         experiment = {
             "id": self.id,
             "name": self.name,
             "path": self.path,
+            "rollout_path": self.rollout_path,
+            "agent_class": project.agent_class,
+            "env_name": project.env_name,
             "log": [],
             "command": "",
             "args": {},

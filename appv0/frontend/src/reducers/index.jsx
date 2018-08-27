@@ -66,6 +66,8 @@ const rolloutDir = (state = '', action) => {
   switch (action.type) {
     case SUCCESS_ROLLOUT:
       return action.rolloutDir;
+    case SUCCESS_FETCH_EXPERIMENT:
+      return action.experiment.rollout_path || '';
     default:
       return state;
   }
