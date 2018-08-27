@@ -68,6 +68,7 @@ class DetailContainer extends React.Component {
       experiment,
       rolloutDir,
       log,
+      renderImagePath,
       stat,
       sliceLeft,
       sliceRight,
@@ -253,7 +254,7 @@ class DetailContainer extends React.Component {
               >
                 {
                   log.length > 0 && log[0].qvalues && log[0].qvalues.map((qvalue, idx) => (
-                    <Line type="monotone" dataKey={(v) => v.qvalues[idx]} key={idx} /> /* eslint-disable-line react/no-array-index-key */
+                    <Line type="monotone" dot={false} dataKey={(v) => v.qvalues[idx]} key={idx} /> /* eslint-disable-line react/no-array-index-key */
                   ))
                 }
                 <CartesianGrid strokeDasharray="5 5" />
@@ -267,7 +268,15 @@ class DetailContainer extends React.Component {
                 <CardBody>
                   <CardTitle>env render</CardTitle>
                   <CardText>{`step: ${xFocus}`}</CardText>
-                  <img src={`http://localhost:5001/images?step=${xFocus}`} alt="env render" height={400} />
+                  {
+                    renderImagePath && (
+                      <img
+                        src={`http://localhost:5001/images?image_path=${renderImagePath}`}
+                        alt="env render"
+                        height={400}
+                      />
+                    )
+                  }
                 </CardBody>
               </Card>
               <br />
@@ -326,6 +335,7 @@ DetailContainer.propTypes = {
   log: PropTypes.arrayOf(
     PropTypes.any
   ).isRequired,
+  renderImagePath: PropTypes.string.isRequired,
   stat: PropTypes.any.isRequired,
   sliceLeft: PropTypes.number.isRequired,
   sliceRight: PropTypes.number.isRequired,
@@ -341,7 +351,7 @@ DetailContainer.propTypes = {
 
 const exstractStat = (log, xFocus) => {
   const isFocused = (elem) => (
-    parseInt(elem.step, 10) === xFocus
+    parseInt(elem.steps, 10) === xFocus
   );
 
   const data = log.filter(isFocused)[0];
@@ -357,6 +367,7 @@ const mapStateToProps = (state) => ({
   experiment: state.experiment,
   rolloutDir: state.rolloutDir,
   log: state.log.slice(state.sliceLeft, state.sliceRight + 1),
+  renderImagePath: state.log.length > 0 ? state.log[state.xFocus].image_path : '',
   stat: exstractStat(state.log, state.xFocus),
   sliceLeft: state.sliceLeft,
   sliceRight: state.sliceRight,

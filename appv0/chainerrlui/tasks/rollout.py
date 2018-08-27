@@ -2,6 +2,8 @@ import os
 from PIL import Image
 import dill
 import datetime
+import string
+import random
 import jsonlines
 import numpy as np
 import gym
@@ -45,7 +47,10 @@ def rollout(experiment, env_name, agent_class, seed):
 
     while not (done or t == 1800):
         image = Image.fromarray(env.render(mode='rgb_array'))
-        image.save(os.path.join(rollout_dir, 'images', 'step{}.png'.format(t)))
+        image_path = os.path.join(rollout_dir, 'images',
+                                  ''.join([random.choice(string.ascii_letters + string.digits) for _ in
+                                           range(11)]) + '.png')
+        image.save(image_path)
 
         qvalues = agent.model(agent.batch_states([obs], agent.xp, agent.phi)).q_values.data[0]
 
@@ -57,6 +62,7 @@ def rollout(experiment, env_name, agent_class, seed):
             'steps': t,
             'reward': r,
             'qvalues': [float(qvalue) for qvalue in qvalues],
+            'image_path': image_path,
         })
 
         test_r += r

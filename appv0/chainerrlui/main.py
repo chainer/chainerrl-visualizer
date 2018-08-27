@@ -63,8 +63,7 @@ def create_app():
 
     @app.route('/images')
     def get_image():
-        result_path = "/Users/sykwer/work/i18-sykwer/experiments/visualize_atari/results/211288/20180804T155228.325999"
-        filename = result_path + "/rollout/images/step" + request.args.get("step") + ".png"
+        filename = request.args.get("image_path")
         return send_file(filename, mimetype="image/image")
 
     return app
