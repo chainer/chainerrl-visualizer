@@ -60,12 +60,12 @@ class ExperimentsContainer extends React.Component {
           {
             id: 'steps',
             Header: 'Steps',
-            accessor: (d) => d.log[d.log.length - 1].steps,
+            accessor: (d) => (d.log.length > 0 ? d.log[d.log.length - 1].steps : '-'),
           },
           {
             id: 'episodes',
             Header: 'Episodes',
-            accessor: (d) => d.log[d.log.length - 1].episodes,
+            accessor: (d) => (d.log.length > 0 ? d.log[d.log.length - 1].episodes : '-'),
           },
         ],
       },

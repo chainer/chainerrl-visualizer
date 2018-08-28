@@ -29,7 +29,7 @@ const ArgsCard = ({ experiment }) => (
 
 ArgsCard.propTypes = {
   experiment: PropTypes.shape({
-    args: PropTypes.object.isRequired,
+    args: PropTypes.object,
   }).isRequired,
 };
 

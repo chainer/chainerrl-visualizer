@@ -44,21 +44,21 @@ const SummaryCard = ({ experiment }) => (
                 (steps)
               </strong>
               {' '}
-              {experiment.log[experiment.log.length - 1].steps}
+              {experiment.log.length > 0 ? experiment.log[experiment.log.length - 1].steps : ''}
             </p>
             <p>
               <strong>
                 (episodes)
               </strong>
               {' '}
-              {experiment.log[experiment.log.length - 1].episodes}
+              {experiment.log > 0 ? experiment.log[experiment.log.length - 1].episodes : ''}
             </p>
             <p>
               <strong>
                 (elapsed time)
               </strong>
               {' '}
-              {experiment.log[experiment.log.length - 1].elapsed}
+              {experiment.log > 0 ? experiment.log[experiment.log.length - 1].elapsed : ''}
             </p>
           </div>
         ) : (
@@ -71,10 +71,10 @@ const SummaryCard = ({ experiment }) => (
 
 SummaryCard.propTypes = {
   experiment: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    command: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
+    id: PropTypes.number,
+    name: PropTypes.string,
+    command: PropTypes.string,
+    path: PropTypes.string,
     log: PropTypes.arrayOf(PropTypes.any), /* eslint-disable-line react/forbid-prop-types */
   }).isRequired,
 };
