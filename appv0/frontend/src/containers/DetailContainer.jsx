@@ -245,7 +245,10 @@ Create
               <Card>
                 <CardBody>
                   <CardTitle>env render</CardTitle>
-                  <CardText>{`step: ${xFocus}`}</CardText>
+                  <CardText>
+                    {`step: ${xFocus},  `}
+                    <strong>{`reward: ${stat.reward || 0}`}</strong>
+                  </CardText>
                   {
                     renderImagePath && (
                       <img
@@ -257,19 +260,25 @@ Create
                   }
                 </CardBody>
               </Card>
-              <br />
+            </Col>
+            <Col>
               <Card>
                 <CardBody>
-                  <CardTitle>statistic description</CardTitle>
+                  <CardTitle>Qvalues</CardTitle>
                   {
-                    Object.keys(stat).filter((key) => key !== 'qvalues' && key !== 'image_path').map((key) => (
-                      <CardText key={key}>
-                        {key}
-                        :
-                        {' '}
-                        {stat[key]}
-                      </CardText>
-                    ))
+                    log.length > 0 && log[xFocus - sliceLeft] && (
+                      log[xFocus - sliceLeft].qvalues.map((qvalue, idx) => (
+                        { [experiment.action_meanings[idx]]: qvalue }
+                      )).sort((a, b) => (
+                        Object.values(b)[0] - Object.values(a)[0]
+                      )).map((entry) => (
+                        <span>
+                          <strong>{`${Object.keys(entry)[0]}: `}</strong>
+                          {`${Object.values(entry)[0]}`}
+                          <br />
+                        </span>
+                      ))
+                    )
                   }
                 </CardBody>
               </Card>

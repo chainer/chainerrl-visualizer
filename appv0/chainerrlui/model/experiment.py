@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 import datetime
 import os
 import jsonlines
+import gym
 
 from chainerrlui import DB_SESSION, DB_BASE
 from chainerrlui.model.project import Project
@@ -43,6 +44,7 @@ class Experiment(DB_BASE):
             "environ": {},
             "agents": [],
             "envs": [],
+            "action_meanings": [],
         }
 
         log_file_name = os.path.join(self.path, "log.jsonl")
@@ -68,6 +70,11 @@ class Experiment(DB_BASE):
             with jsonlines.open(environ_file_name) as reader:
                 for obj in reader:
                     experiment["environ"] = obj
+
+        env = gym.make(project.env_name)
+        while not hasattr(env, 'get_action_meanings'):
+            env = env.env
+        experiment["action_meanings"] = env.get_action_meanings()
 
         """
         for env_dill in os.listdir(os.path.join(self.path, "envs")):
