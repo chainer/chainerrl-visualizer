@@ -3,8 +3,6 @@ import gym
 import numpy as np
 import chainer
 import chainerrl
-from chainerrl import explorers
-from chainerrl import replay_buffer
 
 from chainerrlui.utils import atari_wrappers
 
@@ -26,6 +24,8 @@ def get_env(env_name, seed):
 def get_agent(env, experiment_path, agent_class):
     if agent_class == 'CategoricalDQN':
         return _get_categorical_dqn(env, experiment_path)
+    if agent_class == 'PPO':
+        return _get_ppo(env, experiment_path)
     else:
         raise Exception("Cannot deal with agent {}".format(agent_class))
 
@@ -46,14 +46,14 @@ def _get_categorical_dqn(env, experiment_path):
         )
     )
 
-    explorer = explorers.LinearDecayEpsilonGreedy(
+    explorer = chainerrl.explorers.LinearDecayEpsilonGreedy(
         1, 0, 0.1, 10 ** 6, lambda: np.random.randint(action_size),
     )
 
     opt = chainer.optimizers.Adam(2.5e-4, eps=1e-2 / batch_size)
     opt.setup(q_func)
 
-    rbuf = replay_buffer.ReplayBuffer(10 ** 6)
+    rbuf = chainerrl.replay_buffer.ReplayBuffer(10 ** 6)
 
     def phi(x):
         return np.asarray(x, dtype=np.float32) / 255
@@ -68,9 +68,105 @@ def _get_categorical_dqn(env, experiment_path):
     return agent
 
 
+def _get_ppo(env, experiment_path):
+    class A3CFFGaussian(chainer.Chain, chainerrl.agents.a3c.A3CModel):
+        """An example of A3C feedforward Gaussian policy."""
+
+        def __init__(self, obs_size, action_space,
+                     n_hidden_layers=2, n_hidden_channels=64,
+                     bound_mean=None, normalize_obs=None):
+            assert bound_mean in [False, True]
+            assert normalize_obs in [False, True]
+            super().__init__()
+            hidden_sizes = (n_hidden_channels,) * n_hidden_layers
+            self.normalize_obs = normalize_obs
+            with self.init_scope():
+                self.pi = chainerrl.policies.FCGaussianPolicyWithStateIndependentCovariance(
+                    obs_size, action_space.low.size,
+                    n_hidden_layers, n_hidden_channels,
+                    var_type='diagonal', nonlinearity=chainer.functions.tanh,
+                    bound_mean=bound_mean,
+                    min_action=action_space.low, max_action=action_space.high,
+                    mean_wscale=1e-2)
+                self.v = chainerrl.links.MLP(obs_size, 1, hidden_sizes=hidden_sizes)
+                if self.normalize_obs:
+                    self.obs_filter = chainerrl.links.EmpiricalNormalization(
+                        shape=obs_size
+                    )
+
+        def pi_and_v(self, state):
+            if self.normalize_obs:
+                state = chainer.functions.clip(self.obs_filter(state, update=False),
+                                               -5.0, 5.0)
+
+            return self.pi(state), self.v(state)
+
+    def phi(obs):
+        return obs.astype(np.float32)
+
+    obs_space = env.observation_space
+    action_space = env.action_space
+    model = A3CFFGaussian(obs_space.low.size, action_space, bound_mean=False, normalize_obs=False)
+
+    opt = chainer.optimizers.Adam(alpha=3e-4, eps=1e-5)
+    opt.setup(model)
+
+    agent = chainerrl.agents.PPO(model, opt, gpu=-1, phi=phi, update_interval=2048, minibatch_size=64, epochs=10,
+                                 clip_eps_vf=None,
+                                 entropy_coef=0.0, standardize_advantages=False)
+
+    agent.load(os.path.join(experiment_path, _find_model(experiment_path)))
+
+    return agent
+
+
 def _find_model(experiment_path):
     for file_name in os.listdir(experiment_path):
         if 'finish' in file_name:
             return file_name
 
     return None
+
+
+"""
+if __name__ == '__main__':
+    # https://github.com/openai/gym/blob/master/gym/envs/box2d/bipedal_walker.py#L446
+    # https://github.com/openai/gym/blob/master/gym/envs/classic_control/rendering.py#L81
+
+    env = get_env('BipedalWalker-v2', 0).env
+
+    from gym.envs.classic_control import rendering
+    from gym.envs.box2d.bipedal_walker import VIEWPORT_H, VIEWPORT_W
+    import pyglet
+
+    env.viewer = rendering.Viewer(VIEWPORT_W, VIEWPORT_H)
+
+    def new_render(return_rgb_array=True):
+        env.viewer.window.set_visible(visible=False)
+        pyglet.gl.glClearColor(1, 1, 1, 1)
+        env.viewer.window.clear()
+        env.viewer.window.switch_to()
+        env.viewer.window.dispatch_events()
+        env.viewer.transform.enable()
+
+        for geom in env.viewer.geoms:
+            geom.render()
+        for geom in env.viewer.onetime_geoms:
+            geom.render()
+
+        buffer = pyglet.image.get_buffer_manager().get_color_buffer()
+        image_data = buffer.get_image_data()
+        arr = np.fromstring(image_data.data, dtype=np.uint8, sep='')
+        arr = arr.reshape(buffer.height, buffer.width, 4)
+        arr = arr[::-1, :, 0:3]
+
+        env.viewer.window.flip()
+        env.viewer.onetime_geoms = []
+
+        return arr
+
+    env.viewer.render = new_render
+
+    import matplotlib.pyplot as plt
+    print(env.render())
+"""

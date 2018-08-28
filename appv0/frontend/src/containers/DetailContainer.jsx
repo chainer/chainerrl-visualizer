@@ -4,7 +4,7 @@ import {
   Container, Row, Col, Card, CardBody, CardTitle, CardText, InputGroup, Input, InputGroupAddon, Button,
 } from 'reactstrap';
 import {
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, ComposedChart, Area,
 } from 'recharts';
 import { connect } from 'react-redux';
 
@@ -28,6 +28,7 @@ const path = require('path');
 
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable class-methods-use-this */
+
 /* eslint-disable react/forbid-prop-types */
 
 
@@ -82,6 +83,77 @@ class DetailContainer extends React.Component {
       xFocus,
     } = this.props;
 
+    let chart;
+    if (experiment.env_name === 'SeaquestNoFrameskip-v4') {
+      chart = (
+        <LineChart
+          width={1000}
+          height={800}
+          data={log}
+          margin={{
+            top: 5, right: 30, left: 0, bottom: 5,
+          }}
+          ref={this.lineChart}
+          onMouseMove={() => {
+            this.props.changeXFocus(this.lineChart.current.state.activeLabel);
+          }}
+        >
+          {
+            log.length > 0 && log[0].qvalues && log[0].qvalues.map((qvalue, idx) => (
+              <Line
+                type="monotone"
+                dot={false}
+                dataKey={(v) => v.qvalues[idx]}
+                key={idx} /* eslint-disable-line react/no-array-index-key */
+              />
+            ))
+          }
+          <CartesianGrid strokeDasharray="5 5" />
+          <XAxis dataKey="steps" />
+          <YAxis domain={['dataMin', 'dataMax']} />
+          <Tooltip />
+          <ReferenceLine x={xFocus} stroke="green" />
+        </LineChart>
+      );
+    } else {
+      log.forEach((row) => {
+        /* eslint-disable-next-line no-param-reassign */
+        row.trustRange = [parseFloat(row.action_means[0] - row.action_vars[0]), parseFloat(row.action_means[0]) + row.action_vars[0]];
+      });
+
+      chart = (
+        <ComposedChart
+          width={1000}
+          height={800}
+          data={log}
+          margin={{
+            top: 5, right: 30, left: 0, bottom: 5,
+          }}
+          ref={this.lineChart}
+          onMouseMove={() => {
+            this.props.changeXFocus(this.lineChart.current.state.activeLabel);
+          }}
+          stackOffset="silhouette"
+        >
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dot={false}
+            dataKey={(v) => v.actions[0]}
+          />
+          <Line yAxisId="left" type="monotone" stroke="gray" strokeDasharray="3 4 5 2" dataKey={(v) => v.action_means[0]} />
+          <Area yAxisId="left" dataKey="trustRange" stroke="yellow" fill="yellow" />
+          <Line yAxisId="right" type="monotone" stroke="red" dataKey="state_value" />
+          <CartesianGrid strokeDasharray="5 5" />
+          <XAxis dataKey="steps" />
+          <YAxis yAxisId="left" domain={['dataMin', 'dataMax']} />
+          <YAxis yAxisId="right" orientation="right" />
+          <Tooltip />
+          <ReferenceLine yAxisId="left" x={xFocus} stroke="green" />
+        </ComposedChart>
+      );
+    }
+
     return (
       <div>
         <br />
@@ -118,9 +190,19 @@ class DetailContainer extends React.Component {
                               </strong>
                               {rolloutDir}
                             </CardText>
-                            <Button onClick={() => { this.props.requestRollout(experiment); }}>Rollout</Button>
+                            <Button onClick={() => {
+                              this.props.requestRollout(experiment);
+                            }}
+                            >
+Rollout
+                            </Button>
                             &nbsp;
-                            <Button onClick={() => { this.props.startGetLog(path.join(rolloutDir, 'rollout_log.jsonl')); }}>Get Log</Button>
+                            <Button onClick={() => {
+                              this.props.startGetLog(path.join(rolloutDir, 'rollout_log.jsonl'));
+                            }}
+                            >
+Get Log
+                            </Button>
                           </CardBody>
                         </Card>
                       </Col>
@@ -138,7 +220,12 @@ class DetailContainer extends React.Component {
                               <Input type="number" step="10" value={toStep} onChange={this.handleToStepChange} />
                             </InputGroup>
                             <br />
-                            <Button onClick={() => { this.props.startSaliency(experiment.id, fromStep, toStep, 0); }}>Create</Button>
+                            <Button onClick={() => {
+                              this.props.startSaliency(experiment.id, fromStep, toStep, 0);
+                            }}
+                            >
+Create
+                            </Button>
                           </CardBody>
                         </Card>
                       </Col>
@@ -152,27 +239,7 @@ class DetailContainer extends React.Component {
           <br />
           <Row>
             <Col>
-              <LineChart
-                width={1000}
-                height={800}
-                data={log}
-                margin={{
-                  top: 5, right: 30, left: 0, bottom: 5,
-                }}
-                ref={this.lineChart}
-                onMouseMove={() => { this.props.changeXFocus(this.lineChart.current.state.activeLabel); }}
-              >
-                {
-                  log.length > 0 && log[0].qvalues && log[0].qvalues.map((qvalue, idx) => (
-                    <Line type="monotone" dot={false} dataKey={(v) => v.qvalues[idx]} key={idx} /> /* eslint-disable-line react/no-array-index-key */
-                  ))
-                }
-                <CartesianGrid strokeDasharray="5 5" />
-                <XAxis dataKey="steps" />
-                <YAxis domain={['dataMin', 'dataMax']} />
-                <Tooltip />
-                <ReferenceLine x={xFocus} stroke="green" />
-              </LineChart>
+              {chart}
             </Col>
             <Col>
               <Card>
@@ -198,7 +265,7 @@ class DetailContainer extends React.Component {
                     Object.keys(stat).filter((key) => key !== 'qvalues' && key !== 'image_path').map((key) => (
                       <CardText key={key}>
                         {key}
-:
+                        :
                         {' '}
                         {stat[key]}
                       </CardText>
@@ -214,12 +281,26 @@ class DetailContainer extends React.Component {
                 <CardBody>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">left</InputGroupAddon>
-                    <Input type="number" step="10" value={sliceLeft} onInput={(e) => { this.props.changeSliceLeft(parseInt(e.target.value, 10)); }} />
+                    <Input
+                      type="number"
+                      step="10"
+                      value={sliceLeft}
+                      onInput={(e) => {
+                        this.props.changeSliceLeft(parseInt(e.target.value, 10));
+                      }}
+                    />
                   </InputGroup>
                   <br />
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">right</InputGroupAddon>
-                    <Input type="number" step="10" value={sliceRight} onInput={(e) => { this.props.changeSliceRight(parseInt(e.target.value, 10)); }} />
+                    <Input
+                      type="number"
+                      step="10"
+                      value={sliceRight}
+                      onInput={(e) => {
+                        this.props.changeSliceRight(parseInt(e.target.value, 10));
+                      }}
+                    />
                   </InputGroup>
                 </CardBody>
               </Card>
@@ -228,9 +309,19 @@ class DetailContainer extends React.Component {
               <Card>
                 <CardBody>
                   <CardTitle>prev step / next step</CardTitle>
-                  <Button onClick={() => { this.props.focusPrevStep(); }}>-1</Button>
+                  <Button onClick={() => {
+                    this.props.focusPrevStep();
+                  }}
+                  >
+-1
+                  </Button>
                   {'  '}
-                  <Button onClick={() => { this.props.focusNextStep(); }}>+1</Button>
+                  <Button onClick={() => {
+                    this.props.focusNextStep();
+                  }}
+                  >
++1
+                  </Button>
                 </CardBody>
               </Card>
             </Col>

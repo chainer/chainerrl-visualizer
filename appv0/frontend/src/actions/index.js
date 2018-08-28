@@ -59,7 +59,7 @@ export const requestRollout = (experiment) => ({
   experimentId: experiment.id,
   envName: experiment.env_name,
   agentClass: experiment.agent_class,
-  seed: experiment.args.seed,
+  seed: experiment.args.seed || 0,
 });
 
 export const successRollout = (rolloutDir) => ({
