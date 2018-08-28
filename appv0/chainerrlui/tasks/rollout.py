@@ -81,6 +81,30 @@ def _rollout_ppo(env, agent, rollout_dir, log_writer):
     agent.stop_episode()
 
 
+def _rollout_dqn(env, agent, rollout_dir, log_writer):
+    obs = env.reset()
+    done = False
+    t = 0
+
+    while not (done or t == 1800):
+        image_path = _save_env_render(env, rollout_dir)
+
+        qvalues = agent.model(agent.batch_states([obs], agent.xp, agent.phi)).q_values.data[0]
+        a = agent.act(obs)
+        obs, r, done, info = env.step(a)
+
+        log_writer.write({
+            'steps': t,
+            'reward': r,
+            'image_path': image_path,
+            'qvalues': [float(qvalue) for qvalue in qvalues],
+        })
+
+        t += 1
+
+    agent.stop_episode()
+
+
 def rollout(experiment, env_name, agent_class, seed):
     misc.set_random_seed(seed)
     env = get_env(env_name, seed)
@@ -95,6 +119,8 @@ def rollout(experiment, env_name, agent_class, seed):
         _rollout_categorical_dqn(env, agent, rollout_dir, writer)
     elif agent_class == 'PPO':
         _rollout_ppo(env, agent, rollout_dir, writer)
+    elif agent_class == 'DQN':
+        _rollout_dqn(env, agent, rollout_dir, writer)
     else:
         raise Exception('Unsupported agent')
 
@@ -105,4 +131,3 @@ def rollout(experiment, env_name, agent_class, seed):
     DB_SESSION.commit()
 
     return rollout_dir
-

@@ -24,8 +24,10 @@ def get_env(env_name, seed):
 def get_agent(env, experiment_path, agent_class):
     if agent_class == 'CategoricalDQN':
         return _get_categorical_dqn(env, experiment_path)
-    if agent_class == 'PPO':
+    elif agent_class == 'PPO':
         return _get_ppo(env, experiment_path)
+    elif agent_class == 'DQN':
+        return _get_dqn(env, experiment_path)
     else:
         raise Exception("Cannot deal with agent {}".format(agent_class))
 
@@ -114,6 +116,31 @@ def _get_ppo(env, experiment_path):
     agent = chainerrl.agents.PPO(model, opt, gpu=-1, phi=phi, update_interval=2048, minibatch_size=64, epochs=10,
                                  clip_eps_vf=None,
                                  entropy_coef=0.0, standardize_advantages=False)
+
+    agent.load(os.path.join(experiment_path, _find_model(experiment_path)))
+
+    return agent
+
+
+def _get_dqn(env, experiment_path):
+    q_func = chainerrl.links.Sequence(
+        chainerrl.links.NatureDQNHead(activation=chainer.functions.relu),
+        chainer.links.Linear(512, env.action_space.n),
+        chainerrl.action_value.DiscreteActionValue,
+    )
+
+    opt = chainer.optimizers.RMSpropGraves(lr=2.5e-4, alpha=0.95, momentum=0.0, eps=1e-2)
+    opt.setup(q_func)
+    rep_buf = chainerrl.replay_buffer.ReplayBuffer(10 ** 6)
+    explorer = chainerrl.explorers.LinearDecayEpsilonGreedy(
+        1, 0, 0.1, 10 ** 6, lambda: np.random.randint(env.action_space.n),
+    )
+
+    agent = chainerrl.agents.DQN(q_func, opt, rep_buf, gpu=-1, gamma=0.99, explorer=explorer,
+                                 replay_start_size=5 * 10 ** 4,
+                                 target_update_interval=10 ** 4, clip_delta=True, update_interval=4,
+                                 batch_accumulator="sum",
+                                 phi=lambda x: np.asarray(x, np.float32) / 255)
 
     agent.load(os.path.join(experiment_path, _find_model(experiment_path)))
 

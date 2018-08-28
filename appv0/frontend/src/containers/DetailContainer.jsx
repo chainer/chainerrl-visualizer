@@ -84,7 +84,7 @@ class DetailContainer extends React.Component {
     } = this.props;
 
     let chart;
-    if (experiment.env_name === 'SeaquestNoFrameskip-v4') {
+    if (['SeaquestNoFrameskip-v4', 'BreakoutNoFrameskip-v4'].includes(experiment.env_name)) {
       chart = (
         <LineChart
           width={1000}

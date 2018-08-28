@@ -16,4 +16,3 @@ def convert_log(prev_log_path, new_log_path):  # full path
                 record[key] = scores[idx]
 
             writer.write(record)
-
