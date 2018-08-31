@@ -1,47 +1,13 @@
-from chainerrl.action_value import DiscreteActionValue
-from chainerrl import agents, explorers, links, replay_buffer
-from chainer import functions as F
-from chainer import links as L
-from chainer import optimizers
 import numpy as np
 import os
+import random
+import string
 
 from scipy.ndimage.filters import gaussian_filter
 from scipy.misc import imresize
 from scipy.misc import imsave
 
-from chainerrlui.utils import atari_wrappers
-
-
-def _get_agent(env, load_dir):
-    q_func = links.Sequence(
-        links.NatureDQNHead(activation=F.relu),
-        L.Linear(512, env.action_space.n),
-        DiscreteActionValue,
-    )
-    opt = optimizers.RMSpropGraves(lr=2.5e-4, alpha=0.95, momentum=0.0, eps=1e-2)
-    opt.setup(q_func)
-    rep_buf = replay_buffer.ReplayBuffer(10 ** 6)
-    explorer = explorers.LinearDecayEpsilonGreedy(
-        1, 0, 0.1, 10 ** 6, lambda: np.random.randint(env.action_space.n),
-    )
-
-    agent = agents.DQN(q_func, opt, rep_buf, gpu=-1, gamma=0.99, explorer=explorer, replay_start_size=5 * 10 ** 4,
-                       target_update_interval=10 ** 4, clip_delta=True, update_interval=4, batch_accumulator="sum",
-                       phi=lambda x: np.asarray(x, np.float32) / 255)
-    agent.load(load_dir)
-
-    return agent
-
-
-def _get_env(env_name, random_seed):
-    env = atari_wrappers.wrap_deepmind(
-        atari_wrappers.make_atari(env_name),
-        episode_life=False, clip_rewards=False
-    )
-    env.seed(random_seed)
-    # misc.env_modifiers.make_rendered(env)
-    return env
+from chainerrlui.tasks.restore_objects import get_env, get_agent
 
 
 def get_mask(center, size, radius):
@@ -90,9 +56,9 @@ def saliency_on_atari_frame(saliency, atari, fudge_factor, size=[210, 160], chan
     return I
 
 
-def create_saliency_images(fromStep, toStep, result_path, model_name, seed):
-    env = _get_env("BreakoutNoFrameskip-v4", seed)
-    agent = _get_agent(env, os.path.join(result_path, model_name))
+def create_saliency_images(from_step, to_step, experiment_path, rollout_dir, env_name, agent_class, seed):
+    env = get_env(env_name, seed)
+    agent = get_agent(env, experiment_path, agent_class)
 
     obs = env.reset()
     image = env.render(mode="rgb_array")
@@ -102,11 +68,11 @@ def create_saliency_images(fromStep, toStep, result_path, model_name, seed):
     obs_list = []
     image_list = []
 
-    if fromStep == 0:
+    if from_step == 0:
         obs_list.append(obs)
         image_list.append(image)
 
-    while t <= toStep:
+    while t <= to_step:
         a = agent.act(obs)
         obs, r, done, info = env.step(a)
         image = env.render(mode="rgb_array")
@@ -117,12 +83,17 @@ def create_saliency_images(fromStep, toStep, result_path, model_name, seed):
 
     agent.stop_episode()
 
-    for step in range(fromStep, toStep + 1):
-        output = saliency_on_atari_frame(score_frame(agent, np.asarray(obs_list[step])), image_list[step], 50,
-                                         channel=2)
-        filepath = os.path.join(result_path, 'rollout', 'images', 'step{}.png'.format(step))
-        if os.path.exists(filepath):
-            os.remove(filepath)
+    image_paths = []
 
-        imsave(filepath, output)
+    for step in range(from_step, to_step + 1):
+        output = saliency_on_atari_frame(score_frame(agent, np.asarray(obs_list[step])), image_list[step], 50,
+                                         channel=0)
+        image_path = os.path.join(rollout_dir, 'images',
+                                  ''.join([random.choice(string.ascii_letters + string.digits) for _ in
+                                           range(11)]) + '.png')
+
+        image_paths.append(image_path)
+        imsave(image_path, output)
+
+    return image_paths
 

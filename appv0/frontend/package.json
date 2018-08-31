@@ -4,7 +4,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "build:watch": "webpack --progress --profile --watch",
+    "build:watch": "webpack --progress --profile --watch --mode development",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "devDependencies": {
@@ -36,6 +36,7 @@
     "react-dom": "^16.4.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
+    "react-table": "^6.8.6",
     "reactstrap": "^6.3.1",
     "recharts": "^1.1.0",
     "redux": "^4.0.0",

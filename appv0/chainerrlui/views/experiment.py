@@ -4,10 +4,27 @@ import os
 import json
 
 from chainerrlui.tasks.rollout import rollout
+from chainerrlui.tasks.search_and_create_experiments import search_and_create_experiments
+from chainerrlui.model.project import Project
+from chainerrlui.model.experiment import Experiment
+from chainerrlui import DB_SESSION
 
 
 class ExperimentAPI(MethodView):
     def get(self, project_id=None, id=None):
+        if id is None:
+            project = DB_SESSION.query(Project).filter_by(id=project_id).first()
+            search_and_create_experiments(project)
+            experiments = DB_SESSION.query(Experiment).filter_by(project_id=project.id).all()
+
+            return jsonify({
+                "experiments": [experiment.serialize for experiment in experiments]
+            })
+        else:
+            experiment = DB_SESSION.query(Experiment).filter_by(id=id).first()
+            return jsonify(experiment.serialize)
+
+        """ code for `Get Log` command
         result_path = request.args.get('result_path')
 
         if result_path is not None:
@@ -25,6 +42,7 @@ class ExperimentAPI(MethodView):
                 'id': id,
             }
         })
+        """
 
     def post(self, project_id=None, id=None):
         data = request.get_json()

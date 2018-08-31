@@ -1,11 +1,12 @@
 import React from 'react';
+import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import createSagaMiddleware from 'redux-saga';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
+
 import ProjectsContainer from '../containers/ProjectsContainer';
 import ExperimentsContainer from '../containers/ExperimentsContainer';
 import DetailContainer from '../containers/DetailContainer';

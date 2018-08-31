@@ -10,6 +10,7 @@ setup(name="chainerrlui",
       package_data={
           "chainerrlui": {
               "templates/*",
+              "static/**/*",
           }
       },
       author="sykwer",

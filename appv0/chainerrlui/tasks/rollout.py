@@ -1,82 +1,133 @@
-from chainerrl.action_value import DiscreteActionValue
-from chainerrl import agents, explorers, links, replay_buffer
-from chainer import functions as F
-from chainer import links as L
-from chainer import optimizers
-import numpy as np
 import os
 from PIL import Image
-import json
+import datetime
+import string
+import random
+import jsonlines
+from chainerrl import misc
 
-from chainerrlui.utils import atari_wrappers
-
-
-def _get_agent(env, load_dir):
-    q_func = links.Sequence(
-        links.NatureDQNHead(activation=F.relu),
-        L.Linear(512, env.action_space.n),
-        DiscreteActionValue,
-    )
-    opt = optimizers.RMSpropGraves(lr=2.5e-4, alpha=0.95, momentum=0.0, eps=1e-2)
-    opt.setup(q_func)
-    rep_buf = replay_buffer.ReplayBuffer(10 ** 6)
-    explorer = explorers.LinearDecayEpsilonGreedy(
-        1, 0, 0.1, 10 ** 6, lambda: np.random.randint(env.action_space.n),
-    )
-
-    agent = agents.DQN(q_func, opt, rep_buf, gpu=-1, gamma=0.99, explorer=explorer, replay_start_size=5 * 10 ** 4,
-                       target_update_interval=10 ** 4, clip_delta=True, update_interval=4, batch_accumulator="sum",
-                       phi=lambda x: np.asarray(x, np.float32) / 255)
-    agent.load(load_dir)
-
-    return agent
+from chainerrlui import DB_SESSION
+from chainerrlui.tasks.restore_objects import get_agent, get_env
 
 
-def _get_env(env_name, random_seed):
-    env = atari_wrappers.wrap_deepmind(
-        atari_wrappers.make_atari(env_name),
-        episode_life=False, clip_rewards=False
-    )
-    env.seed(random_seed)
-    # misc.env_modifiers.make_rendered(env)
-    return env
+def _prepare_rollout_dir(experiment_dir):
+    if not os.path.isdir(os.path.join(experiment_dir, 'rollouts')):
+        os.makedirs(os.path.join(experiment_dir, 'rollouts'))
+
+    rollout_dir = os.path.join(experiment_dir, 'rollouts', datetime.datetime.now().strftime("%Y%m%dT%H%M%S.%f"))
+    os.makedirs(rollout_dir)
+    os.makedirs(os.path.join(rollout_dir, 'images'))
+
+    return rollout_dir
 
 
-def rollout(result_path, model_name, seed):
-    env = _get_env("BreakoutNoFrameskip-v4", seed)
-    agent = _get_agent(env, os.path.join(result_path, model_name))
+def _save_env_render(env, rollout_dir):
+    image = Image.fromarray(env.render(mode='rgb_array'))
+    image_path = os.path.join(rollout_dir, 'images',
+                              ''.join([random.choice(string.ascii_letters + string.digits) for _ in
+                                       range(11)]) + '.png')
+    image.save(image_path)
+    return image_path
 
-    output = []
 
+def _rollout_categorical_dqn(env, agent, rollout_dir, log_writer):
     obs = env.reset()
     done = False
-    test_r = 0
     t = 0
 
     while not (done or t == 1800):
-        image = Image.fromarray(env.render(mode='rgb_array'))
-        image.save(os.path.join(result_path, 'rollout', 'images', 'step{}.png'.format(t)))
+        image_path = _save_env_render(env, rollout_dir)
 
-        qvalues = agent.model(agent.batch_states([np.asarray(obs)], agent.xp, agent.phi)).q_values.data[0]
-
+        qvalues = agent.model(agent.batch_states([obs], agent.xp, agent.phi)).q_values.data[0]
         a = agent.act(obs)
-
         obs, r, done, info = env.step(a)
 
-        data = {}
-        data['step'] = t
-        data['qvalue1'] = float(qvalues[0])
-        data['qvalue2'] = float(qvalues[1])
-        data['qvalue3'] = float(qvalues[2])
-        data['qvalue4'] = float(qvalues[3])
-        data['reward'] = r
+        log_writer.write({
+            'steps': t,
+            'reward': r,
+            'image_path': image_path,
+            'qvalues': [float(qvalue) for qvalue in qvalues],
+        })
 
-        output.append(data)
-
-        test_r += r
         t += 1
 
     agent.stop_episode()
 
-    with open(os.path.join(result_path, 'rollout', 'log'), 'a') as f:
-        json.dump(output, f, indent=4)
+
+def _rollout_ppo(env, agent, rollout_dir, log_writer):
+    obs = env.reset()
+    t = 0
+    done = False
+
+    while not (done or t == 1800):
+        image_path = _save_env_render(env, rollout_dir)
+
+        a_distribution, state_value = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+        a = agent.act(obs)
+        obs, r, done, info = env.step(a)
+
+        log_writer.write({
+            'steps': t,
+            'reward': r,
+            'image_path': image_path,
+            'state_value': float(state_value.data[0][0]),
+            'actions': [float(action) for action in a],
+            'action_means': [float(action) for action in a_distribution.mean[0].data],
+            'action_vars': [float(action) for action in a_distribution.ln_var[0].data],
+        })
+
+        t += 1
+
+    agent.stop_episode()
+
+
+def _rollout_dqn(env, agent, rollout_dir, log_writer):
+    obs = env.reset()
+    done = False
+    t = 0
+
+    while not (done or t == 1800):
+        image_path = _save_env_render(env, rollout_dir)
+
+        qvalues = agent.model(agent.batch_states([obs], agent.xp, agent.phi)).q_values.data[0]
+        a = agent.act(obs)
+        obs, r, done, info = env.step(a)
+
+        log_writer.write({
+            'steps': t,
+            'reward': r,
+            'image_path': image_path,
+            'qvalues': [float(qvalue) for qvalue in qvalues],
+        })
+
+        t += 1
+
+    agent.stop_episode()
+
+
+def rollout(experiment, env_name, agent_class, seed):
+    misc.set_random_seed(seed)
+    env = get_env(env_name, seed)
+    agent = get_agent(env, experiment.path, agent_class)
+
+    rollout_dir = _prepare_rollout_dir(experiment.path)
+
+    log_file = open(os.path.join(rollout_dir, 'rollout_log.jsonl'), 'w')
+    writer = jsonlines.Writer(log_file)
+
+    if agent_class == 'CategoricalDQN':
+        _rollout_categorical_dqn(env, agent, rollout_dir, writer)
+    elif agent_class == 'PPO':
+        _rollout_ppo(env, agent, rollout_dir, writer)
+    elif agent_class == 'DQN':
+        _rollout_dqn(env, agent, rollout_dir, writer)
+    else:
+        raise Exception('Unsupported agent')
+
+    writer.close()
+    log_file.close()
+
+    experiment.rollout_path = rollout_dir
+    DB_SESSION.commit()
+
+    return rollout_dir

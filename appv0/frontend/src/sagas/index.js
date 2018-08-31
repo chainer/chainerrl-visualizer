@@ -2,29 +2,28 @@ import {
   fork, take, call, put,
 } from 'redux-saga/effects';
 
-import { postRollout, getRolloutLog } from '../services';
+import { getRolloutLog } from '../services';
 import {
-  successGetLog, startGetLog, REQUEST_ROLLOUT, START_GET_LOG,
+  successGetLog, START_GET_LOG,
 } from '../actions';
-
-function* requestRolloutFlow() {
-  const action = yield take(REQUEST_ROLLOUT);
-  const resultPath = yield call(postRollout, action.resultPath, action.modelName, action.seed);
-
-  yield put(startGetLog, resultPath);
-}
+import projectsSaga from './projects';
+import experimentsSaga from './experiments';
+import detailSaga from './detail';
 
 function* getLogFlow() {
   const action = yield take(START_GET_LOG);
-  const { resultPath } = action;
+  const { rolloutLogPath } = action;
 
-  const log = yield call(getRolloutLog, resultPath);
+  const log = yield call(getRolloutLog, rolloutLogPath);
 
   yield put(successGetLog(log));
 }
 
 function* rootSaga() {
-  yield fork(requestRolloutFlow);
+  yield fork(projectsSaga);
+  yield fork(experimentsSaga);
+  yield fork(detailSaga);
+
   yield fork(getLogFlow);
 }
 
