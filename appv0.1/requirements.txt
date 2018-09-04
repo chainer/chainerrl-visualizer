@@ -1,3 +1,4 @@
 Flask
 chainerrl
 gevent
+jsonlines
