@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from chainerrl.agent import Agent
 
+
 class App(Flask):
     def __init__(self, *args, **kwargs):
         agent = kwargs['agent']
