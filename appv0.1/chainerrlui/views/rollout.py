@@ -1,17 +1,16 @@
 from flask.views import MethodView
 from flask import jsonify
 
-from chainerrlui.tasks import start_rollout
+from chainerrlui.server_tasks import prepare_rollout_dir
+from chainerrlui.job_dispatchers import dispatch_rollout_job
 
 
 class RolloutAPI(MethodView):
     def post(self):
-        rollout_path = start_rollout()
+        rollout_path = prepare_rollout_dir()
 
-        if rollout_path is None:
-            # TODO: notify there is rollout running
-            return 'hoge'
-        else:
-            return jsonify({
-                'rollout_path': rollout_path,
-            })
+        dispatch_rollout_job(rollout_path)
+
+        return jsonify({
+            'rollout_path': rollout_path,
+        })

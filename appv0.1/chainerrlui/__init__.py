@@ -1,1 +1,1 @@
-from chainerrlui.ui_server import launch_visualize
+from chainerrlui.launcher import launch_visualizer

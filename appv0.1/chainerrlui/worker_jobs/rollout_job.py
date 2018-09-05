@@ -1,21 +1,10 @@
 import os
 from PIL import Image
 import jsonlines
-from flask import current_app
 
 from chainerrlui.utils import generate_random_string
 
-ROLLOUT_JOB_ID_FORMAT = 'rollout_{}'  # {} is datetime
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
-
-
-def throw_rollout_job(rollout_dir):
-    current_app.job_queue.put({
-        'type': 'ROLLOUT',
-        'data': {
-            'rollout_dir': rollout_dir,
-        }
-    })
 
 
 def rollout(agent, gymlike_env, rollout_dir):
