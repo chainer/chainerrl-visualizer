@@ -1,8 +1,7 @@
-from threading import Thread, Event
 import os
 from PIL import Image
-from flask import current_app
 import jsonlines
+from flask import current_app
 
 from chainerrlui.utils import generate_random_string
 
@@ -10,40 +9,16 @@ ROLLOUT_JOB_ID_FORMAT = 'rollout_{}'  # {} is datetime
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 
 
-def throw_rollout_job(agent, gymlike_env, rollout_dir):
-    rollout_id = os.path.basename(rollout_dir)
-    job = RolloutJob(agent, gymlike_env, rollout_dir, current_app.jobs)
-
-    current_app.jobs[ROLLOUT_JOB_ID_FORMAT.format(rollout_id)] = job
-
-    job.start()
-
-
-class RolloutJob(Thread):
-    def __init__(self, agent, gymlike_env, rollout_dir, global_jobs):
-        self.agent = agent
-        self.gymlike_env = gymlike_env
-        self.rollout_dir = rollout_dir
-        self.global_jobs = global_jobs
-
-        self.rollout_id = os.path.basename(rollout_dir)
-
-        super().__init__()
-        self.stop_event = Event()
-
-    def stop(self):
-        self.delete_id_from_global_jobs()
-        self.stop_event.set()
-
-    def run(self):
-        _rollout(self.agent, self.gymlike_env, self.rollout_dir)
-        self.delete_id_from_global_jobs()
-
-    def delete_id_from_global_jobs(self):
-        del self.global_jobs[ROLLOUT_JOB_ID_FORMAT.format(self.rollout_id)]
+def throw_rollout_job(rollout_dir):
+    current_app.job_queue.put({
+        'type': 'ROLLOUT',
+        'data': {
+            'rollout_dir': rollout_dir,
+        }
+    })
 
 
-def _rollout(agent, gymlike_env, rollout_dir):
+def rollout(agent, gymlike_env, rollout_dir):
     log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'w')
     writer = jsonlines.Writer(log_fp)
 

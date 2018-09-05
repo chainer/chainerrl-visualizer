@@ -1,1 +1,1 @@
-from chainerrlui.ui_server import create_ui_server
+from chainerrlui.ui_server import launch_visualize

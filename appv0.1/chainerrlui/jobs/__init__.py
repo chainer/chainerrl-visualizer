@@ -1,1 +1,1 @@
-from chainerrlui.jobs.rollout_job import throw_rollout_job
+from chainerrlui.jobs.rollout_job import rollout, throw_rollout_job

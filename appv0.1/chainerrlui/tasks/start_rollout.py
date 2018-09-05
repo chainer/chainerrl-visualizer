@@ -31,6 +31,6 @@ def start_rollout():
     # グローバルなdictionaryにつっこむ.
     #
     # agent_clone = copy.deepcopy(current_app.agent)  # agent internal state may change during rollout
-    throw_rollout_job(current_app.agent, current_app.gymlike_env, rollout_dir)
+    throw_rollout_job(rollout_dir)
 
     return rollout_dir

@@ -9,10 +9,12 @@ class App(Flask):
         agent = kwargs['agent']
         gymlike_env = kwargs['gymlike_env']
         log_dir = kwargs['log_dir']
+        job_queue = kwargs['job_queue']
 
         del kwargs['agent']
         del kwargs['gymlike_env']
         del kwargs['log_dir']
+        del kwargs['job_queue']
 
         super().__init__(*args, **kwargs)
 
@@ -24,12 +26,11 @@ class App(Flask):
         self.agent = agent
         self.gymlike_env = gymlike_env
         self.log_dir = log_dir
+        self.job_queue = job_queue
 
-        self.jobs = {}
 
-
-def create_app(agent, gymlike_env, log_dir):
-    app = App(__name__, agent=agent, gymlike_env=gymlike_env, log_dir=log_dir)
+def create_app(agent, gymlike_env, log_dir, q):
+    app = App(__name__, agent=agent, gymlike_env=gymlike_env, log_dir=log_dir, job_queue=q)
 
     rollout_resource = RolloutAPI.as_view('rollout_resource')
 
