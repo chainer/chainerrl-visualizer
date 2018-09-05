@@ -1,1 +1,2 @@
 from chainerrlui.server_tasks.prepare_rollout_dir import prepare_rollout_dir
+from chainerrlui.server_tasks.parse_rollout_log import parse_rollout_log

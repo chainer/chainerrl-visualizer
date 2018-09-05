@@ -1,7 +1,7 @@
 import signal
 import gevent
 from gevent.pywsgi import WSGIServer
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file, request
 from chainerrl.agent import Agent
 
 from chainerrlui.views import RolloutAPI
@@ -39,10 +39,14 @@ def create_app(agent, gymlike_env, log_dir, q):
     def index(**kwargs):
         return render_template('index.html')
 
+    @app.route('/images')
+    def get_image():
+        return send_file(request.args.get('image_path'), mimetype='image/image')
+
     app.add_url_rule(
         '/api/rollouts',
         view_func=rollout_resource,
-        methods=['POST'],
+        methods=['GET', 'POST'],
     )
 
     return app
