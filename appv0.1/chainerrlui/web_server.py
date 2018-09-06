@@ -51,7 +51,13 @@ def create_app(agent, gymlike_env, log_dir, q):
     )
 
     app.add_url_rule(
-        '/api/<string:rollout_id>/saliency',
+        '/api/rollouts/<string:rollout_id>',
+        view_func=rollout_resource,
+        methods=['GET'],
+    )
+
+    app.add_url_rule(
+        '/api/rollouts/<string:rollout_id>/saliency',
         view_func=saliency_resource,
         methods=['POST'],
     )
