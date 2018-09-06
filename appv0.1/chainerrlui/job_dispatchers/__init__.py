@@ -1,1 +1,2 @@
 from chainerrlui.job_dispatchers.dispatch_rollout_job import dispatch_rollout_job
+from chainerrlui.job_dispatchers.dispatch_saliency_job import dispatch_saliency_job

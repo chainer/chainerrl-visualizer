@@ -4,7 +4,7 @@ from gevent.pywsgi import WSGIServer
 from flask import Flask, render_template, send_file, request
 from chainerrl.agent import Agent
 
-from chainerrlui.views import RolloutAPI
+from chainerrlui.views import RolloutAPI, SaliencyAPI
 
 
 def web_server(agent, gymlike_env, log_dir, host, port, debug, job_queue):
@@ -34,6 +34,7 @@ def create_app(agent, gymlike_env, log_dir, q):
     app = App(__name__, agent=agent, gymlike_env=gymlike_env, log_dir=log_dir, job_queue=q)
 
     rollout_resource = RolloutAPI.as_view('rollout_resource')
+    saliency_resource = SaliencyAPI.as_view('saliency_resource')
 
     @app.route('/')
     def index(**kwargs):
@@ -47,6 +48,12 @@ def create_app(agent, gymlike_env, log_dir, q):
         '/api/rollouts',
         view_func=rollout_resource,
         methods=['GET', 'POST'],
+    )
+
+    app.add_url_rule(
+        '/api/<string:rollout_id>/saliency',
+        view_func=saliency_resource,
+        methods=['POST'],
     )
 
     return app
