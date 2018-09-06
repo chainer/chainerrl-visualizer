@@ -7,7 +7,7 @@ from chainerrlui.web_server import web_server
 from chainerrlui.job_worker import job_worker
 
 
-def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5001, debug=False):
+def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002, debug=False):
     assert issubclass(type(agent), Agent), 'Agent object has to be subclass of Agent class defined in chainerrl'
 
     assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'

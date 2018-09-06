@@ -7,13 +7,15 @@ from chainerrlui.utils import generate_random_string
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 
 
-def rollout(agent, gymlike_env, rollout_dir):
+def rollout(agent, gymlike_env, rollout_dir, obs_list):
+    obs_list[:] = []  # Clear the shared observations list
+
     log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'w')
     writer = jsonlines.Writer(log_fp)
 
     # TODO: Generalize for all agents in ChainerRL
     if type(agent).__name__ == 'CategoricalDQN':
-        _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, writer)
+        _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, writer, obs_list)
     else:
         raise Exception('Unsupported agent')
 
@@ -21,10 +23,12 @@ def rollout(agent, gymlike_env, rollout_dir):
     log_fp.close()
 
 
-def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer):
+def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_list):
     obs = gymlike_env.reset()
     done = False
     t = 0
+
+    obs_list.append(obs)
 
     while not (done or t == 1800):
         image_path = _save_env_render(gymlike_env, rollout_dir)
@@ -32,6 +36,8 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer):
         qvalues = agent.model(agent.batch_states([obs], agent.xp, agent.phi)).q_values.data[0]
         a = agent.act(obs)
         obs, r, done, info = gymlike_env.step(a)
+
+        obs_list.append(obs)
 
         log_writer.write({
             'steps': t,
