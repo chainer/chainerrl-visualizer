@@ -1,5 +1,6 @@
 import os
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Value
+from ctypes import c_bool
 import signal
 from chainerrl.agent import Agent
 
@@ -33,9 +34,13 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
         os.makedirs(log_dir)
 
     job_queue = Queue()
+    is_job_running = Value(c_bool, False)
+    is_rollout_on_memory = Value(c_bool, False)
 
-    server_process = Process(target=web_server, args=(agent, gymlike_env, log_dir, host, port, debug, job_queue))
-    worker_process = Process(target=job_worker, args=(agent, gymlike_env, job_queue))
+    server_process = Process(target=web_server, args=(
+        agent, gymlike_env, log_dir, host, port, debug, job_queue, is_job_running, is_rollout_on_memory))
+    worker_process = Process(target=job_worker,
+                             args=(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory))
 
     server_process.start()
     worker_process.start()

@@ -27,10 +27,16 @@ class RolloutAPI(MethodView):
         })
 
     def post(self):
-        rollout_path = prepare_rollout_dir()
+        if current_app.is_job_running.value:
+            return jsonify({
+                'rollout_path': '',
+                'is_rollout_started': False,
+            })
 
+        rollout_path = prepare_rollout_dir()
         dispatch_rollout_job(rollout_path)
 
         return jsonify({
             'rollout_path': rollout_path,
+            'is_rollout_started': True,
         })
