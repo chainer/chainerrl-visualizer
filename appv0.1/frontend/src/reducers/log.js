@@ -1,8 +1,9 @@
-import { SUCCESS_FETCH_LOG } from '../actions';
+import { RECEIVE_ROLLOUT_RESPONSE, SUCCESS_FETCH_LOG } from '../actions';
 
 const initialLog = {
   logDataRows: [],
   logLastUpdated: null,
+  rolloutPath: '',
 };
 
 const log = (state = initialLog, action) => {
@@ -29,6 +30,14 @@ const log = (state = initialLog, action) => {
 
       return state;
     }
+    case RECEIVE_ROLLOUT_RESPONSE:
+      if (action.isRolloutStarted) {
+        return Object.assign({}, state, {
+          rolloutPath: action.rolloutPath,
+        });
+      }
+
+      return state;
     default:
       return state;
   }

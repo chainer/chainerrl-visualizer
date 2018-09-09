@@ -28,16 +28,16 @@ const plotRange = (state = initialPlotRange, action) => {
       }
 
       return Object.assign({}, state, {
-        focusedStep: state.focusedStep + 1,
+        focusedStep: state.focusedStep - 1,
       });
     case CLICK_NEXT_STEP:
-      if (state.focusedStep >= state.logLength) {
+      if (state.focusedStep >= state.logLength - 1) {
         return state;
       }
 
       if (state.focusedStep >= state.plotRangeRight) {
         const range = state.plotRangeRight - state.plotRangeLeft;
-        const rightAfter = Math.min(state.logLength, state.plotRangeRight + range);
+        const rightAfter = Math.min(state.logLength - 1, state.plotRangeRight + range);
 
         return Object.assign({}, state, {
           focusedStep: state.focusedStep + 1,
@@ -66,7 +66,7 @@ const plotRange = (state = initialPlotRange, action) => {
         plotRangeLeft: action.step,
       });
     case CHANGE_PLOT_RANGE_RIGHT:
-      if (action.step > state.logLength) {
+      if (action.step > state.logLength - 1) {
         return state;
       }
 

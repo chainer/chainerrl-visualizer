@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 
-import { SUCCESS_FETCH_GLOBAL_INFO, CLICK_ROLLOUT, CLICK_SALIENCY } from '../actions';
+import {
+  SUCCESS_FETCH_SERVER_STATE, CLICK_ROLLOUT, CLICK_SALIENCY,
+} from '../actions';
 
 const agentType = (state = '', action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_GLOBAL_INFO:
+    case SUCCESS_FETCH_SERVER_STATE:
       return action.agentType;
     default:
       return state;
@@ -13,7 +15,7 @@ const agentType = (state = '', action) => {
 
 const isJobRunning = (state = false, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_GLOBAL_INFO:
+    case SUCCESS_FETCH_SERVER_STATE:
       return action.isJobRunning;
     case CLICK_ROLLOUT:
       return true;
@@ -26,17 +28,17 @@ const isJobRunning = (state = false, action) => {
 
 const isRolloutOnMemory = (state = false, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_GLOBAL_INFO:
+    case SUCCESS_FETCH_SERVER_STATE:
       return action.isRolloutOnMemory;
     default:
       return state;
   }
 };
 
-const globalInfo = combineReducers({
+const serverState = combineReducers({
   agentType,
   isJobRunning,
   isRolloutOnMemory,
 });
 
-export default globalInfo;
+export default serverState;
