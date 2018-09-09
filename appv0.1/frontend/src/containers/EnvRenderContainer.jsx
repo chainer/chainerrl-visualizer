@@ -5,7 +5,7 @@ import {
 
 const EnvRenderContainer = () => (
   <div>
-    <Card style={{ 'margin-top': '5px' }}>
+    <Card style={{ marginTop: '5px' }}>
       <CardBody>
         <CardTitle>
           Render

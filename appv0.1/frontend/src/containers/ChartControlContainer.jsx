@@ -5,7 +5,7 @@ import {
 
 const ChartControlContainer = () => (
   <div>
-    <Card style={{ 'margin-top': '14px' }}>
+    <Card style={{ marginTop: '14px' }}>
       <CardBody>
         <CardTitle>
           Operation2

@@ -21,6 +21,9 @@ const log = (state = initialLog, action) => {
       const nextLogUpdated = new Date();
       nextLogUpdated.setISO8601(action.logLastUpdated);
 
+      console.log(nowLogUpdated);
+      console.log(nextLogUpdated);
+
       if (nowLogUpdated.getTime() < nextLogUpdated.getTime()) {
         return Object.assign({}, state, {
           logDataRows: action.logDataRows,

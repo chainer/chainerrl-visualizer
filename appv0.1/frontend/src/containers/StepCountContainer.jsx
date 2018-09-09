@@ -6,7 +6,7 @@ import {
 const StepCountContainer = () => (
   <div>
     <Card>
-      <CardBody style={{ padding: '0.25rem', 'padding-left': '20px' }}>
+      <CardBody style={{ padding: '0.25rem', paddingLeft: '20px' }}>
         <CardTitle>
           Step / Reward
         </CardTitle>

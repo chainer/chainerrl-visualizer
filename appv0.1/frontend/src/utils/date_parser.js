@@ -1,7 +1,7 @@
 // https://dansnetwork.com/javascript-iso8601rfc3339-date-parser/
 
 const injectISO8601DateParser = () => {
-  Date.prototype.setISO8601 = (dString) => { /* eslint-disable-line no-extend-native */
+  Date.prototype.setISO8601 = function (dString) { /* eslint-disable-line no-extend-native */
     const regexp = /(\d\d\d\d)(-)?(\d\d)(-)?(\d\d)(T)?(\d\d)(:)?(\d\d)(:)?(\d\d)(\.\d+)?(Z|([+-])(\d\d)(:)?(\d\d))/;
 
     if (dString.toString().match(new RegExp(regexp))) {

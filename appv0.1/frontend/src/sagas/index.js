@@ -12,11 +12,6 @@ import {
 function* requestRolloutFlow() {
   while (true) {
     yield take(CLICK_ROLLOUT);
-
-    const { serverState } = yield select();
-    const { isJobRunning } = serverState;
-    if (isJobRunning) continue;
-
     const { rolloutPath, isRolloutStarted } = yield call(postRollout);
     yield put(receiveRolloutResponse(rolloutPath, isRolloutStarted));
   }
@@ -53,6 +48,10 @@ function* fetchRolloutLogFlow() {
     }
 
     const { logDataRows, logLastUpdated } = yield call(getRolloutLog, rolloutId);
+
+    console.log(logDataRows.length);
+    console.log(logLastUpdated);
+
     yield put(successFetchLog(logDataRows, logLastUpdated));
   }
 }

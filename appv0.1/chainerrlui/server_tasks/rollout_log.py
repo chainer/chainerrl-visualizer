@@ -17,4 +17,5 @@ def parse_rollout_log(rollout_path):
 
 def rollout_log_last_updated(rollout_path):
     unix_timestamp = os.path.getmtime(rollout_path)
+    print(unix_timestamp)
     return datetime.fromtimestamp(unix_timestamp)

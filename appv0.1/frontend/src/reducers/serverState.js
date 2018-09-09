@@ -13,7 +13,7 @@ const agentType = (state = '', action) => {
   }
 };
 
-const isJobRunning = (state = false, action) => {
+const isJobRunning = (state = true, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_SERVER_STATE:
       return action.isJobRunning;
