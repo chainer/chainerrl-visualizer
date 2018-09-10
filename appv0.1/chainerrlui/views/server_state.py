@@ -6,6 +6,7 @@ class ServerStateAPI(MethodView):
     def get(self):
         return jsonify({
             'agent_type': type(current_app.agent).__name__,
+            'action_meanings': current_app.action_meanings,
             'is_job_running': current_app.is_job_running.value,
             'is_rollout_on_memory': current_app.is_rollout_on_memory.value,
         })

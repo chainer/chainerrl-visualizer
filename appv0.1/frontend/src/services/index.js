@@ -26,6 +26,7 @@ export const getRolloutLog = (rolloutId) => (
 export const getServerState = () => (
   axios.get('http://localhost:5002/api/server_state').then((res) => ({
     agentType: res.data.agent_type,
+    actionMeanings: res.data.action_meanings,
     isJobRunning: res.data.is_job_running,
     isRolloutOnMemory: res.data.is_rollout_on_memory,
   }))

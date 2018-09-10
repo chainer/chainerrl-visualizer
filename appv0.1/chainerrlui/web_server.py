@@ -7,9 +7,10 @@ from chainerrl.agent import Agent
 from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI
 
 
-def web_server(agent, gymlike_env, log_dir, host, port, debug, job_queue, is_job_running, is_rollout_on_memory):
+def web_server(agent, gymlike_env, log_dir, host, port, debug, action_meanings, job_queue, is_job_running,
+               is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
-    app = create_app(agent, gymlike_env, log_dir, job_queue, is_job_running, is_rollout_on_memory)
+    app = create_app(agent, gymlike_env, log_dir, action_meanings, job_queue, is_job_running, is_rollout_on_memory)
 
     if debug:
         app.config['ENV'] = 'development'
@@ -31,10 +32,10 @@ def web_server(agent, gymlike_env, log_dir, host, port, debug, job_queue, is_job
             stop_server()
 
 
-def create_app(agent, gymlike_env, log_dir, q, is_job_running, is_rollout_on_memory):
+def create_app(agent, gymlike_env, log_dir, action_meanings, q, is_job_running, is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
-    app = App(__name__, agent=agent, gymlike_env=gymlike_env, log_dir=log_dir, job_queue=q,
-              is_job_running=is_job_running, is_rollout_on_memory=is_rollout_on_memory)
+    app = App(__name__, agent=agent, gymlike_env=gymlike_env, log_dir=log_dir, action_meanings=action_meanings,
+              job_queue=q, is_job_running=is_job_running, is_rollout_on_memory=is_rollout_on_memory)
 
     server_state_resource = ServerStateAPI.as_view('server_state_resource')
     rollout_resource = RolloutAPI.as_view('rollout_resource')
@@ -80,6 +81,7 @@ class App(Flask):
         agent = kwargs['agent']
         gymlike_env = kwargs['gymlike_env']
         log_dir = kwargs['log_dir']
+        action_meanings = kwargs['action_meanings']
         job_queue = kwargs['job_queue']
         # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
         is_job_running = kwargs['is_job_running']
@@ -88,6 +90,7 @@ class App(Flask):
         del kwargs['agent']
         del kwargs['gymlike_env']
         del kwargs['log_dir']
+        del kwargs['action_meanings']
         del kwargs['job_queue']
         del kwargs['is_job_running']
         del kwargs['is_rollout_on_memory']
@@ -102,6 +105,7 @@ class App(Flask):
         self.agent = agent
         self.gymlike_env = gymlike_env
         self.log_dir = log_dir
+        self.action_meanings = action_meanings
         self.job_queue = job_queue
         self.is_job_running = is_job_running
         self.is_rollout_on_memory = is_rollout_on_memory

@@ -13,6 +13,15 @@ const agentType = (state = '', action) => {
   }
 };
 
+const actionMeanings = (state = {}, action) => {
+  switch (action.type) {
+    case SUCCESS_FETCH_SERVER_STATE:
+      return action.actionMeanings;
+    default:
+      return state;
+  }
+};
+
 const isJobRunning = (state = true, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_SERVER_STATE:
@@ -37,6 +46,7 @@ const isRolloutOnMemory = (state = false, action) => {
 
 const serverState = combineReducers({
   agentType,
+  actionMeanings,
   isJobRunning,
   isRolloutOnMemory,
 });

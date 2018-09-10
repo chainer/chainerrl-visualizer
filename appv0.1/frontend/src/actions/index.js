@@ -82,9 +82,10 @@ export const startFetchServerState = () => ({
   type: START_FETCH_SERVER_STATE,
 });
 
-export const successFetchServerState = (agentType, isJobRunning, isRolloutOnMemory) => ({
+export const successFetchServerState = (agentType, actionMeanings, isJobRunning, isRolloutOnMemory) => ({
   type: SUCCESS_FETCH_SERVER_STATE,
   agentType,
+  actionMeanings,
   isJobRunning,
   isRolloutOnMemory,
 });

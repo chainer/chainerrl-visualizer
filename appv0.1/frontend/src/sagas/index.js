@@ -54,8 +54,10 @@ function* fetchRolloutLogFlow() {
 function* fetchServerStateFlow() {
   while (true) {
     yield take(START_FETCH_SERVER_STATE);
-    const { agentType, isJobRunning, isRolloutOnMemory } = yield call(getServerState);
-    yield put(successFetchServerState(agentType, isJobRunning, isRolloutOnMemory));
+    const {
+      agentType, actionMeanings, isJobRunning, isRolloutOnMemory,
+    } = yield call(getServerState);
+    yield put(successFetchServerState(agentType, actionMeanings, isJobRunning, isRolloutOnMemory));
   }
 }
 
