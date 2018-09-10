@@ -19,7 +19,7 @@ const MainPageBody = () => (
   <div style={topStyle}>
     <Container fluid>
       <Row>
-        <Col xs="8">
+        <Col xs="8" style={{ padding: 0 }}>
           <PlotContainer />
         </Col>
         <Col xs="4">
@@ -27,14 +27,13 @@ const MainPageBody = () => (
           <EnvRenderContainer />
         </Col>
       </Row>
-      <br />
-      <Row>
+      <Row style={{ marginTop: '10px' }}>
         <Col xs="4">
           <CommandsContainer />
         </Col>
         <Col xs="4">
-          <ChartSwitchContainer />
           <ChartControlContainer />
+          <ChartSwitchContainer />
         </Col>
         <Col xs="4">
           <ChartValuesContainer />

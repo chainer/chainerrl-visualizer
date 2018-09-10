@@ -30,3 +30,10 @@ export const getServerState = () => (
     isRolloutOnMemory: res.data.is_rollout_on_memory,
   }))
 );
+
+export const getLatestLogInfo = () => (
+  axios.get('http://localhost:5002/api/rollouts?q=latest').then((res) => ({
+    rolloutId: res.data.rollout_id,
+    rolloutPath: res.data.rollout_path,
+  }))
+);

@@ -3,10 +3,10 @@ import {
 } from 'redux-saga/effects';
 
 import {
-  CLICK_ROLLOUT, CLICK_SALIENCY, START_FETCH_LOG, START_FETCH_SERVER_STATE, receiveRolloutResponse, successFetchLog, successFetchServerState,
+  CLICK_ROLLOUT, CLICK_SALIENCY, START_FETCH_LOG, START_FETCH_SERVER_STATE, START_FETCH_LATEST_LOG_INFO, receiveRolloutResponse, successFetchLog, successFetchServerState, successFetchLatestLogInfo,
 } from '../actions';
 import {
-  postRollout, postSaliency, getRolloutLog, getServerState,
+  postRollout, postSaliency, getRolloutLog, getServerState, getLatestLogInfo,
 } from '../services';
 
 function* requestRolloutFlow() {
@@ -19,15 +19,9 @@ function* requestRolloutFlow() {
 
 function* requestSaliencyFlow() {
   while (true) {
-    yield take(CLICK_SALIENCY);
+    const { rolloutId, fromStep, toStep } = yield take(CLICK_SALIENCY);
 
-    // Validate be capable of saliency process in job worker
-    const { serverState } = yield select();
-    const { isJobRunning, isRolloutOnMemory } = serverState;
-
-    if (isJobRunning || !isRolloutOnMemory) continue;
-
-    const { isSaliencyStarted } = yield call(postSaliency);
+    const { isSaliencyStarted } = yield call(postSaliency, rolloutId, fromStep, toStep);
 
     // for debug
     if (isSaliencyStarted) {
@@ -49,10 +43,11 @@ function* fetchRolloutLogFlow() {
 
     const { logDataRows, logLastUpdated } = yield call(getRolloutLog, rolloutId);
 
-    console.log(logDataRows.length);
-    console.log(logLastUpdated);
-
-    yield put(successFetchLog(logDataRows, logLastUpdated));
+    const { log } = yield select();
+    const prevLogLastUpdated = log.logLastUpdated;
+    if (prevLogLastUpdated === null || (new Date()).setISO8601(prevLogLastUpdated) < (new Date()).setISO8601(logLastUpdated)) {
+      yield put(successFetchLog(logDataRows, logLastUpdated));
+    }
   }
 }
 
@@ -64,11 +59,20 @@ function* fetchServerStateFlow() {
   }
 }
 
+function* fetchLatestLogInfoFlow() {
+  while (true) {
+    yield take(START_FETCH_LATEST_LOG_INFO);
+    const { rolloutPath } = yield call(getLatestLogInfo);
+    yield put(successFetchLatestLogInfo(rolloutPath));
+  }
+}
+
 function* rootSaga() {
   yield fork(requestRolloutFlow);
   yield fork(requestSaliencyFlow);
   yield fork(fetchRolloutLogFlow);
   yield fork(fetchServerStateFlow);
+  yield fork(fetchLatestLogInfoFlow);
 }
 
 export default rootSaga;

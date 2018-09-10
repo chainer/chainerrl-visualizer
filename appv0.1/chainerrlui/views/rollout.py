@@ -1,12 +1,14 @@
 import os
 from flask.views import MethodView
-from flask import jsonify, current_app
+from flask import jsonify, current_app, request
 
-from chainerrlui.server_tasks import prepare_rollout_dir, parse_rollout_log, rollout_log_last_updated, get_rollout_ids
+from chainerrlui.server_tasks import prepare_rollout_dir, parse_rollout_log, rollout_log_last_updated, \
+    get_rollout_ids, get_latest_rollout_info
 from chainerrlui.utils.jsonize_datetime import jsonize_datetime
 from chainerrlui.job_dispatchers import dispatch_rollout_job
 
 ROLLOUT_LOGFILE_NAME = 'rollout_log.jsonl'
+
 
 class RolloutAPI(MethodView):
     def get(self, rollout_id=None):
@@ -25,6 +27,13 @@ class RolloutAPI(MethodView):
             return jsonify({
                 'rollout_log': rollout_log,
                 'last_updated': jsonize_datetime(last_updated_datetime),
+            })
+
+        if request.args.get('q') == 'latest':
+            latest_rollout_id, latest_rollout_path = get_latest_rollout_info()
+            return jsonify({
+                'rollout_id': latest_rollout_id,
+                'rollout_path': latest_rollout_path,
             })
 
         rollout_ids = get_rollout_ids()

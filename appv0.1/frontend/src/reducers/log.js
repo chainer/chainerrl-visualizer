@@ -1,4 +1,4 @@
-import { RECEIVE_ROLLOUT_RESPONSE, SUCCESS_FETCH_LOG } from '../actions';
+import { RECEIVE_ROLLOUT_RESPONSE, SUCCESS_FETCH_LOG, SUCCESS_FETCH_LATEST_LOG_INFO } from '../actions';
 
 const initialLog = {
   logDataRows: [],
@@ -8,31 +8,11 @@ const initialLog = {
 
 const log = (state = initialLog, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_LOG: {
-      if (state.logLastUpdated === null) {
-        return Object.assign({}, state, {
-          logDataRows: action.logDataRows,
-          logLastUpdated: action.logLastUpdated,
-        });
-      }
-
-      const nowLogUpdated = new Date();
-      nowLogUpdated.setISO8601(state.logLastUpdated); // See utils/date_parser.js
-      const nextLogUpdated = new Date();
-      nextLogUpdated.setISO8601(action.logLastUpdated);
-
-      console.log(nowLogUpdated);
-      console.log(nextLogUpdated);
-
-      if (nowLogUpdated.getTime() < nextLogUpdated.getTime()) {
-        return Object.assign({}, state, {
-          logDataRows: action.logDataRows,
-          logLastUpdated: action.logLastUpdated,
-        });
-      }
-
-      return state;
-    }
+    case SUCCESS_FETCH_LOG:
+      return Object.assign({}, state, {
+        logDataRows: action.logDataRows,
+        logLastUpdated: action.logLastUpdated,
+      });
     case RECEIVE_ROLLOUT_RESPONSE:
       if (action.isRolloutStarted) {
         return Object.assign({}, state, {
@@ -41,6 +21,10 @@ const log = (state = initialLog, action) => {
       }
 
       return state;
+    case SUCCESS_FETCH_LATEST_LOG_INFO:
+      return Object.assign({}, state, {
+        rolloutPath: action.rolloutPath,
+      });
     default:
       return state;
   }

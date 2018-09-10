@@ -63,7 +63,9 @@ export const changeSaliencyRangeRight = (step) => ({
 export const START_FETCH_LOG = 'START_FETCH_LOG';
 export const SUCCESS_FETCH_LOG = 'SUCCESS_FETCH_LOG';
 export const START_FETCH_SERVER_STATE = 'START_FETCH_SERVER_STATE';
-export const SUCCESS_FETCH_SERVER_STATE = 'SUCCESS_FETCH_SERVER_STATE'; // agentの種類, jobが現在走っているか, rolloutがメモリ上にあるか
+export const SUCCESS_FETCH_SERVER_STATE = 'SUCCESS_FETCH_SERVER_STATE';
+export const START_FETCH_LATEST_LOG_INFO = 'START_FETCH_LATEST_LOG_INFO';
+export const SUCCESS_FETCH_LATEST_LOG_INFO = 'SUCCESS_FETCH_LATEST_LOG_INFO';
 
 export const startFetchLog = (rolloutId) => ({
   type: START_FETCH_LOG,
@@ -85,4 +87,13 @@ export const successFetchServerState = (agentType, isJobRunning, isRolloutOnMemo
   agentType,
   isJobRunning,
   isRolloutOnMemory,
+});
+
+export const startFetchLatestLogInfo = () => ({
+  type: START_FETCH_LATEST_LOG_INFO,
+});
+
+export const successFetchLatestLogInfo = (rolloutPath) => ({
+  type: SUCCESS_FETCH_LATEST_LOG_INFO,
+  rolloutPath,
 });

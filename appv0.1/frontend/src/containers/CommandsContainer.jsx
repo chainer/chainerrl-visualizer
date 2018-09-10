@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 
 import {
-  clickRollout, clickSaliency, changeSaliencyRangeLeft, changeSaliencyRangeRight, startFetchLog, startFetchServerState,
+  clickRollout, clickSaliency, changeSaliencyRangeLeft, changeSaliencyRangeRight, startFetchLog, startFetchServerState, startFetchLatestLogInfo,
 } from '../actions';
 import { startPolling, stopPolling } from '../utils/polling';
 
@@ -18,6 +18,8 @@ const path = require('path');
 
 class CommandsContainer extends React.Component {
   componentDidMount() {
+    this.props.startFetchLatestLogInfo();
+
     this.logPollingTimer = startPolling(POLLING_INTERVAL_MS, this.props.startFetchLog, this.props.rolloutId);
     this.serverStatePollingTimer = startPolling(POLLING_INTERVAL_MS, this.props.startFetchServerState);
   }
@@ -40,6 +42,7 @@ class CommandsContainer extends React.Component {
       saliencyRangeRight,
       isRolloutReady,
       isSaliencyReady,
+      rolloutId,
     } = this.props;
 
     return (
@@ -74,7 +77,7 @@ class CommandsContainer extends React.Component {
               />
             </InputGroup>
             <Button
-              onClick={this.props.clickSaliency}
+              onClick={() => { this.props.clickSaliency(rolloutId, saliencyRangeLeft, saliencyRangeRight); }}
               disabled={!isSaliencyReady}
               style={{ marginTop: '8px' }}
             >
@@ -100,6 +103,7 @@ CommandsContainer.propTypes = {
   changeSaliencyRangeRight: PropTypes.func.isRequired,
   startFetchLog: PropTypes.func.isRequired,
   startFetchServerState: PropTypes.func.isRequired,
+  startFetchLatestLogInfo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -117,4 +121,5 @@ export default connect(mapStateToProps, {
   changeSaliencyRangeRight,
   startFetchLog,
   startFetchServerState,
+  startFetchLatestLogInfo,
 })(CommandsContainer);

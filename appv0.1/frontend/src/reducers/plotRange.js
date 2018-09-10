@@ -50,6 +50,12 @@ const plotRange = (state = initialPlotRange, action) => {
         focusedStep: state.focusedStep + 1,
       });
     case HOVER_ON_STEP:
+      if (action.step === undefined) {
+        return Object.assign({}, state, {
+          focusedStep: 0,
+        });
+      }
+
       return Object.assign({}, state, {
         focusedStep: action.step,
       });
@@ -78,6 +84,14 @@ const plotRange = (state = initialPlotRange, action) => {
         plotRangeRight: action.step,
       });
     case SUCCESS_FETCH_LOG:
+      if (state.plotRangeLeft === 0 && state.plotRangeRight === 0) {
+        return Object.assign({}, state, {
+          plotRangeLeft: 0,
+          plotRangeRight: action.logDataRows.length - 1,
+          logLength: action.logDataRows.length,
+        });
+      }
+
       return Object.assign({}, state, {
         logLength: action.logDataRows.length,
       });

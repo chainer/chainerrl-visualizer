@@ -5,7 +5,7 @@ import {
 
 const ChartSwitchContainer = () => (
   <div>
-    <Card>
+    <Card style={{ marginTop: '14px' }}>
       <CardBody>
         <CardTitle>
           Operation1

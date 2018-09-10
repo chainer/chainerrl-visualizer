@@ -39,8 +39,8 @@ class PlotContainer extends React.Component {
     return (
       <div>
         <LineChart
-          width={800}
-          height={440}
+          width={900}
+          height={460}
           data={logDataRows}
           ref={this.chartRef}
           onMouseMove={() => {
@@ -60,7 +60,10 @@ class PlotContainer extends React.Component {
           }
           <CartesianGrid strokeDasharray="5 5" />
           <XAxis dataKey="steps" />
-          <YAxis domain={['dataMin', 'dataMax']} />
+          <YAxis
+            domain={['dataMin', 'dataMax']}
+            tickFormatter={(v) => Number.parseFloat(v).toFixed(3)}
+          />
           <Tooltip />
           <ReferenceLine x={focusedStep} stroke="green" />
         </LineChart>
@@ -78,7 +81,7 @@ PlotContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   agentType: state.serverState.agentType,
-  logDataRows: state.log.logDataRows,
+  logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
 });
 
