@@ -7,6 +7,10 @@ import {
 const agentType = (state = '', action) => {
   switch (action.type) {
     case SUCCESS_FETCH_SERVER_STATE:
+      if (action.agentType === state) {
+        return state;
+      }
+
       return action.agentType;
     default:
       return state;
@@ -16,6 +20,10 @@ const agentType = (state = '', action) => {
 const actionMeanings = (state = {}, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_SERVER_STATE:
+      if (Object.keys(action.actionMeanings).length === Object.keys(state).length) {
+        return state;
+      }
+
       return action.actionMeanings;
     default:
       return state;
