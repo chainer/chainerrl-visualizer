@@ -23,6 +23,6 @@ $ pip install gym[atari] opencv-python
 
 Run example
 ```
-$ cd examples/categorical_dqn
+$ cd examples/categorical_dqn_seaquest
 $ python main.py
 ```
