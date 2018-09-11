@@ -5,7 +5,7 @@ import {
   Card, CardBody,
 } from 'reactstrap';
 import {
-  BarChart, Bar, XAxis, YAxis,
+  BarChart, Bar, LabelList, XAxis, YAxis,
 } from 'recharts';
 
 const ChartValuesContainer = ({ sortedQvalues }) => (
@@ -14,13 +14,27 @@ const ChartValuesContainer = ({ sortedQvalues }) => (
       <CardBody>
         <BarChart
           layout="vertical"
-          width={400}
-          height={300}
+          width={390}
+          height={330}
           data={sortedQvalues}
         >
-          <Bar dataKey="qvalue" fill="#8884d8" />
-          <XAxis tickFormatter={(v) => Number.parseFloat(v).toFixed(3)} />
-          <YAxis type="category" dataKey="name" />
+          <Bar dataKey="qvalue" fill="#8884d8">
+            <LabelList
+              dataKey="name"
+              position="insideRight"
+              style={{ fontSize: '8px' }}
+            />
+          </Bar>
+          <XAxis
+            type="number"
+            tickFormatter={(v) => Number.parseFloat(v).toFixed(3)}
+            domain={['dataMin - 0.05', 'dataMax']}
+          />
+          <YAxis
+            type="category"
+            tick={false}
+            width={2}
+          />
         </BarChart>
       </CardBody>
     </Card>
