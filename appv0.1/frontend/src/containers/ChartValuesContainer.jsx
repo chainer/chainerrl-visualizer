@@ -57,15 +57,11 @@ const mapStateToSortedQvalues = (state) => {
     return [];
   }
 
-  const ret = logDataRow.qvalues.map((qvalue, idx) => (
+  return logDataRow.qvalues.map((qvalue, idx) => (
     { name: actionMeanings[idx], qvalue }
   )).sort((a, b) => (
     b.qvalue - a.qvalue
   ));
-
-  console.log(ret);
-
-  return ret;
 };
 
 const mapStateToProps = (state) => ({

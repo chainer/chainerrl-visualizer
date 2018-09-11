@@ -84,7 +84,7 @@ const plotRange = (state = initialPlotRange, action) => {
         plotRangeRight: action.step,
       });
     case SUCCESS_FETCH_LOG:
-      if (state.plotRangeLeft === 0 && state.plotRangeRight === 0) {
+      if (state.plotRangeLeft <= 0 && state.plotRangeRight <= 0) {
         return Object.assign({}, state, {
           plotRangeLeft: 0,
           plotRangeRight: action.logDataRows.length - 1,

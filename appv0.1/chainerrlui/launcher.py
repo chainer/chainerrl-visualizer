@@ -29,9 +29,13 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     os.environ['OBJC_DISABLE_INITIALIZE_FORK_SAFETY'] = 'YES'
 
     log_dir = os.path.join(os.getcwd(), log_dir)
+    rollouts_dir = os.path.join(log_dir, 'rollouts')
 
     if not os.path.isdir(log_dir):
         os.makedirs(log_dir)
+
+    if not os.path.isdir(rollouts_dir):
+        os.makedirs(rollouts_dir)
 
     job_queue = Queue()
     is_job_running = Value(c_bool, False)

@@ -31,6 +31,13 @@ class RolloutAPI(MethodView):
 
         if request.args.get('q') == 'latest':
             latest_rollout_id, latest_rollout_path = get_latest_rollout_info()
+
+            if latest_rollout_id is None:
+                return jsonify({
+                    'rollout_id': '',
+                    'rollout_path': '',
+                })
+
             return jsonify({
                 'rollout_id': latest_rollout_id,
                 'rollout_path': latest_rollout_path,
