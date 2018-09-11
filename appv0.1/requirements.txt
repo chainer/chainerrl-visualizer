@@ -1,0 +1,4 @@
+Flask
+chainerrl
+gevent
+jsonlines
