@@ -1,0 +1,1 @@
+train_categorical_dqn_ale.py --steps 50000000 --max-episode-len 27000 --final-epsilon 0.01 --eval-epsilon 0.001 --env SeaquestNoFrameskip-v4 --seed 0
