@@ -1,0 +1,11 @@
+export const CATEGORICAL_DQN = 'CategoricalDQN';
+
+export const DISCRETE_QVALUES = 'DISCRETE_QVALUES';
+export const VALUE_DISTRIBUTION = 'VALUE_DISTRIBUTION';
+
+export const AGENT_TO_CHARTS = {
+  [CATEGORICAL_DQN]: [
+    DISCRETE_QVALUES,
+    VALUE_DISTRIBUTION,
+  ],
+};
