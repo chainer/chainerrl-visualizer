@@ -37,7 +37,10 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_li
 
         image_path = _save_env_render(rendered, rollout_dir)
 
-        qvalues = agent.model(agent.batch_states([obs], agent.xp, agent.phi)).q_values.data[0]
+        action_value = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+        qvalues = action_value.q_values.data[0]
+        z_values = action_value.z_values
+        qvalue_dist = action_value.q_dist.data[0].T
         a = agent.act(obs)
         obs, r, done, info = gymlike_env.step(a)
 
@@ -46,6 +49,8 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_li
             'reward': r,
             'image_path': image_path,
             'qvalues': [float(qvalue) for qvalue in qvalues],
+            'z_values': [float('%.2f' % float(v)) for v in z_values],
+            'qvalue_dist': [['%f' % float(v) for v in qvalue_dist_row] for qvalue_dist_row in qvalue_dist],
         })
 
         t += 1

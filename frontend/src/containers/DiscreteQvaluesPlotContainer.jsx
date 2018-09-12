@@ -2,15 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Card, CardBody, CardTitle, CardText,
-} from 'reactstrap';
-import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 
 import { hoverOnStep } from '../actions';
 
-class PlotContainer extends React.Component {
+class DiscreteQvaluesPlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -18,22 +15,7 @@ class PlotContainer extends React.Component {
   }
 
   render() {
-    const { agentType, logDataRows, focusedStep } = this.props;
-
-    if (agentType !== 'CategoricalDQN') {
-      return (
-        <div>
-          <Card>
-            <CardBody>
-              <CardTitle>
-                Plot
-              </CardTitle>
-              <CardText style={{ padding: '180px' }} />
-            </CardBody>
-          </Card>
-        </div>
-      );
-    }
+    const { logDataRows, focusedStep } = this.props;
 
     /* CategoricalDQN */
     return (
@@ -72,19 +54,17 @@ class PlotContainer extends React.Component {
   }
 }
 
-PlotContainer.propTypes = {
-  agentType: PropTypes.string.isRequired,
+DiscreteQvaluesPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedStep: PropTypes.number.isRequired,
   hoverOnStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  agentType: state.serverState.agentType,
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
 });
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(PlotContainer);
+})(DiscreteQvaluesPlotContainer);

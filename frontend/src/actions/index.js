@@ -39,6 +39,7 @@ export const CHANGE_PLOT_RANGE_LEFT = 'CHANGE_PLOT_RANGE_LEFT';
 export const CHANGE_PLOT_RANGE_RIGHT = 'CHANGE_PLOT_RANGE_RIGHT';
 export const CHANGE_SALIENCY_RANGE_LEFT = 'CHANGE_SALIENCY_RANGE_LEFT';
 export const CHANGE_SALIENCY_RANGE_RIGHT = 'CHANGE_SALIENCY_RANGE_RIGHT';
+export const CHANGE_DISPLAYED_CHART = 'CHANGE_DISPLAYED_CHART';
 
 export const changePlotRangeLeft = (step) => ({
   type: CHANGE_PLOT_RANGE_LEFT,
@@ -58,6 +59,11 @@ export const changeSaliencyRangeLeft = (step) => ({
 export const changeSaliencyRangeRight = (step) => ({
   type: CHANGE_SALIENCY_RANGE_RIGHT,
   step,
+});
+
+export const changeDisplayedChart = (chartName) => ({
+  type: CHANGE_DISPLAYED_CHART,
+  chartName,
 });
 
 export const START_FETCH_LOG = 'START_FETCH_LOG';

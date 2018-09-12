@@ -1,7 +1,7 @@
 venv/
 .idea/
 
-/dist/
+dist/
 build/
 *.egg-info
 *.egg
