@@ -104,3 +104,10 @@ export const successFetchLatestLogInfo = (rolloutPath) => ({
   type: SUCCESS_FETCH_LATEST_LOG_INFO,
   rolloutPath,
 });
+
+export const TOGGLE_ACTION_DIMENSION_SELECT = 'TOGGLE_ACTION_DIMENSION_SELECT';
+
+export const toggleActionDimensionSelect = (actionIdx) => ({
+  type: TOGGLE_ACTION_DIMENSION_SELECT,
+  actionIdx,
+});

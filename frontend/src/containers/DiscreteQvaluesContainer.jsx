@@ -8,7 +8,7 @@ import {
   BarChart, Bar, LabelList, XAxis, YAxis,
 } from 'recharts';
 
-const ChartValuesContainer = ({ sortedQvalues }) => (
+const DiscreteQvaluesContainer = ({ sortedQvalues }) => (
   <div>
     <Card>
       <CardBody>
@@ -41,7 +41,7 @@ const ChartValuesContainer = ({ sortedQvalues }) => (
   </div>
 );
 
-ChartValuesContainer.propTypes = {
+DiscreteQvaluesContainer.propTypes = {
   sortedQvalues: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
@@ -68,4 +68,4 @@ const mapStateToProps = (state) => ({
   sortedQvalues: mapStateToSortedQvalues(state),
 });
 
-export default connect(mapStateToProps, null)(ChartValuesContainer);
+export default connect(mapStateToProps, null)(DiscreteQvaluesContainer);
