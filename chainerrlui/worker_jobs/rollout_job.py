@@ -17,6 +17,8 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
     # TODO: Generalize for all agents in ChainerRL
     if type(agent).__name__ == 'CategoricalDQN':
         _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, writer, obs_list, render_img_list)
+    elif type(agent).__name__ == 'PPO':
+        _rollout_ppo(agent, gymlike_env, rollout_dir, writer, obs_list, render_img_list)
     else:
         raise Exception('Unsupported agent')
 
@@ -51,6 +53,38 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_li
             'qvalues': [float(qvalue) for qvalue in qvalues],
             'z_values': [float('%.2f' % float(v)) for v in z_values],
             'qvalue_dist': [['%f' % float(v) for v in qvalue_dist_row] for qvalue_dist_row in qvalue_dist],
+        })
+
+        t += 1
+
+    agent.stop_episode()
+
+
+def _rollout_ppo(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_img_list):
+    obs = gymlike_env.reset()
+    done = False
+    t = 0
+
+    while not (done or t == 100):
+        rendered = gymlike_env.render(mode='rgb_array')
+
+        obs_list.append(obs)
+        render_img_list.append(rendered)
+
+        image_path = _save_env_render(rendered, rollout_dir)
+
+        action_dist, state_value = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+        a = agent.act(obs)
+        obs, r, done, info = gymlike_env.step(a)
+
+        log_writer.write({
+            'steps': t,
+            'reward': r,
+            'image_path': image_path,
+            'action': [float(v) for v in a],
+            'state_value': float(state_value.data[0][0]),
+            'action_means': [float(v) for v in action_dist.mean.data[0]],
+            'action_vars': [float(v) for v in action_dist.ln_var.data[0]],
         })
 
         t += 1

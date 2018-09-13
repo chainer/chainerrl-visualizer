@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem,
+  Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Input,
 } from 'reactstrap';
 
-import { AGENT_TO_CHARTS } from '../settings/agent';
-import { changeDisplayedChart } from '../actions';
+import { AGENT_TO_CHARTS, AGENT_TO_VALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE } from '../settings/agent';
+import { changeDisplayedChart, toggleActionDimensionSelect } from '../actions';
 
 /* eslint-disable react/destructuring-assignment */
 
@@ -25,7 +25,7 @@ class ChartSwitchContainer extends React.Component {
   }
 
   render() {
-    const { agentType } = this.props;
+    const { selectedActionDimensionIndices, agentType, actionMeanings } = this.props;
 
     return (
       <div>
@@ -50,6 +50,25 @@ class ChartSwitchContainer extends React.Component {
                 }
               </DropdownMenu>
             </Dropdown>
+            {
+               AGENT_TO_VALUES_PANE[agentType] === CONTINUOUS_STOCHASTIC_ACTIONS_PANE && (
+                 <div style={{ marginTop: '10px' }}>
+                   {
+                     Object.keys(actionMeanings).map((key) => (
+                       <Label key={key} style={{ display: 'block', marginLeft: '25px' }}>
+                         <Input
+                           type="checkbox"
+                           value={key}
+                           checked={selectedActionDimensionIndices.includes(parseInt(key, 10))}
+                           onChange={(e) => { this.props.toggleActionDimensionSelect(parseInt(e.target.value, 10)); }}
+                         />
+                         {actionMeanings[key]}
+                       </Label>
+                     ))
+                   }
+                 </div>
+               )
+            }
           </CardBody>
         </Card>
       </div>
@@ -58,14 +77,20 @@ class ChartSwitchContainer extends React.Component {
 }
 
 ChartSwitchContainer.propTypes = {
+  selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
   agentType: PropTypes.string.isRequired,
+  actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   changeDisplayedChart: PropTypes.func.isRequired,
+  toggleActionDimensionSelect: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  selectedActionDimensionIndices: state.selectedActionDimensionIndices,
   agentType: state.serverState.agentType,
+  actionMeanings: state.serverState.actionMeanings,
 });
 
 export default connect(mapStateToProps, {
   changeDisplayedChart,
+  toggleActionDimensionSelect,
 })(ChartSwitchContainer);
