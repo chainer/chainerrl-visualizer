@@ -8,6 +8,7 @@ import {
 import DiscreteQvaluesPlotContainer from '../containers/DiscreteQvaluesPlotContainer';
 import QvaluesDistributionPlotContainer from '../containers/QvaluesDistributionPlotContainer';
 import ContinuousStochasticActionsAndValuePlotContainer from '../containers/ContinuousStochasticActionsAndValuePlotContainer';
+import DiscreteStochasticActionsAndValuePlotContainer from '../containers/DiscreteStochasticActionsAndValuePlotContainer';
 import StepCountContainer from '../containers/StepCountContainer';
 import EnvRenderContainer from '../containers/EnvRenderContainer';
 import CommandsContainer from '../containers/CommandsContainer';
@@ -15,9 +16,10 @@ import ChartSwitchContainer from '../containers/ChartSwitchContainer';
 import ChartControlContainer from '../containers/ChartControlContainer';
 import DiscreteQvaluesContainer from '../containers/DiscreteQvaluesContainer';
 import ContinuousStochasticActionsContainer from '../containers/ContinuousStochasticActionsContainer';
+import DiscreteStochasticActionsContainer from '../containers/DiscreteStochasticActionsContainer';
 import ChartSkelton from './ChartSkelton';
 import {
-  DISCRETE_QVALUES, VALUE_DISTRIBUTION, CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE, AGENT_TO_VALUES_PANE, DISCRETE_QVALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE,
+  DISCRETE_QVALUES, VALUE_DISTRIBUTION, CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE, DISCRETE_STOCHASTIC_ACTIONS, AGENT_TO_VALUES_PANE, DISCRETE_QVALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE, DISCRETE_STOCHASTIC_ACTIONS_PANE,
 } from '../settings/agent';
 
 const topStyle = {
@@ -36,6 +38,9 @@ const MainPageBody = ({ selectedChartName, valuesPaneName }) => {
     case CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE:
       chart = <ContinuousStochasticActionsAndValuePlotContainer />;
       break;
+    case DISCRETE_STOCHASTIC_ACTIONS:
+      chart = <DiscreteStochasticActionsAndValuePlotContainer />;
+      break;
     default:
       chart = <ChartSkelton />;
   }
@@ -49,6 +54,9 @@ const MainPageBody = ({ selectedChartName, valuesPaneName }) => {
       break;
     case CONTINUOUS_STOCHASTIC_ACTIONS_PANE:
       valuesPane = <ContinuousStochasticActionsContainer />;
+      break;
+    case DISCRETE_STOCHASTIC_ACTIONS_PANE:
+      valuesPane = <DiscreteStochasticActionsContainer />;
       break;
     default:
       valuesPane = <div />;

@@ -13,7 +13,7 @@ const EnvRenderContainer = ({ imagePath }) => (
           src={`http://localhost:5002/images?image_path=${imagePath}`}
           alt="env render"
           style={{
-            maxHeight: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
+            height: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
           }}
         />
       </CardBody>
