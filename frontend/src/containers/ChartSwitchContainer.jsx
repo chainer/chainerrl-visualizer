@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Input,
+  Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Input, FormGroup,
 } from 'reactstrap';
 
 import { AGENT_TO_CHARTS, AGENT_TO_VALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE } from '../settings/agent';
@@ -55,15 +55,17 @@ class ChartSwitchContainer extends React.Component {
                  <div style={{ marginTop: '10px' }}>
                    {
                      Object.keys(actionMeanings).map((key) => (
-                       <Label key={key} style={{ display: 'block', marginLeft: '25px' }}>
-                         <Input
-                           type="checkbox"
-                           value={key}
-                           checked={selectedActionDimensionIndices.includes(parseInt(key, 10))}
-                           onChange={(e) => { this.props.toggleActionDimensionSelect(parseInt(e.target.value, 10)); }}
-                         />
-                         {actionMeanings[key]}
-                       </Label>
+                       <FormGroup check key={key}>
+                         <Label check>
+                           <Input
+                             type="checkbox"
+                             value={key}
+                             checked={selectedActionDimensionIndices.includes(parseInt(key, 10))}
+                             onChange={(e) => { this.props.toggleActionDimensionSelect(parseInt(e.target.value, 10)); }}
+                           />
+                           {actionMeanings[key]}
+                         </Label>
+                       </FormGroup>
                      ))
                    }
                  </div>
