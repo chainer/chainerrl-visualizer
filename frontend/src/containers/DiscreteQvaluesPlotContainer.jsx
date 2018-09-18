@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, Label,
 } from 'recharts';
 
 import { hoverOnStep } from '../actions';
@@ -17,12 +17,11 @@ class DiscreteQvaluesPlotContainer extends React.Component {
   render() {
     const { logDataRows, focusedStep } = this.props;
 
-    /* CategoricalDQN */
     return (
       <div>
         <LineChart
-          width={900}
-          height={460}
+          width={830}
+          height={450}
           data={logDataRows}
           ref={this.chartRef}
           onMouseMove={() => {
@@ -41,10 +40,15 @@ class DiscreteQvaluesPlotContainer extends React.Component {
             ))
           }
           <CartesianGrid strokeDasharray="5 5" />
-          <XAxis dataKey="steps" />
+          <XAxis dataKey="steps" height={45}>
+            <Label value="step" position="insideBottomLeft" offset={5} />
+          </XAxis>
           <YAxis
             domain={['dataMin', 'dataMax']}
-            tickFormatter={(v) => Number.parseFloat(v).toFixed(3)}
+            tickFormatter={(v) => Number.parseFloat(v).toFixed(2)}
+            label={{
+              value: 'Qvalue of each action', angle: -90, position: 'insideLeft', offset: 2,
+            }}
           />
           <Tooltip />
           <ReferenceLine x={focusedStep} stroke="green" />

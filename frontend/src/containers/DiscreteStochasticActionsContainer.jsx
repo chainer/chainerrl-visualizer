@@ -22,12 +22,37 @@ const DiscreteStochasticActionsContainer = ({
     color: actionColors[actionIdx],
   }));
 
+  const renderCustomizedLabel = ({
+    cx, cy, midAngle, innerRadius, outerRadius, percent,
+  }) => {
+    const RADIAN = Math.PI / 180;
+
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+  renderCustomizedLabel.propTypes = {
+    cx: PropTypes.number.isRequired,
+    cy: PropTypes.number.isRequired,
+    midAngle: PropTypes.number.isRequired,
+    innerRadius: PropTypes.number.isRequired,
+    outerRadius: PropTypes.number.isRequired,
+    percent: PropTypes.number.isRequired,
+  };
+
   return (
     <div>
       <Card>
         <CardBody>
           <CardTitle style={{ marginBottom: '0.25rem' }}>{paneTitle}</CardTitle>
-          <p>
+          <p style={{ margin: 0 }}>
             {'( '}
             Next action is
             {' '}
@@ -47,6 +72,8 @@ const DiscreteStochasticActionsContainer = ({
               dataKey="prob"
               isAnimationActive={false}
               outerRadius="90%"
+              label={renderCustomizedLabel}
+              labelLine={false}
             >
               {
                 actionProbs.map((entry) => (
