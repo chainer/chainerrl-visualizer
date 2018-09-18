@@ -10,13 +10,23 @@ const EnvRenderContainer = ({ imagePath }) => (
     <Card style={{ marginTop: '5px' }}>
       <CardBody>
         <CardTitle>Current environemnt</CardTitle>
-        <img
-          src={`http://localhost:5002/images?image_path=${imagePath}`}
-          alt="env render"
-          style={{
-            height: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
-          }}
-        />
+        {
+          imagePath ? (
+            <img
+              src={`http://localhost:5002/images?image_path=${imagePath}`}
+              alt="env render"
+              style={{
+                height: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                height: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
+              }}
+            />
+          )
+        }
       </CardBody>
     </Card>
   </div>
