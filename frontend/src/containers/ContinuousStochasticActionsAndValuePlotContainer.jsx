@@ -18,16 +18,9 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
   }
 
   render() {
-    const { logDataRows, focusedStep, selectedActionDimensionIndices } = this.props;
-
-    /*
-    logDataRows.forEach((logDataRow) => {
-      logDataRow.trustRange = [
-        parseFloat(logDataRow.action_means[0] - logDataRow.action_vars[0]),
-        parseFloat(logDataRow.action_means[0] + logDataRow.action_vars[0]),
-      ];
-    });
-    */
+    const {
+      logDataRows, focusedStep, selectedActionDimensionIndices, actionColors,
+    } = this.props;
 
     logDataRows.forEach((logDataRow) => {
       /* eslint-disable-next-line no-param-reassign */
@@ -60,7 +53,7 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
               dataKey={(v) => v.action[actionIdx]}
               key={`${actionIdx}_taken`}
               fill="#00000000"
-              stroke="blue"
+              stroke={actionColors[actionIdx]}
             />
           ))
         }
@@ -70,7 +63,7 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
               yAxisId="left"
               type="monotone"
               dot={false}
-              stroke="gray"
+              stroke={actionColors[actionIdx]}
               fill="#00000000"
               strokeDasharray="3 4 5 2"
               dataKey={(v) => v.action_means[actionIdx]}
@@ -84,8 +77,8 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
             <Area
               yAxisId="left"
               dataKey={(row) => row.trustRange[actionIdx]}
-              stroke="yellow"
-              fill="yellow"
+              stroke={actionColors[actionIdx]}
+              fill={actionColors[actionIdx]}
             />
           ))
         }
@@ -114,12 +107,14 @@ ContinuousStochasticActionsAndValuePlotContainer.propTypes = {
   focusedStep: PropTypes.number.isRequired,
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
   hoverOnStep: PropTypes.func.isRequired,
+  actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
   selectedActionDimensionIndices: state.selectedActionDimensionIndices,
+  actionColors: state.serverState.actionColors,
 });
 
 export default connect(mapStateToProps, {

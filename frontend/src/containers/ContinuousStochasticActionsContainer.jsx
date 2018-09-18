@@ -25,13 +25,13 @@ const gauseDistributionData = (mean, variance, bins) => {
   return dist;
 };
 
-const actionDistributionChart = (actionMean, actionVar, actionTaken) => (
+const actionDistributionChart = (actionMean, actionVar, actionTaken, actionColor) => (
   <AreaChart
     width={180}
     height={90}
     data={gauseDistributionData(actionMean, actionVar, 10)}
   >
-    <Area xAxisId="1" type="monotone" dataKey="prob" isAnimationActive={false} />
+    <Area xAxisId="1" type="monotone" dataKey="prob" isAnimationActive={false} fill={actionColor} stroke={actionColor} />
     <XAxis
       xAxisId="1"
       type="number"
@@ -39,12 +39,18 @@ const actionDistributionChart = (actionMean, actionVar, actionTaken) => (
       tickFormatter={(v) => Number.parseFloat(v).toFixed(1)}
       domain={['dataMin', 'dataMax']}
     />
-    <ReferenceLine xAxisId="1" x={actionMean} stroke="blue" />
-    <ReferenceLine xAxisId="1" x={actionTaken} stroke="red" />
+    <ReferenceLine
+      xAxisId="1"
+      x={actionTaken}
+      stroke={actionColor}
+      label={Number.parseFloat(actionTaken).toFixed(2)}
+    />
   </AreaChart>
 );
 
-const ContinuousStochasticActionsContainer = ({ logDataRow, actionMeanings, paneTitle }) => {
+const ContinuousStochasticActionsContainer = ({
+  logDataRow, actionMeanings, paneTitle, actionColors,
+}) => {
   if (Object.keys(logDataRow).length === 0) {
     return <div />;
   }
@@ -55,13 +61,13 @@ const ContinuousStochasticActionsContainer = ({ logDataRow, actionMeanings, pane
       <Row key={actionMeanings[2 * i]}>
         <Col xs="6">
           <p style={{ margin: '0 auto' }}>{actionMeanings[2 * i]}</p>
-          {actionDistributionChart(logDataRow.action_means[2 * i], logDataRow.action_vars[2 * i], logDataRow.action[2 * i])}
+          {actionDistributionChart(logDataRow.action_means[2 * i], logDataRow.action_vars[2 * i], logDataRow.action[2 * i], actionColors[2 * i])}
         </Col>
         {
           logDataRow.action.length >= 2 * i + 2 && (
             <Col xs="6">
               <p style={{ margin: '0 auto' }}>{actionMeanings[2 * i + 1]}</p>
-              {actionDistributionChart(logDataRow.action_means[2 * i + 1], logDataRow.action_vars[2 * i + 1], logDataRow.action[2 * i + 1])}
+              {actionDistributionChart(logDataRow.action_means[2 * i + 1], logDataRow.action_vars[2 * i + 1], logDataRow.action[2 * i + 1], actionColors[2 * i + 1])}
             </Col>
           )
         }
@@ -93,6 +99,7 @@ ContinuousStochasticActionsContainer.propTypes = {
   }),
   paneTitle: PropTypes.string.isRequired,
   actionMeanings: PropTypes.object, /* eslint-disable-line react/forbid-prop-types */
+  actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 ContinuousStochasticActionsContainer.defaultProps = {
@@ -104,6 +111,7 @@ const mapStateToProps = (state) => ({
   logDataRow: state.log.logDataRows[state.plotRange.focusedStep],
   paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.serverState.agentType]],
   actionMeanings: state.serverState.actionMeanings,
+  actionColors: state.serverState.actionColors,
 });
 
 export default connect(mapStateToProps, null)(ContinuousStochasticActionsContainer);
