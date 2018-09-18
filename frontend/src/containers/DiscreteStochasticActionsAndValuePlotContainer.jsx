@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  ComposedChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Line,
+  AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend,
 } from 'recharts';
 
 import { hoverOnStep } from '../actions';
@@ -32,7 +32,7 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
 
     return (
       <div>
-        <ComposedChart
+        <AreaChart
           width={900}
           height={460}
           data={logDataRows}
@@ -61,9 +61,9 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
               />
             ))
           }
-          <Line dataKey="state_value" stroke="red" yAxisId="right" type="monotone" dot={false} />
+          <Area fill="#00000000" dataKey="state_value" stroke="red" yAxisId="right" type="monotone" />
           <Legend payload={legendPayload} />
-        </ComposedChart>
+        </AreaChart>
       </div>
     );
   }
