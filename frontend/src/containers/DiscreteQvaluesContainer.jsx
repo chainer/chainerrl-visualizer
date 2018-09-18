@@ -17,7 +17,7 @@ const DiscreteQvaluesContainer = ({
     <Card>
       <CardBody>
         <CardTitle style={{ marginBottom: '0.25rem' }}>{paneTitle}</CardTitle>
-        <p>
+        <p style={{ margin: 0 }}>
           {'( '}
           Next action is
           {' '}
@@ -41,8 +41,9 @@ const DiscreteQvaluesContainer = ({
           </Bar>
           <XAxis
             type="number"
-            tickFormatter={(v) => Number.parseFloat(v).toFixed(3)}
+            tickFormatter={(v) => Number.parseFloat(v).toFixed(2)}
             domain={['dataMin - 0.05', 'dataMax']}
+            padding={{ right: 10 }}
           />
           <YAxis
             type="category"
@@ -59,7 +60,7 @@ DiscreteQvaluesContainer.propTypes = {
   sortedQvalues: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionTaken: PropTypes.number.isRequired,
   paneTitle: PropTypes.string.isRequired,
-  actionMeanings: PropTypes.arrayOf(PropTypes.string).isRequired,
+  actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
 };
 
 const mapStateToSortedQvalues = (state) => {
@@ -91,6 +92,8 @@ const mapStateToActionTaken = (state) => {
   if (!Object.prototype.hasOwnProperty.call(logDataRow, 'action')) {
     return -1;
   }
+
+  console.log(logDataRow.action);
 
   return logDataRow.action;
 };
