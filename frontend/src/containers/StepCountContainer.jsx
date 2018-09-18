@@ -17,7 +17,7 @@ const StepCountContainer = ({ step, reward }) => (
               <span style={{ fontSize: '30px', marginRight: '20px' }}>
                 {step}
               </span>
-              reward
+              reward for next action
               {' '}
               <strong style={{ fontSize: '30px' }}>
                 {Number.parseFloat(reward).toFixed(3)}
@@ -30,7 +30,7 @@ const StepCountContainer = ({ step, reward }) => (
               <span style={{ fontSize: '30px', marginRight: '20px' }}>
                 {step}
               </span>
-              reward
+              reward for next action
               {' '}
               <span style={{ fontSize: '30px' }}>
                 {Number.parseFloat(reward).toFixed(3)}

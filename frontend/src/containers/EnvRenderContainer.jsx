@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Card, CardBody,
+  Card, CardBody, CardTitle,
 } from 'reactstrap';
 
 const EnvRenderContainer = ({ imagePath }) => (
   <div>
     <Card style={{ marginTop: '5px' }}>
       <CardBody>
+        <CardTitle>Current environemnt</CardTitle>
         <img
           src={`http://localhost:5002/images?image_path=${imagePath}`}
           alt="env render"
