@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend,
+  AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
 } from 'recharts';
 
 import { hoverOnStep } from '../actions';
@@ -33,8 +33,8 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
     return (
       <div>
         <AreaChart
-          width={900}
-          height={460}
+          width={860}
+          height={450}
           data={logDataRows}
           stackOffset="expand"
           onMouseMove={() => {
@@ -43,9 +43,24 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
           }}
           ref={this.chartRef}
         >
-          <XAxis dataKey="steps" />
-          <YAxis tickFormatter={toPercent} yAxisId="left" />
-          <YAxis yAxisId="right" orientation="right" />
+          <XAxis dataKey="steps">
+            <Label value="step" position="insideBottomLeft" offset={-10} />
+          </XAxis>
+          <YAxis
+            tickFormatter={toPercent}
+            yAxisId="left"
+            label={{
+              value: 'Percentage of action', angle: -90, position: 'insideLeft', offset: 3,
+            }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            label={{
+              value: 'State value', angle: 90, position: 'insideTopLeft', offset: 45,
+            }}
+            width={100}
+          />
           <Tooltip />
           <ReferenceLine x={focusedStep} stroke="green" yAxisId="left" />
           {
