@@ -39,7 +39,7 @@ const actionColors = (state = [], action) => {
         return state;
       }
 
-      return distinctColors({ count: Object.values(action.actionMeanings).length }).map((color) => (color.css()));
+      return distinctColors({ count: Object.values(action.actionMeanings).length, lightMin: 30 }).map((color) => (color.css()));
     }
     default:
       return state;

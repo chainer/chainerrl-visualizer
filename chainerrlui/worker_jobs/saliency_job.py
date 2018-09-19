@@ -23,8 +23,8 @@ def create_and_save_saliency_images(agent, rollout_path, from_step, to_step, obs
             output = _saliency_on_atari_frame(_score_frame_discrete_qvalues(agent, obs), base_img, 50, channel=0)
         elif type(agent).__name__ == 'A3C':
             softmax_policy_score, state_value_score = _score_frame_softmax_policy_and_state_value(agent, obs)
-            output = _saliency_on_atari_frame(state_value_score, base_img, 5, channel=0)
-            output = _saliency_on_atari_frame(softmax_policy_score, output, 5, channel=2)
+            output = _saliency_on_atari_frame(state_value_score, base_img, 50, channel=0)
+            output = _saliency_on_atari_frame(softmax_policy_score, output, 25, channel=2)
         else:
             raise Exception('unsupported agent')
 

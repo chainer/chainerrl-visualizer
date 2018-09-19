@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  ComposedChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Line,
+  AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
 } from 'recharts';
 
 import { hoverOnStep } from '../actions';
@@ -32,9 +32,9 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
 
     return (
       <div>
-        <ComposedChart
-          width={900}
-          height={460}
+        <AreaChart
+          width={1000}
+          height={450}
           data={logDataRows}
           stackOffset="expand"
           onMouseMove={() => {
@@ -43,9 +43,24 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
           }}
           ref={this.chartRef}
         >
-          <XAxis dataKey="steps" />
-          <YAxis tickFormatter={toPercent} yAxisId="left" />
-          <YAxis yAxisId="right" orientation="right" />
+          <XAxis dataKey="steps">
+            <Label value="step" position="insideBottomLeft" offset={-10} />
+          </XAxis>
+          <YAxis
+            tickFormatter={toPercent}
+            yAxisId="left"
+            label={{
+              value: 'Percentage of action', angle: -90, position: 'insideLeft', offset: 3,
+            }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            label={{
+              value: 'State value', angle: 90, position: 'insideTopLeft', offset: 55,
+            }}
+            width={100}
+          />
           <Tooltip />
           <ReferenceLine x={focusedStep} stroke="green" yAxisId="left" />
           {
@@ -61,9 +76,9 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
               />
             ))
           }
-          <Line dataKey="state_value" stroke="red" yAxisId="right" type="monotone" dot={false} />
+          <Area fill="#00000000" dataKey="state_value" stroke="red" yAxisId="right" type="monotone" />
           <Legend payload={legendPayload} />
-        </ComposedChart>
+        </AreaChart>
       </div>
     );
   }

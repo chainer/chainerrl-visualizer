@@ -51,6 +51,7 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_li
 
         log_writer.write({
             'steps': t,
+            'action': int(a),
             'reward': r,
             'image_path': image_path,
             'qvalues': [float(qvalue) for qvalue in qvalues],
@@ -82,6 +83,7 @@ def _rollout_a3c(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_i
 
         log_writer.write({
             'steps': t,
+            'action': int(a),
             'reward': r,
             'image_path': image_path,
             'state_value': float(state_value.data[0][0]),
@@ -117,7 +119,7 @@ def _rollout_ppo(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_i
             'action': [float(v) for v in a],
             'state_value': float(state_value.data[0][0]),
             'action_means': [float(v) for v in action_dist.mean.data[0]],
-            'action_vars': [float(v) for v in action_dist.ln_var.data[0]],
+            'action_vars': [float(v) for v in action_dist.var.data[0]],
         })
 
         t += 1

@@ -9,50 +9,79 @@ import {
   clickPrevStep, clickNextStep, changePlotRangeLeft, changePlotRangeRight,
 } from '../actions';
 
-/* eslint-disable no-shadow */
+const ARROW_LEFT_KEY = 37;
+const ARROW_RIGHT_KEY = 39;
 
-const ChartControlContainer = ({
-  plotRangeLeft, plotRangeRight, clickPrevStep, clickNextStep, changePlotRangeLeft, changePlotRangeRight,
-}) => (
-  <div>
-    <Card>
-      <CardBody>
-        <CardTitle>ChartControl</CardTitle>
-        <Button
-          onClick={clickPrevStep}
-        >
-          -1 (prev step)
-        </Button>
-        {' '}
-        <Button
-          onClick={clickNextStep}
-        >
-          +1 (next step)
-        </Button>
-        <InputGroup style={{ marginTop: '15px' }}>
-          <InputGroupAddon addonType="prepend">
-            Left
-          </InputGroupAddon>
-          <Input
-            type="number"
-            step="10"
-            value={plotRangeLeft}
-            onInput={(e) => { changePlotRangeLeft(parseInt(e.target.value, 10)); }}
-          />
-          <InputGroupAddon addonType="prepend">
-            Right
-          </InputGroupAddon>
-          <Input
-            type="number"
-            step="10"
-            value={plotRangeRight}
-            onInput={(e) => { changePlotRangeRight(parseInt(e.target.value, 10)); }}
-          />
-        </InputGroup>
-      </CardBody>
-    </Card>
-  </div>
-);
+/* eslint-disable react/destructuring-assignment */
+
+class ChartControlContainer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onArrowPress = this.onArrowPress.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.onArrowPress, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onArrowPress, false);
+  }
+
+  onArrowPress(e) {
+    if (e.keyCode === ARROW_LEFT_KEY) {
+      this.props.clickPrevStep();
+    } else if (e.keyCode === ARROW_RIGHT_KEY) {
+      this.props.clickNextStep();
+    }
+  }
+
+  render() {
+    const { plotRangeRight, plotRangeLeft } = this.props;
+
+    return (
+      <div>
+        <Card>
+          <CardBody>
+            <CardTitle>ChartControl</CardTitle>
+            <Button
+              onClick={this.props.clickPrevStep}
+            >
+              -1 (prev step)
+            </Button>
+            {' '}
+            <Button
+              onClick={this.props.clickNextStep}
+            >
+              +1 (next step)
+            </Button>
+            <InputGroup style={{ marginTop: '15px' }}>
+              <InputGroupAddon addonType="prepend">
+                Left
+              </InputGroupAddon>
+              <Input
+                type="number"
+                step="10"
+                value={plotRangeLeft}
+                onInput={(e) => { this.props.changePlotRangeLeft(parseInt(e.target.value, 10)); }}
+              />
+              <InputGroupAddon addonType="prepend">
+                Right
+              </InputGroupAddon>
+              <Input
+                type="number"
+                step="10"
+                value={plotRangeRight}
+                onInput={(e) => { this.props.changePlotRangeRight(parseInt(e.target.value, 10)); }}
+              />
+            </InputGroup>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
+}
 
 ChartControlContainer.propTypes = {
   plotRangeLeft: PropTypes.number.isRequired,

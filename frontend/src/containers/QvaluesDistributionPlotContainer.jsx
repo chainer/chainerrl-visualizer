@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  BarChart, Bar, CartesianGrid, XAxis, YAxis, Legend,
+  BarChart, Bar, CartesianGrid, XAxis, YAxis, Legend, Label,
 } from 'recharts';
 
 
@@ -11,8 +11,8 @@ import {
 const QvaluesDistributionPlotContainer = ({ actionMeanings, actionColors, qvalueDist }) => (
   <div>
     <BarChart
-      width={900}
-      height={460}
+      width={830}
+      height={450}
       data={qvalueDist}
     >
       {
@@ -21,9 +21,15 @@ const QvaluesDistributionPlotContainer = ({ actionMeanings, actionColors, qvalue
           ))
         }
       <CartesianGrid strokeDasharray="5 5" />
-      <XAxis dataKey="z_value" />
-      <YAxis />
-      <Legend />
+      <XAxis dataKey="z_value">
+        <Label value="Expected return" position="insideBottomLeft" offset={-10} />
+      </XAxis>
+      <YAxis
+        label={{
+          value: 'Probability', angle: -90, position: 'insideLeft', offset: 2,
+        }}
+      />
+      <Legend align="right" width={700} />
     </BarChart>
   </div>
 );

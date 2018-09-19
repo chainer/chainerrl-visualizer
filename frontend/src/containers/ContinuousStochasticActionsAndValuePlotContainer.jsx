@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  ComposedChart, Line, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
+  AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 
 import { hoverOnStep } from '../actions';
@@ -18,16 +18,9 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
   }
 
   render() {
-    const { logDataRows, focusedStep, selectedActionDimensionIndices } = this.props;
-
-    /*
-    logDataRows.forEach((logDataRow) => {
-      logDataRow.trustRange = [
-        parseFloat(logDataRow.action_means[0] - logDataRow.action_vars[0]),
-        parseFloat(logDataRow.action_means[0] + logDataRow.action_vars[0]),
-      ];
-    });
-    */
+    const {
+      logDataRows, focusedStep, selectedActionDimensionIndices, actionColors,
+    } = this.props;
 
     logDataRows.forEach((logDataRow) => {
       /* eslint-disable-next-line no-param-reassign */
@@ -36,14 +29,14 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
       selectedActionDimensionIndices.forEach((actionIdx) => {
         /* eslint-disable-next-line no-param-reassign */
         logDataRow.trustRange[actionIdx] = [
-          parseFloat(logDataRow.action_means[actionIdx] - logDataRow.action_vars[actionIdx]),
-          parseFloat(logDataRow.action_means[actionIdx] + logDataRow.action_vars[actionIdx]),
+          parseFloat(logDataRow.action_means[actionIdx] - Math.sqrt(logDataRow.action_vars[actionIdx])),
+          parseFloat(logDataRow.action_means[actionIdx] + Math.sqrt(logDataRow.action_vars[actionIdx])),
         ];
       });
     });
 
     return (
-      <ComposedChart
+      <AreaChart
         width={900}
         height={460}
         data={logDataRows}
@@ -53,25 +46,28 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
       >
         {
           selectedActionDimensionIndices.map((actionIdx) => (
-            <Line
+            <Area
               yAxisId="left"
               type="monotone"
               dot={false}
               dataKey={(v) => v.action[actionIdx]}
-              key={actionIdx}
+              key={`${actionIdx}_taken`}
+              fill="#00000000"
+              stroke={actionColors[actionIdx]}
             />
           ))
         }
         {
           selectedActionDimensionIndices.map((actionIdx) => (
-            <Line
+            <Area
               yAxisId="left"
               type="monotone"
               dot={false}
-              stroke="gray"
+              stroke={actionColors[actionIdx]}
+              fill="#00000000"
               strokeDasharray="3 4 5 2"
               dataKey={(v) => v.action_means[actionIdx]}
-              key={actionIdx}
+              key={`${actionIdx}_mean`}
             />
           ))
         }
@@ -81,15 +77,16 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
             <Area
               yAxisId="left"
               dataKey={(row) => row.trustRange[actionIdx]}
-              stroke="yellow"
-              fill="yellow"
+              stroke={actionColors[actionIdx]}
+              fill={actionColors[actionIdx]}
             />
           ))
         }
-        <Line
+        <Area
           yAxisId="right"
           type="monotone"
           dot={false}
+          fill="#00000000"
           stroke="red"
           dataKey="state_value"
         />
@@ -99,7 +96,7 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
         <YAxis yAxisId="right" orientation="right" />
         <Tooltip />
         <ReferenceLine yAxisId="left" x={focusedStep} stroke="green" />
-      </ComposedChart>
+      </AreaChart>
     );
   }
 }
@@ -110,12 +107,14 @@ ContinuousStochasticActionsAndValuePlotContainer.propTypes = {
   focusedStep: PropTypes.number.isRequired,
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
   hoverOnStep: PropTypes.func.isRequired,
+  actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
   selectedActionDimensionIndices: state.selectedActionDimensionIndices,
+  actionColors: state.serverState.actionColors,
 });
 
 export default connect(mapStateToProps, {
