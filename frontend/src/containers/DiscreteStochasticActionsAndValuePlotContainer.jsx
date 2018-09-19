@@ -33,7 +33,7 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
     return (
       <div>
         <AreaChart
-          width={860}
+          width={1000}
           height={450}
           data={logDataRows}
           stackOffset="expand"
@@ -57,7 +57,7 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
             yAxisId="right"
             orientation="right"
             label={{
-              value: 'State value', angle: 90, position: 'insideTopLeft', offset: 45,
+              value: 'State value', angle: 90, position: 'insideTopLeft', offset: 55,
             }}
             width={100}
           />
