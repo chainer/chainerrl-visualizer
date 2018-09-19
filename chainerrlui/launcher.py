@@ -2,6 +2,7 @@ import os
 from multiprocessing import Process, Queue, Value
 from ctypes import c_bool
 import signal
+import webbrowser
 from chainerrl.agent import Agent
 
 from chainerrlui.web_server import web_server
@@ -48,6 +49,8 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
 
     server_process.start()
     worker_process.start()
+
+    webbrowser.open_new_tab('http://{}:{}'.format(host, port))
 
     try:
         server_process.join()
