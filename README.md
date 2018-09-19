@@ -24,3 +24,7 @@ launch_visualizer(agent, env, action_meanings=ACTION_MEANINGS)
   - `reset`: Reset the environment to initial state.
   - `step` : Take `numpy.ndarray` action as argument, and proceed enviroment one step.
   - `render` : Return 3D `numpy.ndarray` which represents RGB image describing env state.
+
+# Quick start
+Follow instructions of each example.
+- [CategoricalDQN at seaquest](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/categorical_dqn_seaquest)
