@@ -1,6 +1,3 @@
-import signal
-import gevent
-from gevent.pywsgi import WSGIServer
 from flask import Flask, render_template, send_file, request
 from chainerrl.agent import Agent
 
