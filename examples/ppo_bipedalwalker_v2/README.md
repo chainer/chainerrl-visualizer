@@ -16,7 +16,7 @@ Install packages in development mode.
 $ python setup.py develop
 ```
 
-In this example, you need to install `box2d`. For some reason, you have to install box2d from source.
+In this example, you need to install `box2d`. [For some reason](https://github.com/openai/gym/issues/100#issuecomment-260095406), you have to install box2d from source.
 ```
 # Install swig in proper way to your OS.
 $ brew install swig
