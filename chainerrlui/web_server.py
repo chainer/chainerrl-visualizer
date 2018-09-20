@@ -10,7 +10,7 @@ def web_server(agent, gymlike_env, log_dir, host, port, action_meanings, job_que
     app = create_app(agent, gymlike_env, log_dir, action_meanings, job_queue, is_job_running, is_rollout_on_memory)
 
     app.config['ENV'] = 'development'
-    app.run(host=host, port=port, debug=True, threaded=True)
+    app.run(host=host, port=port, debug=True, threaded=True, use_reloader=False)
 
 
 def create_app(agent, gymlike_env, log_dir, action_meanings, q, is_job_running, is_rollout_on_memory):
