@@ -60,5 +60,5 @@ Returns:
 # Quick start
 Follow instructions of each example.
 - [CategoricalDQN at seaquest](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/categorical_dqn_seaquest)
-- [A3C at breakout](https://github.com/pfn-intern/i18-sykwer/tree/private-release/examples/a3c_breakout)
-- [PPO at bipedalwalker-v2](https://github.com/pfn-intern/i18-sykwer/tree/private-release/examples/ppo_bipedalwalker_v2)
+- [A3C at breakout](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/a3c_breakout)
+- [PPO at bipedalwalker-v2](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/ppo_bipedalwalker_v2)
