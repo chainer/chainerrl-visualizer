@@ -51,7 +51,7 @@ StepCountContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   step: state.plotRange.focusedStep,
-  reward: state.log.logDataRows.length > 0 ? state.log.logDataRows[state.plotRange.focusedStep].reward : 0,
+  reward: state.log.logDataRows.length > 0 && state.log.logDataRows[state.plotRange.focusedStep] ? state.log.logDataRows[state.plotRange.focusedStep].reward : 0,
 });
 
 export default connect(mapStateToProps, null)(StepCountContainer);
