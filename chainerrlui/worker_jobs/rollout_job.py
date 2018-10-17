@@ -12,24 +12,21 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
     obs_list[:] = []  # Clear the shared observations list
     render_img_list[:] = []  # Clear the shared render images list
 
-    log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'w')
-    writer = jsonlines.Writer(log_fp)
-
     # TODO: Generalize for all agents in ChainerRL
     if type(agent).__name__ == 'CategoricalDQN':
-        _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, writer, obs_list, render_img_list)
+        _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, obs_list, render_img_list)
     elif type(agent).__name__ == 'PPO':
-        _rollout_ppo(agent, gymlike_env, rollout_dir, writer, obs_list, render_img_list)
+        _rollout_ppo(agent, gymlike_env, rollout_dir, obs_list, render_img_list)
     elif type(agent).__name__ == 'A3C':
-        _rollout_a3c(agent, gymlike_env, rollout_dir, writer, obs_list, render_img_list)
+        _rollout_a3c(agent, gymlike_env, rollout_dir, obs_list, render_img_list)
     else:
         raise Exception('Unsupported agent')
 
-    writer.close()
-    log_fp.close()
 
+def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
+    log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+    writer = jsonlines.Writer(log_fp)
 
-def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_img_list):
     obs = gymlike_env.reset()
     done = False
     t = 0
@@ -49,8 +46,9 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_li
         a = agent.act(obs)
         obs, r, done, info = gymlike_env.step(a)
 
-        log_writer.write({
+        writer.write({
             'steps': t,
+            'action': int(a),
             'reward': r,
             'image_path': image_path,
             'qvalues': [float(qvalue) for qvalue in qvalues],
@@ -60,10 +58,24 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, log_writer, obs_li
 
         t += 1
 
+        # workaround: to change file modified time during rollout
+        if t % 10 == 0:
+            writer.close()
+            log_fp.close()
+
+            log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+            writer = jsonlines.Writer(log_fp)
+
     agent.stop_episode()
 
+    writer.close()
+    log_fp.close()
 
-def _rollout_a3c(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_img_list):
+
+def _rollout_a3c(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
+    log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+    writer = jsonlines.Writer(log_fp)
+
     obs = gymlike_env.reset()
     done = False
     t = 0
@@ -80,8 +92,9 @@ def _rollout_a3c(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_i
         a = agent.act(obs)
         obs, r, done, info = gymlike_env.step(a)
 
-        log_writer.write({
+        writer.write({
             'steps': t,
+            'action': int(a),
             'reward': r,
             'image_path': image_path,
             'state_value': float(state_value.data[0][0]),
@@ -90,10 +103,24 @@ def _rollout_a3c(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_i
 
         t += 1
 
+        # workaround: to change file modified time during rollout
+        if t % 10 == 0:
+            writer.close()
+            log_fp.close()
+
+            log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+            writer = jsonlines.Writer(log_fp)
+
     agent.stop_episode()
 
+    writer.close()
+    log_fp.close()
 
-def _rollout_ppo(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_img_list):
+
+def _rollout_ppo(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
+    log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+    writer = jsonlines.Writer(log_fp)
+
     obs = gymlike_env.reset()
     done = False
     t = 0
@@ -110,19 +137,30 @@ def _rollout_ppo(agent, gymlike_env, rollout_dir, log_writer, obs_list, render_i
         a = agent.act(obs)
         obs, r, done, info = gymlike_env.step(a)
 
-        log_writer.write({
+        writer.write({
             'steps': t,
             'reward': r,
             'image_path': image_path,
             'action': [float(v) for v in a],
             'state_value': float(state_value.data[0][0]),
             'action_means': [float(v) for v in action_dist.mean.data[0]],
-            'action_vars': [float(v) for v in action_dist.ln_var.data[0]],
+            'action_vars': [float(v) for v in action_dist.var.data[0]],
         })
 
         t += 1
 
+        # workaround: to change file modified time during rollout
+        if t % 10 == 0:
+            writer.close()
+            log_fp.close()
+
+            log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+            writer = jsonlines.Writer(log_fp)
+
     agent.stop_episode()
+
+    writer.close()
+    log_fp.close()
 
 
 def _save_env_render(rendered, rollout_dir):

@@ -17,10 +17,10 @@ const StepCountContainer = ({ step, reward }) => (
               <span style={{ fontSize: '30px', marginRight: '20px' }}>
                 {step}
               </span>
-              reward
+              reward for next action
               {' '}
               <strong style={{ fontSize: '30px' }}>
-                {Number.parseFloat(reward).toFixed(3)}
+                {Number.parseFloat(reward).toFixed(2)}
               </strong>
             </p>
           ) : (
@@ -30,10 +30,10 @@ const StepCountContainer = ({ step, reward }) => (
               <span style={{ fontSize: '30px', marginRight: '20px' }}>
                 {step}
               </span>
-              reward
+              reward for next action
               {' '}
               <span style={{ fontSize: '30px' }}>
-                {Number.parseFloat(reward).toFixed(3)}
+                {Number.parseFloat(reward).toFixed(2)}
                 {' '}
               </span>
             </p>
@@ -51,7 +51,7 @@ StepCountContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   step: state.plotRange.focusedStep,
-  reward: state.log.logDataRows.length > 0 ? state.log.logDataRows[state.plotRange.focusedStep].reward : 0,
+  reward: state.log.logDataRows.length > 0 && state.log.logDataRows[state.plotRange.focusedStep] ? state.log.logDataRows[state.plotRange.focusedStep].reward : 0,
 });
 
 export default connect(mapStateToProps, null)(StepCountContainer);

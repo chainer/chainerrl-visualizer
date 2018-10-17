@@ -1,35 +1,16 @@
-import signal
-import gevent
-from gevent.pywsgi import WSGIServer
 from flask import Flask, render_template, send_file, request
 from chainerrl.agent import Agent
 
 from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI
 
 
-def web_server(agent, gymlike_env, log_dir, host, port, debug, action_meanings, job_queue, is_job_running,
+def web_server(agent, gymlike_env, log_dir, host, port, action_meanings, job_queue, is_job_running,
                is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
     app = create_app(agent, gymlike_env, log_dir, action_meanings, job_queue, is_job_running, is_rollout_on_memory)
 
-    if debug:
-        app.config['ENV'] = 'development'
-        app.run(host=host, port=port, debug=True, threaded=True)
-    else:
-        socket_address = '{}:{}'.format(host, port)
-        server = WSGIServer(socket_address, application=app)
-
-        def stop_server():
-            if server.started:
-                server.stop()
-
-        gevent.signal(signal.SIGTERM, stop_server)
-        gevent.signal(signal.SIGINT, stop_server)
-
-        try:
-            server.serve_forever()
-        except(KeyboardInterrupt, SystemExit):
-            stop_server()
+    app.config['ENV'] = 'development'
+    app.run(host=host, port=port, debug=True, threaded=True, use_reloader=False)
 
 
 def create_app(agent, gymlike_env, log_dir, action_meanings, q, is_job_running, is_rollout_on_memory):

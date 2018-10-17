@@ -1,0 +1,1 @@
+{"t_max": 5, "load": "", "eval_interval": 1000000, "env": "BreakoutNoFrameskip-v4", "lr": 0.0007, "monitor": false, "beta": 0.01, "demo": false, "weight_decay": 0.0, "seed": 0, "logging_level": 20, "steps": 80000000, "profile": false, "max_episode_len": 4500, "render": false, "processes": 24, "eval_n_runs": 10, "outdir": "results", "use_lstm": false}

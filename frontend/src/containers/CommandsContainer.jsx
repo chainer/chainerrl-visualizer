@@ -43,7 +43,11 @@ class CommandsContainer extends React.Component {
       isRolloutReady,
       isSaliencyReady,
       rolloutId,
+      agentType,
     } = this.props;
+
+    console.log(agentType);
+    console.log(agentType !== 'PPO');
 
     return (
       <div>
@@ -56,33 +60,43 @@ class CommandsContainer extends React.Component {
             >
               Rollout 1 episode
             </Button>
-            <InputGroup style={{ marginTop: '20px' }}>
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText>from</InputGroupText>
-              </InputGroupAddon>
-              <Input
-                type="number"
-                step="10"
-                value={saliencyRangeLeft}
-                onInput={(e) => { this.props.changeSaliencyRangeLeft(parseInt(e.target.value, 10)); }}
-              />
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText placeholder="step">to</InputGroupText>
-              </InputGroupAddon>
-              <Input
-                type="number"
-                step="10"
-                value={saliencyRangeRight}
-                onInput={(e) => { this.props.changeSaliencyRangeRight(parseInt(e.target.value, 10)); }}
-              />
-            </InputGroup>
-            <Button
-              onClick={() => { this.props.clickSaliency(rolloutId, saliencyRangeLeft, saliencyRangeRight); }}
-              disabled={!isSaliencyReady}
-              style={{ marginTop: '8px' }}
-            >
-              Create saliency map
-            </Button>
+            {
+              agentType !== 'PPO' && ( // TODO: decide by whether state input is raw image or not
+                <div>
+                  <InputGroup style={{ marginTop: '20px' }}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>from</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      type="number"
+                      step="10"
+                      value={saliencyRangeLeft}
+                      onInput={(e) => {
+                        this.props.changeSaliencyRangeLeft(parseInt(e.target.value, 10));
+                      }}
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText placeholder="step">to</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      type="number"
+                      step="10"
+                      value={saliencyRangeRight}
+                      onInput={(e) => {
+                        this.props.changeSaliencyRangeRight(parseInt(e.target.value, 10));
+                      }}
+                    />
+                  </InputGroup>
+                  <Button
+                    onClick={() => { this.props.clickSaliency(rolloutId, saliencyRangeLeft, saliencyRangeRight); }}
+                    disabled={!isSaliencyReady}
+                    style={{ marginTop: '8px' }}
+                  >
+                    Create saliency map
+                  </Button>
+                </div>
+              )
+            }
           </CardBody>
         </Card>
       </div>
@@ -97,6 +111,7 @@ CommandsContainer.propTypes = {
   isRolloutReady: PropTypes.bool.isRequired,
   isSaliencyReady: PropTypes.bool.isRequired,
   rolloutId: PropTypes.string.isRequired,
+  agentType: PropTypes.string.isRequired,
   clickRollout: PropTypes.func.isRequired,
   clickSaliency: PropTypes.func.isRequired,
   changeSaliencyRangeLeft: PropTypes.func.isRequired,
@@ -112,6 +127,7 @@ const mapStateToProps = (state) => ({
   isRolloutReady: !state.serverState.isJobRunning,
   isSaliencyReady: !state.serverState.isJobRunning && state.serverState.isRolloutOnMemory,
   rolloutId: path.basename(state.log.rolloutPath),
+  agentType: state.serverState.agentType,
 });
 
 export default connect(mapStateToProps, {

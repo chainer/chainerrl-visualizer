@@ -1,0 +1,1 @@
+{"PWD": "/home/user", "CHAINER_SEED": "0", "OMP_NUM_THREADS": "1", "CHAINER_TYPE_CHECK": "0", "HOSTNAME": "9c7f6b6171cf", "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "HOME": "/home/user", "DEEPMUX_DATASETS": "[{\"dataset\": \"mjkey\", \"version\": 1, \"path\": \"/mjkey\", \"storage\": \"3_LAN\"}]"}
