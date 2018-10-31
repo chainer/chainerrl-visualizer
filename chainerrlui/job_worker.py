@@ -5,7 +5,10 @@ import signal
 from chainerrlui.worker_jobs import rollout, create_and_save_saliency_images
 
 
-def job_worker(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory):
+def job_worker(agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory):
+    print("from job worker:")
+    print(profile)
+
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
     obs_manager = Manager()
     obs_list = obs_manager.list()

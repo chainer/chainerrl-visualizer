@@ -4,8 +4,11 @@ from chainerrl.agent import Agent
 from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI
 
 
-def web_server(agent, gymlike_env, log_dir, host, port, action_meanings, job_queue, is_job_running,
+def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings, job_queue, is_job_running,
                is_rollout_on_memory):
+    print("from web server:")
+    print(profile)
+
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
     app = create_app(agent, gymlike_env, log_dir, action_meanings, job_queue, is_job_running, is_rollout_on_memory)
 

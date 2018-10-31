@@ -46,15 +46,17 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     if not os.path.isdir(rollouts_dir):
         os.makedirs(rollouts_dir)
 
+    profile = inspect_agent(agent, gymlike_env)
+
     job_queue = Queue()
     is_job_running = Value(c_bool, False)
     is_rollout_on_memory = Value(c_bool, False)
 
     server_process = Process(target=web_server, args=(
-        agent, gymlike_env, log_dir, host, port, action_meanings, job_queue, is_job_running,
+        agent, gymlike_env, profile, log_dir, host, port, action_meanings, job_queue, is_job_running,
         is_rollout_on_memory))
     worker_process = Process(target=job_worker,
-                             args=(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory))
+                             args=(agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory))
 
     server_process.start()
     worker_process.start()
@@ -88,7 +90,7 @@ def inspect_agent(agent, gymlike_env):
         outputs = model(agent.batch_states([obs], agent.xp, agent.phi))
 
     if not isinstance(outputs, tuple):
-        outputs = tuple(outputs)
+        outputs = tuple((outputs,))
 
     for output in outputs:
         if isinstance(output, chainer.Variable):  # state value returned as chainer.Variable
