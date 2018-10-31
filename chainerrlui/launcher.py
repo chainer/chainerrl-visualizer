@@ -3,6 +3,8 @@ from multiprocessing import Process, Queue, Value
 from ctypes import c_bool
 import signal
 import webbrowser
+import chainer
+import chainerrl
 from chainerrl.agent import Agent
 
 from chainerrlui.web_server import web_server
@@ -65,3 +67,37 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     except(KeyboardInterrupt, SystemExit):
         os.kill(worker_process.pid, signal.SIGTERM)
         os.kill(server_process.pid, signal.SIGTERM)
+
+
+# Create and return dict contains agent profile
+def inspect_agent(agent, gymlike_env):
+    profile = {
+        'contains_recurrent_model': False,
+        'state_value_returned': False,
+        'distribution_type': None,
+        'action_value_type': None,
+    }
+    model = agent.model
+    obs = gymlike_env.reset()
+
+    if isinstance(model, chainerrl.recurrent.RecurrentChainMixin):
+        profile['contains_recurrent_model'] = True
+        with model.state_kept():
+            outputs = model(agent.batch_states([obs], agent.xp, agent.phi))
+    else:
+        outputs = model(agent.batch_states([obs], agent.xp, agent.phi))
+
+    if not isinstance(outputs, tuple):
+        outputs = tuple(outputs)
+
+    for output in outputs:
+        if isinstance(output, chainer.Variable):  # state value returned as chainer.Variable
+            profile['state_value_returned'] = True
+
+        if isinstance(output, chainerrl.distribution.Distribution):
+            profile['distribution_type'] = type(output).__name__
+
+        if isinstance(output, chainerrl.action_value.ActionValue):
+            profile['action_value_type'] = type(output).__name__
+
+    return profile
