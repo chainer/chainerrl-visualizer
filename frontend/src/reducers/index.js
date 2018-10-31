@@ -4,6 +4,7 @@ import log from './log';
 import plotRange from './plotRange';
 import saliencyRange from './saliencyRange';
 import serverState from './serverState';
+import agentType from './agentType';
 
 import {
   SUCCESS_FETCH_SERVER_STATE, CHANGE_DISPLAYED_CHART, TOGGLE_ACTION_DIMENSION_SELECT,
@@ -59,6 +60,7 @@ const rootReducer = combineReducers({
   plotRange,
   saliencyRange,
   serverState,
+  agentType,
   selectedChartName,
   selectedActionDimensionIndices,
 });
