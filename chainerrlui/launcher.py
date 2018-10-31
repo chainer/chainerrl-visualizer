@@ -3,6 +3,7 @@ from multiprocessing import Process, Queue, Value
 from ctypes import c_bool
 import signal
 import webbrowser
+import numpy as np
 import chainer
 import chainerrl
 from chainerrl.agent import Agent
@@ -82,12 +83,18 @@ def inspect_agent(agent, gymlike_env):
     model = agent.model
     obs = gymlike_env.reset()
 
+    # workaround
+    if hasattr(agent, 'xp'):
+        xp = agent.xp
+    else:
+        xp = np
+
     if isinstance(model, chainerrl.recurrent.RecurrentChainMixin):
         profile['contains_recurrent_model'] = True
         with model.state_kept():
-            outputs = model(agent.batch_states([obs], agent.xp, agent.phi))
+            outputs = model(agent.batch_states([obs], xp, agent.phi))
     else:
-        outputs = model(agent.batch_states([obs], agent.xp, agent.phi))
+        outputs = model(agent.batch_states([obs], xp, agent.phi))
 
     if not isinstance(outputs, tuple):
         outputs = tuple((outputs,))
