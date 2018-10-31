@@ -3,10 +3,21 @@ import {
 } from 'redux-saga/effects';
 
 import {
-  CLICK_ROLLOUT, CLICK_SALIENCY, START_FETCH_LOG, START_FETCH_SERVER_STATE, START_FETCH_LATEST_LOG_INFO, receiveRolloutResponse, successFetchLog, successFetchServerState, successFetchLatestLogInfo,
+  CLICK_ROLLOUT,
+  CLICK_SALIENCY,
+  START_FETCH_LOG,
+  START_FETCH_SERVER_STATE,
+  START_FETCH_LATEST_LOG_INFO,
+  START_FETCH_AGENT_PROFILE,
+  receiveRolloutResponse,
+  successFetchLog,
+  successFetchServerState,
+  successFetchLatestLogInfo,
+  successFetchAgentProfile,
 } from '../actions';
+
 import {
-  postRollout, postSaliency, getRolloutLog, getServerState, getLatestLogInfo,
+  postRollout, postSaliency, getRolloutLog, getServerState, getLatestLogInfo, getAgentProfile,
 } from '../services';
 
 function* requestRolloutFlow() {
@@ -69,12 +80,21 @@ function* fetchLatestLogInfoFlow() {
   }
 }
 
+function* fetchAgentProfileFlow() {
+  while (true) {
+    yield take(START_FETCH_AGENT_PROFILE);
+    const agentProfile = yield call(getAgentProfile);
+    yield put(successFetchAgentProfile(agentProfile));
+  }
+}
+
 function* rootSaga() {
   yield fork(requestRolloutFlow);
   yield fork(requestSaliencyFlow);
   yield fork(fetchRolloutLogFlow);
   yield fork(fetchServerStateFlow);
   yield fork(fetchLatestLogInfoFlow);
+  yield fork(fetchAgentProfileFlow);
 }
 
 export default rootSaga;

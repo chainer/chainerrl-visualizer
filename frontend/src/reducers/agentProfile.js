@@ -1,48 +1,48 @@
 import { combineReducers } from 'redux';
 
-import { SUCCESS_FETCH_AGENT_TYPE } from '../actions';
+import { SUCCESS_FETCH_AGENT_PROFILE } from '../actions';
 
-const containsRecurrentModel = (state, action) => {
+const containsRecurrentModel = (state = false, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_AGENT_TYPE:
+    case SUCCESS_FETCH_AGENT_PROFILE:
       return action.containsRecurrentModel;
     default:
       return state;
   }
 };
 
-const stateValueReturned = (state, action) => {
+const stateValueReturned = (state = false, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_AGENT_TYPE:
+    case SUCCESS_FETCH_AGENT_PROFILE:
       return action.stateValueReturned;
     default:
       return state;
   }
 };
 
-const distributionType = (state, action) => {
+const distributionType = (state = null, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_AGENT_TYPE:
+    case SUCCESS_FETCH_AGENT_PROFILE:
       return action.distributionType;
     default:
       return state;
   }
 };
 
-const actionValueType = (state, action) => {
+const actionValueType = (state = null, action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_AGENT_TYPE:
+    case SUCCESS_FETCH_AGENT_PROFILE:
       return action.actionValueType;
     default:
       return state;
   }
 };
 
-const agentType = combineReducers({
+const agentProfile = combineReducers({
   containsRecurrentModel,
   stateValueReturned,
   distributionType,
   actionValueType,
 });
 
-export default agentType;
+export default agentProfile;

@@ -72,7 +72,8 @@ export const START_FETCH_SERVER_STATE = 'START_FETCH_SERVER_STATE';
 export const SUCCESS_FETCH_SERVER_STATE = 'SUCCESS_FETCH_SERVER_STATE';
 export const START_FETCH_LATEST_LOG_INFO = 'START_FETCH_LATEST_LOG_INFO';
 export const SUCCESS_FETCH_LATEST_LOG_INFO = 'SUCCESS_FETCH_LATEST_LOG_INFO';
-export const SUCCESS_FETCH_AGENT_TYPE = 'SUCCESS_FETCH_AGENT_TYPE';
+export const START_FETCH_AGENT_PROFILE = 'START_FETCH_AGENT_PROFILE';
+export const SUCCESS_FETCH_AGENT_PROFILE = 'SUCCESS_FETCH_AGENT_PROFILE';
 
 export const startFetchLog = (rolloutId) => ({
   type: START_FETCH_LOG,
@@ -106,12 +107,16 @@ export const successFetchLatestLogInfo = (rolloutPath) => ({
   rolloutPath,
 });
 
-export const successFetchAgentType = (containsRecurrentModel, stateValueReturned, distributionType, actionValueType) => ({
-  type: SUCCESS_FETCH_AGENT_TYPE,
-  containsRecurrentModel,
-  stateValueReturned,
-  distributionType,
-  actionValueType,
+export const startFetchAgentProfile = () => ({
+  type: START_FETCH_AGENT_PROFILE,
+});
+
+export const successFetchAgentProfile = (agentProfile) => ({
+  type: SUCCESS_FETCH_AGENT_PROFILE,
+  containsRecurrentModel: agentProfile.containsRecurrentModel,
+  stateValueReturned: agentProfile.stateValueReturned,
+  distributionType: agentProfile.distributionType,
+  actionValueType: agentProfile.actionValueType,
 });
 
 export const TOGGLE_ACTION_DIMENSION_SELECT = 'TOGGLE_ACTION_DIMENSION_SELECT';

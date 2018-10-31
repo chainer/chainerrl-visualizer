@@ -38,3 +38,12 @@ export const getLatestLogInfo = () => (
     rolloutPath: res.data.rollout_path,
   }))
 );
+
+export const getAgentProfile = () => (
+  axios.get('http://localhost:5002/api/agent_profile').then((res) => ({
+    containsRecurrentModel: res.data.contains_recurrent_model,
+    stateValueReturned: res.data.state_value_returned,
+    distributionType: res.data.distribution_type,
+    actionValueType: res.data.action_value_type,
+  }))
+);
