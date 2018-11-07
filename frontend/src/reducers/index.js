@@ -7,18 +7,18 @@ import serverState from './serverState';
 import agentProfile from './agentProfile';
 
 import {
-  SUCCESS_FETCH_SERVER_STATE, CHANGE_DISPLAYED_CHART, TOGGLE_ACTION_DIMENSION_SELECT,
+  SUCCESS_FETCH_SERVER_STATE, SUCCESS_FETCH_AGENT_PROFILE, CHANGE_DISPLAYED_CHART, TOGGLE_ACTION_DIMENSION_SELECT,
 } from '../actions';
-import { AGENT_TO_CHARTS } from '../settings/agent';
+import { mapAgentProfileToChartList } from '../settings/agent';
 
 const selectedChartName = (state = '', action) => {
   switch (action.type) {
-    case SUCCESS_FETCH_SERVER_STATE:
+    case SUCCESS_FETCH_AGENT_PROFILE:
       if (state) {
         return state;
       }
 
-      return AGENT_TO_CHARTS[action.agentType][0];
+      return mapAgentProfileToChartList(action)[0];
     case CHANGE_DISPLAYED_CHART:
       return action.chartName;
     default:

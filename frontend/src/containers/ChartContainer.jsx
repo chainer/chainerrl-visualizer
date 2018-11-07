@@ -9,21 +9,21 @@ import DiscreteStochasticActionsAndValuePlotContainer from './DiscreteStochastic
 import ChartSkelton from '../components/ChartSkelton';
 
 import {
-  DISCRETE_QVALUES,
-  VALUE_DISTRIBUTION,
-  CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE,
-  DISCRETE_STOCHASTIC_ACTIONS,
+  DISCRETE_ACTION_VALUE_PLOT,
+  DISTRIBUTIONAL_ACTION_VALUE_PLOT,
+  GAUSSIAN_DISTRIBUTION_PLOT,
+  SOFTMAX_DISTRIBUTION_PLOT,
 } from '../settings/agent';
 
-const ChartContainer = ({ selectdChartName }) => {
-  switch (selectdChartName) {
-    case DISCRETE_QVALUES:
+const ChartContainer = ({ selectedChartName }) => {
+  switch (selectedChartName) {
+    case DISCRETE_ACTION_VALUE_PLOT:
       return <DiscreteQvaluesPlotContainer />;
-    case VALUE_DISTRIBUTION:
+    case DISTRIBUTIONAL_ACTION_VALUE_PLOT:
       return <QvalusDistributionPlotContainer />;
-    case CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE:
+    case GAUSSIAN_DISTRIBUTION_PLOT:
       return <ContinuousStochasticActionsAndValuePlotContainer />;
-    case DISCRETE_STOCHASTIC_ACTIONS:
+    case SOFTMAX_DISTRIBUTION_PLOT:
       return <DiscreteStochasticActionsAndValuePlotContainer />;
     default:
       return <ChartSkelton />;
