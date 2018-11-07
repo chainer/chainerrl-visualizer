@@ -5,10 +5,7 @@ import {
   Container, Row, Col,
 } from 'reactstrap';
 
-import DiscreteQvaluesPlotContainer from '../containers/DiscreteQvaluesPlotContainer';
-import QvaluesDistributionPlotContainer from '../containers/QvaluesDistributionPlotContainer';
-import ContinuousStochasticActionsAndValuePlotContainer from '../containers/ContinuousStochasticActionsAndValuePlotContainer';
-import DiscreteStochasticActionsAndValuePlotContainer from '../containers/DiscreteStochasticActionsAndValuePlotContainer';
+import ChartContainer from '../containers/ChartContainer';
 import StepCountContainer from '../containers/StepCountContainer';
 import EnvRenderContainer from '../containers/EnvRenderContainer';
 import CommandsContainer from '../containers/CommandsContainer';
@@ -17,36 +14,15 @@ import ChartControlContainer from '../containers/ChartControlContainer';
 import DiscreteQvaluesContainer from '../containers/DiscreteQvaluesContainer';
 import ContinuousStochasticActionsContainer from '../containers/ContinuousStochasticActionsContainer';
 import DiscreteStochasticActionsContainer from '../containers/DiscreteStochasticActionsContainer';
-import ChartSkelton from './ChartSkelton';
 import {
-  DISCRETE_QVALUES, VALUE_DISTRIBUTION, CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE, DISCRETE_STOCHASTIC_ACTIONS, AGENT_TO_VALUES_PANE, DISCRETE_QVALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE, DISCRETE_STOCHASTIC_ACTIONS_PANE,
+  AGENT_TO_VALUES_PANE, DISCRETE_QVALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE, DISCRETE_STOCHASTIC_ACTIONS_PANE,
 } from '../settings/agent';
 
 const topStyle = {
   padding: '20px',
 };
 
-const MainPageBody = ({ selectedChartName, valuesPaneName }) => {
-  let chart;
-  switch (selectedChartName) {
-    case DISCRETE_QVALUES:
-      chart = <DiscreteQvaluesPlotContainer />;
-      break;
-    case VALUE_DISTRIBUTION:
-      chart = <QvaluesDistributionPlotContainer />;
-      break;
-    case CONTINUOUS_STOCHASTIC_ACTIONS_AND_VALUE:
-      chart = <ContinuousStochasticActionsAndValuePlotContainer />;
-      break;
-    case DISCRETE_STOCHASTIC_ACTIONS:
-      chart = <DiscreteStochasticActionsAndValuePlotContainer />;
-      break;
-    default:
-      chart = <ChartSkelton />;
-  }
-
-  console.log(valuesPaneName);
-
+const MainPageBody = ({ valuesPaneName }) => {
   let valuesPane;
   switch (valuesPaneName) {
     case DISCRETE_QVALUES_PANE:
@@ -67,7 +43,7 @@ const MainPageBody = ({ selectedChartName, valuesPaneName }) => {
       <Container fluid>
         <Row>
           <Col xs="8" style={{ padding: 0 }}>
-            {chart}
+            <ChartContainer />
           </Col>
           <Col xs="4">
             <StepCountContainer />
@@ -92,12 +68,10 @@ const MainPageBody = ({ selectedChartName, valuesPaneName }) => {
 };
 
 MainPageBody.propTypes = {
-  selectedChartName: PropTypes.string.isRequired,
   valuesPaneName: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  selectedChartName: state.selectedChartName,
   valuesPaneName: AGENT_TO_VALUES_PANE[state.serverState.agentType] || '',
 });
 
