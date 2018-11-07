@@ -39,7 +39,7 @@ class ChartSwitchContainer extends React.Component {
               </DropdownToggle>
               <DropdownMenu>
                 {
-                  agentType && mapAgentProfileToChartList(agentProfile).map((chartName) => (
+                  mapAgentProfileToChartList(agentProfile).map((chartName) => (
                     <DropdownItem
                       key={chartName}
                       onClick={(e) => {
@@ -91,7 +91,7 @@ ChartSwitchContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   selectedActionDimensionIndices: state.selectedActionDimensionIndices,
-  agentType: state.serverState.agentType,
+  agentType: state.agentProfile.agentType,
   actionMeanings: state.serverState.actionMeanings,
   agentProfile: state.agentProfile,
 });

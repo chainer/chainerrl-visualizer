@@ -72,7 +72,7 @@ MainPageBody.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  valuesPaneName: AGENT_TO_VALUES_PANE[state.serverState.agentType] || '',
+  valuesPaneName: AGENT_TO_VALUES_PANE[state.agentProfile.agentType] || '',
 });
 
 export default connect(mapStateToProps, null)(MainPageBody);

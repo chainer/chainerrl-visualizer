@@ -127,7 +127,7 @@ const mapStateToProps = (state) => ({
   isRolloutReady: !state.serverState.isJobRunning,
   isSaliencyReady: !state.serverState.isJobRunning && state.serverState.isRolloutOnMemory,
   rolloutId: path.basename(state.log.rolloutPath),
-  agentType: state.serverState.agentType,
+  agentType: state.agentProfile.agentType,
 });
 
 export default connect(mapStateToProps, {

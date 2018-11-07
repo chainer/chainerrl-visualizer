@@ -48,7 +48,6 @@ function* fetchRolloutLogFlow() {
     const { rolloutId } = yield take(START_FETCH_LOG);
 
     if (!rolloutId) {
-      console.log('rolloutId has not been set...');
       continue;
     }
 
@@ -66,9 +65,9 @@ function* fetchServerStateFlow() {
   while (true) {
     yield take(START_FETCH_SERVER_STATE);
     const {
-      agentType, actionMeanings, isJobRunning, isRolloutOnMemory,
+      actionMeanings, isJobRunning, isRolloutOnMemory,
     } = yield call(getServerState);
-    yield put(successFetchServerState(agentType, actionMeanings, isJobRunning, isRolloutOnMemory));
+    yield put(successFetchServerState(actionMeanings, isJobRunning, isRolloutOnMemory));
   }
 }
 

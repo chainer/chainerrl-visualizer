@@ -90,9 +90,8 @@ export const startFetchServerState = () => ({
   type: START_FETCH_SERVER_STATE,
 });
 
-export const successFetchServerState = (agentType, actionMeanings, isJobRunning, isRolloutOnMemory) => ({
+export const successFetchServerState = (actionMeanings, isJobRunning, isRolloutOnMemory) => ({
   type: SUCCESS_FETCH_SERVER_STATE,
-  agentType,
   actionMeanings,
   isJobRunning,
   isRolloutOnMemory,
@@ -113,6 +112,7 @@ export const startFetchAgentProfile = () => ({
 
 export const successFetchAgentProfile = (agentProfile) => ({
   type: SUCCESS_FETCH_AGENT_PROFILE,
+  agentType: agentProfile.agentType,
   containsRecurrentModel: agentProfile.containsRecurrentModel,
   stateValueReturned: agentProfile.stateValueReturned,
   distributionType: agentProfile.distributionType,

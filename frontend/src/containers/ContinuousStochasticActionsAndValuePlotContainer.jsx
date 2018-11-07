@@ -72,13 +72,13 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
           ))
         }
         {
-          // TODO: If `key` attribute to Area added, chart broken. Why?
           selectedActionDimensionIndices.map((actionIdx) => (
             <Area
               yAxisId="left"
               dataKey={(row) => row.trustRange[actionIdx]}
               stroke={actionColors[actionIdx]}
               fill={actionColors[actionIdx]}
+              key={`${actionIdx}_trust_range`}
             />
           ))
         }

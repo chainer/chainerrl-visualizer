@@ -2,6 +2,19 @@ import { combineReducers } from 'redux';
 
 import { SUCCESS_FETCH_AGENT_PROFILE } from '../actions';
 
+const agentType = (state = '', action) => {
+  switch (action.type) {
+    case SUCCESS_FETCH_AGENT_PROFILE:
+      if (action.agentType === state) {
+        return state;
+      }
+
+      return action.agentType;
+    default:
+      return state;
+  }
+};
+
 const containsRecurrentModel = (state = false, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_AGENT_PROFILE:
@@ -39,6 +52,7 @@ const actionValueType = (state = null, action) => {
 };
 
 const agentProfile = combineReducers({
+  agentType,
   containsRecurrentModel,
   stateValueReturned,
   distributionType,

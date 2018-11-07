@@ -25,7 +25,6 @@ export const getRolloutLog = (rolloutId) => (
 
 export const getServerState = () => (
   axios.get('http://localhost:5002/api/server_state').then((res) => ({
-    agentType: res.data.agent_type,
     actionMeanings: res.data.action_meanings,
     isJobRunning: res.data.is_job_running,
     isRolloutOnMemory: res.data.is_rollout_on_memory,
@@ -41,6 +40,7 @@ export const getLatestLogInfo = () => (
 
 export const getAgentProfile = () => (
   axios.get('http://localhost:5002/api/agent_profile').then((res) => ({
+    agentType: res.data.agent_type,
     containsRecurrentModel: res.data.contains_recurrent_model,
     stateValueReturned: res.data.state_value_returned,
     distributionType: res.data.distribution_type,

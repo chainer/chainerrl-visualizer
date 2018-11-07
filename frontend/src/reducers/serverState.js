@@ -6,19 +6,6 @@ import {
 
 const distinctColors = require('distinct-colors');
 
-const agentType = (state = '', action) => {
-  switch (action.type) {
-    case SUCCESS_FETCH_SERVER_STATE:
-      if (action.agentType === state) {
-        return state;
-      }
-
-      return action.agentType;
-    default:
-      return state;
-  }
-};
-
 const actionMeanings = (state = {}, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_SERVER_STATE:
@@ -69,7 +56,6 @@ const isRolloutOnMemory = (state = false, action) => {
 };
 
 const serverState = combineReducers({
-  agentType,
   actionMeanings,
   actionColors,
   isJobRunning,

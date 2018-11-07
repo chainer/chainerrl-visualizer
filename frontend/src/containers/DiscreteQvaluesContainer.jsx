@@ -99,7 +99,7 @@ const mapStateToActionTaken = (state) => {
 const mapStateToProps = (state) => ({
   sortedQvalues: mapStateToSortedQvalues(state),
   actionTaken: mapStateToActionTaken(state),
-  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.serverState.agentType]],
+  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
   actionMeanings: state.serverState.actionMeanings,
 });
 
