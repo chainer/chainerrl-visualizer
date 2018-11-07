@@ -65,9 +65,9 @@ function* fetchServerStateFlow() {
   while (true) {
     yield take(START_FETCH_SERVER_STATE);
     const {
-      actionMeanings, isJobRunning, isRolloutOnMemory,
+      isJobRunning, isRolloutOnMemory,
     } = yield call(getServerState);
-    yield put(successFetchServerState(actionMeanings, isJobRunning, isRolloutOnMemory));
+    yield put(successFetchServerState(isJobRunning, isRolloutOnMemory));
   }
 }
 

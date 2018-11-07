@@ -102,8 +102,8 @@ DiscreteStochasticActionsContainer.propTypes = {
 
 const mapStateToActionProbs = (state) => {
   const logDataRow = state.log.logDataRows[state.plotRange.focusedStep];
-  const actionMeanings = state.serverState.actionMeanings;
-  const actionColors = state.serverState.actionColors;
+  const actionMeanings = state.settings.actionMeanings;
+  const actionColors = state.settings.actionColors;
 
   if (!logDataRow) {
     return [];
@@ -137,8 +137,8 @@ const mapStateToActionTaken = (state) => {
 const mapStateToProps = (state) => ({
   actionProbs: mapStateToActionProbs(state),
   actionTaken: mapStateToActionTaken(state),
-  actionMeanings: state.serverState.actionMeanings,
-  actionColors: state.serverState.actionColors,
+  actionMeanings: state.settings.actionMeanings,
+  actionColors: state.settings.actionColors,
   paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
 });
 

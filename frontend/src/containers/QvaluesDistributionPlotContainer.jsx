@@ -63,8 +63,8 @@ QvaluesDistributionPlotContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  actionColors: state.serverState.actionColors,
-  actionMeanings: state.serverState.actionMeanings,
+  actionColors: state.settings.actionColors,
+  actionMeanings: state.settings.actionMeanings,
   qvalueDist: mapStateToQvalueDist(state),
 });
 

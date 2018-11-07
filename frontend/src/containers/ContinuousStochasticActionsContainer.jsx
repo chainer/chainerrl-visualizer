@@ -110,8 +110,8 @@ ContinuousStochasticActionsContainer.defaultProps = {
 const mapStateToProps = (state) => ({
   logDataRow: state.log.logDataRows[state.plotRange.focusedStep],
   paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
-  actionMeanings: state.serverState.actionMeanings,
-  actionColors: state.serverState.actionColors,
+  actionMeanings: state.settings.actionMeanings,
+  actionColors: state.settings.actionColors,
 });
 
 export default connect(mapStateToProps, null)(ContinuousStochasticActionsContainer);

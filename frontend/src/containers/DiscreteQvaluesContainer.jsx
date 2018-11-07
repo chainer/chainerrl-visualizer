@@ -100,7 +100,7 @@ const mapStateToProps = (state) => ({
   sortedQvalues: mapStateToSortedQvalues(state),
   actionTaken: mapStateToActionTaken(state),
   paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
-  actionMeanings: state.serverState.actionMeanings,
+  actionMeanings: state.settings.actionMeanings,
 });
 
 export default connect(mapStateToProps, null)(DiscreteQvaluesContainer);

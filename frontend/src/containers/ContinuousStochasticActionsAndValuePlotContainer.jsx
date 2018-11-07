@@ -114,7 +114,7 @@ const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
   selectedActionDimensionIndices: state.selectedActionDimensionIndices,
-  actionColors: state.serverState.actionColors,
+  actionColors: state.settings.actionColors,
 });
 
 export default connect(mapStateToProps, {

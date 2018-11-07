@@ -94,8 +94,8 @@ DiscreteStochasticActionsAndValuePlotContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
-  actionMeanings: state.serverState.actionMeanings,
-  actionColors: state.serverState.actionColors,
+  actionMeanings: state.settings.actionMeanings,
+  actionColors: state.settings.actionColors,
   focusedStep: state.plotRange.focusedStep,
 });
 

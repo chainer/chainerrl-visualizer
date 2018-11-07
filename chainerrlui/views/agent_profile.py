@@ -8,5 +8,6 @@ class AgentProfileAPI(MethodView):
         profile = profile.copy()
         profile.update({
             'agent_type': type(current_app.agent).__name__,
+            'action_meanings': current_app.action_meanings,
         })
         return jsonify(profile)
