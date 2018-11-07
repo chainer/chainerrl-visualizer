@@ -35,7 +35,7 @@ ChartContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  selectedChartName: state.selectedChartName,
+  selectedChartName: state.chartControl.selectedChartName,
 });
 
 export default connect(mapStateToProps, null)(ChartContainer);

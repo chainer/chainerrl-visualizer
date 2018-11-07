@@ -90,7 +90,7 @@ ChartSwitchContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  selectedActionDimensionIndices: state.selectedActionDimensionIndices,
+  selectedActionDimensionIndices: state.chartControl.selectedActionDimensionIndices,
   agentType: state.agentProfile.agentType,
   actionMeanings: state.settings.actionMeanings,
   agentProfile: state.agentProfile,

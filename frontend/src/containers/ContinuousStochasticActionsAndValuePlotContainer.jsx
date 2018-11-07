@@ -113,7 +113,7 @@ ContinuousStochasticActionsAndValuePlotContainer.propTypes = {
 const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
-  selectedActionDimensionIndices: state.selectedActionDimensionIndices,
+  selectedActionDimensionIndices: state.chartControl.selectedActionDimensionIndices,
   actionColors: state.settings.actionColors,
 });
 
