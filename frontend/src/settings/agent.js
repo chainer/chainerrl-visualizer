@@ -69,10 +69,6 @@ export const validateProfile = (profile) => {
 export const mapAgentProfileToChartList = (profile) => {
   if (!validateProfile(profile)) return [];
 
-  if (profile.actionValueType === DISCRETE_ACTION_VALUE) {
-    return [DISCRETE_ACTION_VALUE_PLOT];
-  }
-
   switch (profile.actionValueType) {
     case (DISCRETE_ACTION_VALUE):
       return [DISCRETE_ACTION_VALUE_PLOT];
