@@ -8,7 +8,7 @@ import {
   BarChart, Bar, LabelList, XAxis, YAxis,
 } from 'recharts';
 
-import { AGENT_TO_VALUES_PANE, VALUES_PANE_TO_TITLE } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../settings/agent';
 
 const DiscreteQvaluesContainer = ({
   sortedQvalues, actionTaken, paneTitle, actionMeanings,
@@ -99,7 +99,7 @@ const mapStateToActionTaken = (state) => {
 const mapStateToProps = (state) => ({
   sortedQvalues: mapStateToSortedQvalues(state),
   actionTaken: mapStateToActionTaken(state),
-  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
+  paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
   actionMeanings: state.settings.actionMeanings,
 });
 

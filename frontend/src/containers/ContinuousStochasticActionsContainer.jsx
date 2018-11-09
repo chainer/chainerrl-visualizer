@@ -8,7 +8,7 @@ import {
   AreaChart, Area, XAxis, ReferenceLine,
 } from 'recharts';
 
-import { AGENT_TO_VALUES_PANE, VALUES_PANE_TO_TITLE } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../settings/agent';
 
 const gauseDistributionData = (mean, variance, bins) => {
   const stdDev = Math.sqrt(variance);
@@ -109,7 +109,7 @@ ContinuousStochasticActionsContainer.defaultProps = {
 
 const mapStateToProps = (state) => ({
   logDataRow: state.log.logDataRows[state.plotRange.focusedStep],
-  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
+  paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
   actionMeanings: state.settings.actionMeanings,
   actionColors: state.settings.actionColors,
 });

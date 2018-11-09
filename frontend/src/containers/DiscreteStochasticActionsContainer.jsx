@@ -8,7 +8,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
 
-import { AGENT_TO_VALUES_PANE, VALUES_PANE_TO_TITLE } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../settings/agent';
 
 /* eslint-disable prefer-destructuring */
 
@@ -91,7 +91,7 @@ const DiscreteStochasticActionsContainer = ({
 
 DiscreteStochasticActionsContainer.propTypes = {
   actionProbs: PropTypes.arrayOf(PropTypes.shape({
-    actionName: PropTypes.string.isRequried,
+    actionName: PropTypes.string.isRequired,
     prob: PropTypes.number.isRequired,
   })).isRequired,
   actionTaken: PropTypes.number.isRequired,
@@ -139,7 +139,7 @@ const mapStateToProps = (state) => ({
   actionTaken: mapStateToActionTaken(state),
   actionMeanings: state.settings.actionMeanings,
   actionColors: state.settings.actionColors,
-  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.agentProfile.agentType]],
+  paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
 });
 
 export default connect(mapStateToProps, null)(DiscreteStochasticActionsContainer);

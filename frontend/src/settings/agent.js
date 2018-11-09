@@ -14,12 +14,6 @@ export const DISCRETE_QVALUES_PANE = 'DISCRETE_QVALUES_PANE';
 export const CONTINUOUS_STOCHASTIC_ACTIONS_PANE = 'CONTINUOUS_STOCHASTIC_ACTIONS_PANE';
 export const DISCRETE_STOCHASTIC_ACTIONS_PANE = 'DISCRETE_STOCHASTIC_ACTIONS_PANE';
 
-export const VALUES_PANE_TO_TITLE = {
-  [DISCRETE_QVALUES_PANE]: 'QValues of next action',
-  [CONTINUOUS_STOCHASTIC_ACTIONS_PANE]: 'Distribution of next action',
-  [DISCRETE_STOCHASTIC_ACTIONS_PANE]: 'Probability of next action',
-};
-
 export const AGENT_TO_VALUES_PANE = {
   [CATEGORICAL_DQN]: DISCRETE_QVALUES_PANE,
   [PPO]: CONTINUOUS_STOCHASTIC_ACTIONS_PANE,
@@ -34,6 +28,14 @@ export const GAUSSIAN_DISTRIBUTION_PLOT = 'GAUSSIAN_DISTRIBUTION_PLOT';
 export const SOFTMAX_DISTRIBUTION_PLOT = 'SOFTMAX_DISTRIBUTION_PLOT';
 export const MELLOWMAX_DISTRIBUTION_PLOT = 'MELLOWMAX_DISTRIBUTION_PLOT';
 export const CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PLOT = 'CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PLOT';
+
+// ValuesPaneContainer names
+export const DISCRETE_ACTION_VALUE_PANE = 'DISCRETE_ACTION_VALUE_PANE';
+export const QUADRATIC_ACTION_VALUE_PANE = 'QUADRATIC_ACTION_VALUE_PANE';
+export const GAUSSIAN_DISTRIBUTION_PANE = 'GAUSSIAN_DISTRIBUTION_PANE';
+export const SOFTMAX_DISTRIBUTION_PANE = 'SOFTMAX_DISTRIBUTION_PANE';
+export const MELLOWMAX_DISTRIBUTION_PANE = 'MELLOWMAX_DISTRIBUTION_PANE';
+export const CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PANE = 'CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PANE';
 
 const profileProperties = [
   'containsRecurrentModel',
@@ -92,4 +94,51 @@ export const mapAgentProfileToChartList = (profile) => {
   }
 
   return [];
+};
+
+export const mapAgentProfileToValuesPaneList = (profile) => {
+  if (!validateProfile(profile)) return [];
+
+  switch (profile.actionValueType) {
+    case DISCRETE_ACTION_VALUE:
+    case DISTRIBUTIONAL_DISCRETE_ACTION_VALUE:
+      return [DISCRETE_ACTION_VALUE_PANE];
+    case QUADRATIC_ACTION_VALUE:
+      return [QUADRATIC_ACTION_VALUE_PANE];
+    default:
+  }
+
+  switch (profile.distributionType) {
+    case GAUSSIAN_DISTRIBUTION:
+      return [GAUSSIAN_DISTRIBUTION_PANE];
+    case SOFTMAX_DISTRIBUTION:
+      return [SOFTMAX_DISTRIBUTION_PANE];
+    case MELLOWMAX_DISTRIBUTION:
+      return [MELLOWMAX_DISTRIBUTION_PANE];
+    case CONTINUOUS_DETERMINISTIC_DISTRIBUTION:
+      return [CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PANE];
+    default:
+  }
+
+  return [];
+};
+
+export const VALUES_PANE_TO_TITLE = {
+  [DISCRETE_ACTION_VALUE_PANE]: 'QValues of next action',
+  [QUADRATIC_ACTION_VALUE_PANE]: 'HOGE',
+  [GAUSSIAN_DISTRIBUTION_PANE]: 'Distribution of next action',
+  [SOFTMAX_DISTRIBUTION_PANE]: 'Probability of next action',
+  [MELLOWMAX_DISTRIBUTION_PANE]: 'HOGE',
+  [CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PANE]: 'HOGE',
+};
+
+export const mapAgentProfileToValuesPaneTitle = (profile) => {
+  const paneList = mapAgentProfileToValuesPaneList(profile);
+
+  if (paneList.length === 0) {
+    return '';
+  }
+
+  // TODO: deal with multiple pane switching
+  return VALUES_PANE_TO_TITLE[paneList[0]];
 };

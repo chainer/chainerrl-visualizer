@@ -7,7 +7,10 @@ import ContinuousStochasticActionsContainer from './ContinuousStochasticActionsC
 import DiscreteStochasticActionsContainer from './DiscreteStochasticActionsContainer';
 
 import {
-  AGENT_TO_VALUES_PANE, DISCRETE_QVALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE, DISCRETE_STOCHASTIC_ACTIONS_PANE,
+  mapAgentProfileToValuesPaneList,
+  DISCRETE_QVALUES_PANE,
+  CONTINUOUS_STOCHASTIC_ACTIONS_PANE,
+  DISCRETE_STOCHASTIC_ACTIONS_PANE,
 } from '../settings/agent';
 
 const ValuesPaneContainer = ({ valuesPaneName }) => {
@@ -27,8 +30,11 @@ ValuesPaneContainer.propTypes = {
   valuesPaneName: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  valuesPaneName: AGENT_TO_VALUES_PANE[state.agentProfile.agentType] || '',
-});
+const mapStateToProps = (state) => {
+  const paneList = mapAgentProfileToValuesPaneList(state.agentProfile);
+  return {
+    valuesPaneName: paneList.length === 0 ? '' : paneList[0],
+  };
+};
 
 export default connect(mapStateToProps, null)(ValuesPaneContainer);

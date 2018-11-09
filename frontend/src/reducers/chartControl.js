@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { combineReducers } from 'redux';
 
 import {
   SUCCESS_FETCH_SERVER_STATE,
@@ -52,7 +52,7 @@ const selectedActionDimensionIndices = (state = [], action) => {
   }
 };
 
-const chartControl = connect({
+const chartControl = combineReducers({
   selectedChartName,
   selectedActionDimensionIndices,
 });

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import DiscreteQvaluesPlotContainer from './DiscreteQvaluesContainer';
-import QvalusDistributionPlotContainer from './QvaluesDistributionPlotContainer';
+import DiscreteQvaluesPlotContainer from './DiscreteQvaluesPlotContainer';
+import QvaluesDistributionPlotContainer from './QvaluesDistributionPlotContainer';
 import ContinuousStochasticActionsAndValuePlotContainer from './ContinuousStochasticActionsAndValuePlotContainer';
 import DiscreteStochasticActionsAndValuePlotContainer from './DiscreteStochasticActionsAndValuePlotContainer';
 import ChartSkelton from '../components/ChartSkelton';
@@ -20,7 +20,7 @@ const ChartContainer = ({ selectedChartName }) => {
     case DISCRETE_ACTION_VALUE_PLOT:
       return <DiscreteQvaluesPlotContainer />;
     case DISTRIBUTIONAL_ACTION_VALUE_PLOT:
-      return <QvalusDistributionPlotContainer />;
+      return <QvaluesDistributionPlotContainer />;
     case GAUSSIAN_DISTRIBUTION_PLOT:
       return <ContinuousStochasticActionsAndValuePlotContainer />;
     case SOFTMAX_DISTRIBUTION_PLOT:

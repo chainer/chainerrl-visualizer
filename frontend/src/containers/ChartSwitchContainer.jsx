@@ -5,7 +5,11 @@ import {
   Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Input, FormGroup,
 } from 'reactstrap';
 
-import { AGENT_TO_VALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE, mapAgentProfileToChartList } from '../settings/agent';
+import {
+  mapAgentProfileToValuesPaneList,
+  CONTINUOUS_STOCHASTIC_ACTIONS_PANE,
+  mapAgentProfileToChartList,
+} from '../settings/agent';
 import { changeDisplayedChart, toggleActionDimensionSelect } from '../actions';
 
 /* eslint-disable react/destructuring-assignment */
@@ -26,7 +30,7 @@ class ChartSwitchContainer extends React.Component {
 
   render() {
     const {
-      selectedActionDimensionIndices, agentType, actionMeanings, agentProfile,
+      selectedActionDimensionIndices, actionMeanings, agentProfile,
     } = this.props;
 
     return (
@@ -53,7 +57,8 @@ class ChartSwitchContainer extends React.Component {
               </DropdownMenu>
             </Dropdown>
             {
-               AGENT_TO_VALUES_PANE[agentType] === CONTINUOUS_STOCHASTIC_ACTIONS_PANE && (
+              // TODO: deal with multiple pane switching
+               mapAgentProfileToValuesPaneList(agentProfile)[0] === CONTINUOUS_STOCHASTIC_ACTIONS_PANE && (
                  <div style={{ marginTop: '10px' }}>
                    {
                      Object.keys(actionMeanings).map((key) => (
@@ -82,7 +87,6 @@ class ChartSwitchContainer extends React.Component {
 
 ChartSwitchContainer.propTypes = {
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
-  agentType: PropTypes.string.isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   agentProfile: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   changeDisplayedChart: PropTypes.func.isRequired,
@@ -91,7 +95,6 @@ ChartSwitchContainer.propTypes = {
 
 const mapStateToProps = (state) => ({
   selectedActionDimensionIndices: state.chartControl.selectedActionDimensionIndices,
-  agentType: state.agentProfile.agentType,
   actionMeanings: state.settings.actionMeanings,
   agentProfile: state.agentProfile,
 });
