@@ -6,8 +6,7 @@ import {
 } from 'reactstrap';
 
 import {
-  mapAgentProfileToValuesPaneList,
-  CONTINUOUS_STOCHASTIC_ACTIONS_PANE,
+  GAUSSIAN_DISTRIBUTION_PLOT,
   mapAgentProfileToChartList,
 } from '../settings/agent';
 import { changeDisplayedChart, toggleActionDimensionSelect } from '../actions';
@@ -58,7 +57,7 @@ class ChartSwitchContainer extends React.Component {
             </Dropdown>
             {
               // TODO: deal with multiple pane switching
-               mapAgentProfileToValuesPaneList(agentProfile)[0] === CONTINUOUS_STOCHASTIC_ACTIONS_PANE && (
+               mapAgentProfileToChartList(agentProfile).includes(GAUSSIAN_DISTRIBUTION_PLOT) && (
                  <div style={{ marginTop: '10px' }}>
                    {
                      Object.keys(actionMeanings).map((key) => (

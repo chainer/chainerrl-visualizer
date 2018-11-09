@@ -8,18 +8,18 @@ import DiscreteStochasticActionsContainer from './DiscreteStochasticActionsConta
 
 import {
   mapAgentProfileToValuesPaneList,
-  DISCRETE_QVALUES_PANE,
-  CONTINUOUS_STOCHASTIC_ACTIONS_PANE,
-  DISCRETE_STOCHASTIC_ACTIONS_PANE,
+  DISCRETE_ACTION_VALUE_PANE,
+  GAUSSIAN_DISTRIBUTION_PANE,
+  SOFTMAX_DISTRIBUTION_PANE,
 } from '../settings/agent';
 
 const ValuesPaneContainer = ({ valuesPaneName }) => {
   switch (valuesPaneName) {
-    case DISCRETE_QVALUES_PANE:
+    case DISCRETE_ACTION_VALUE_PANE:
       return <DiscreteQvaluesContainer />;
-    case CONTINUOUS_STOCHASTIC_ACTIONS_PANE:
+    case GAUSSIAN_DISTRIBUTION_PANE:
       return <ContinuousStochasticActionsContainer />;
-    case DISCRETE_STOCHASTIC_ACTIONS_PANE:
+    case SOFTMAX_DISTRIBUTION_PANE:
       return <DiscreteStochasticActionsContainer />;
     default:
       return <div />;
