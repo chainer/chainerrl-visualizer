@@ -14,7 +14,7 @@ import {
   SOFTMAX_DISTRIBUTION_PANE,
   MELLOWMAX_DISTRIBUTION_PANE,
   CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PANE,
-} from '../settings/agent';
+} from '../settings';
 
 const ValuesPaneContainer = ({ valuesPaneName }) => {
   switch (valuesPaneName) {

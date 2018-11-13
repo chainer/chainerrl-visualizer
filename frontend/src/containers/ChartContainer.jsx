@@ -16,7 +16,7 @@ import {
   SOFTMAX_DISTRIBUTION_PLOT,
   MELLOWMAX_DISTRIBUTION_PLOT,
   CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PLOT,
-} from '../settings/agent';
+} from '../settings';
 
 const ChartContainer = ({ selectedChartName }) => {
   switch (selectedChartName) {

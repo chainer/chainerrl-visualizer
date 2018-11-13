@@ -8,7 +8,7 @@ import {
   AreaChart, Area, XAxis, ReferenceLine,
 } from 'recharts';
 
-import { mapAgentProfileToValuesPaneTitle } from '../../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings';
 
 const gauseDistributionData = (mean, variance, bins) => {
   const stdDev = Math.sqrt(variance);

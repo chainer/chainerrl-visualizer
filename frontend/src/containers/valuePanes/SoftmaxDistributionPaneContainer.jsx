@@ -8,7 +8,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
 
-import { mapAgentProfileToValuesPaneTitle } from '../../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings';
 
 /* eslint-disable prefer-destructuring */
 

@@ -8,7 +8,7 @@ import {
   BarChart, Bar, LabelList, XAxis, YAxis,
 } from 'recharts';
 
-import { mapAgentProfileToValuesPaneTitle } from '../../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings';
 
 const DiscreteActionValuePaneContainer = ({
   sortedQvalues, actionTaken, paneTitle, actionMeanings,

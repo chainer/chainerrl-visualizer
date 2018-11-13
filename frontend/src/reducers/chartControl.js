@@ -6,7 +6,7 @@ import {
   CHANGE_DISPLAYED_CHART,
   TOGGLE_ACTION_DIMENSION_SELECT,
 } from '../actions';
-import { mapAgentProfileToChartList } from '../settings/agent';
+import { mapAgentProfileToChartList } from '../settings';
 
 const selectedChartName = (state = '', action) => {
   switch (action.type) {

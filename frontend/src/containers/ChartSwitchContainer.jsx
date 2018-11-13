@@ -8,7 +8,7 @@ import {
 import {
   GAUSSIAN_DISTRIBUTION_PLOT,
   mapAgentProfileToChartList,
-} from '../settings/agent';
+} from '../settings';
 import { changeDisplayedChart, toggleActionDimensionSelect } from '../actions';
 
 /* eslint-disable react/destructuring-assignment */
