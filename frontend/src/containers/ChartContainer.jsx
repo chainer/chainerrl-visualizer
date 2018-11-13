@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import DiscreteQvaluesPlotContainer from './DiscreteQvaluesPlotContainer';
-import QvaluesDistributionPlotContainer from './QvaluesDistributionPlotContainer';
-import ContinuousStochasticActionsAndValuePlotContainer from './ContinuousStochasticActionsAndValuePlotContainer';
-import DiscreteStochasticActionsAndValuePlotContainer from './DiscreteStochasticActionsAndValuePlotContainer';
+import DiscreteActionValuePlotContainer from './charts/DiscreteActionValuePlotContainer';
+import DistributionalActionValuePlotContainer from './charts/DistributionalActionValuePlotContainer';
+import GaussianDistributionPlotContainer from './charts/GaussianDistributionPlotContainer';
+import SoftmaxDistributionPlotContainer from './charts/SoftmaxDistributionPlotContainer';
 import ChartSkelton from '../components/ChartSkelton';
 
 import {
@@ -21,19 +21,19 @@ import {
 const ChartContainer = ({ selectedChartName }) => {
   switch (selectedChartName) {
     case DISCRETE_ACTION_VALUE_PLOT:
-      return <DiscreteQvaluesPlotContainer />;
+      return <DiscreteActionValuePlotContainer />;
     case DISTRIBUTIONAL_ACTION_VALUE_PLOT:
-      return <QvaluesDistributionPlotContainer />;
+      return <DistributionalActionValuePlotContainer />;
     case QUADRATIC_ACTION_VALUE_PLOT:
-      return <div />; // TODO: implement QuadraticActionValuePlotContainer
+      return <ChartSkelton />; // TODO: implement QuadraticActionValuePlotContainer
     case GAUSSIAN_DISTRIBUTION_PLOT:
-      return <ContinuousStochasticActionsAndValuePlotContainer />;
+      return <GaussianDistributionPlotContainer />;
     case SOFTMAX_DISTRIBUTION_PLOT:
-      return <DiscreteStochasticActionsAndValuePlotContainer />;
+      return <SoftmaxDistributionPlotContainer />;
     case MELLOWMAX_DISTRIBUTION_PLOT:
-      return <div />; // TODO: implement MellowmaxDistributionPlotContainer
+      return <ChartSkelton />; // TODO: implement MellowmaxDistributionPlotContainer
     case CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PLOT:
-      return <div />;
+      return <ChartSkelton />;
     default:
       return <ChartSkelton />;
   }

@@ -8,7 +8,7 @@ import {
 
 /* eslint-disable prefer-destructuring */
 
-const QvaluesDistributionPlotContainer = ({ actionMeanings, actionColors, qvalueDist }) => (
+const DistributionalActionValuePlotContainer = ({ actionMeanings, actionColors, qvalueDist }) => (
   <div>
     <BarChart
       width={830}
@@ -56,7 +56,7 @@ const mapStateToQvalueDist = (state) => {
   return qvalueDist;
 };
 
-QvaluesDistributionPlotContainer.propTypes = {
+DistributionalActionValuePlotContainer.propTypes = {
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
   qvalueDist: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
@@ -68,4 +68,4 @@ const mapStateToProps = (state) => ({
   qvalueDist: mapStateToQvalueDist(state),
 });
 
-export default connect(mapStateToProps, null)(QvaluesDistributionPlotContainer);
+export default connect(mapStateToProps, null)(DistributionalActionValuePlotContainer);

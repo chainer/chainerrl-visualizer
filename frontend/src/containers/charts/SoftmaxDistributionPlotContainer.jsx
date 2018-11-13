@@ -5,13 +5,13 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
 } from 'recharts';
 
-import { hoverOnStep } from '../actions';
+import { hoverOnStep } from '../../actions/index';
 
 const toPercent = (decimal, fixed = 0) => (
   `${(decimal * 100).toFixed(fixed)}%`
 );
 
-class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
+class SoftmaxDistributionPlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -84,7 +84,7 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
   }
 }
 
-DiscreteStochasticActionsAndValuePlotContainer.propTypes = {
+SoftmaxDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -101,4 +101,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(DiscreteStochasticActionsAndValuePlotContainer);
+})(SoftmaxDistributionPlotContainer);

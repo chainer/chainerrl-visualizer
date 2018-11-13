@@ -5,12 +5,12 @@ import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 
-import { hoverOnStep } from '../actions';
+import { hoverOnStep } from '../../actions/index';
 
 /* eslint-disable prefer-destructuring */
 /* eslint-disable react/destructuring-assignment */
 
-class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
+class GaussianDistributionPlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -102,7 +102,7 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
 }
 
 
-ContinuousStochasticActionsAndValuePlotContainer.propTypes = {
+GaussianDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedStep: PropTypes.number.isRequired,
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
@@ -119,4 +119,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(ContinuousStochasticActionsAndValuePlotContainer);
+})(GaussianDistributionPlotContainer);

@@ -5,9 +5,9 @@ import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, Label,
 } from 'recharts';
 
-import { hoverOnStep } from '../actions';
+import { hoverOnStep } from '../../actions/index';
 
-class DiscreteQvaluesPlotContainer extends React.Component {
+class DiscreteActionValuePlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -58,7 +58,7 @@ class DiscreteQvaluesPlotContainer extends React.Component {
   }
 }
 
-DiscreteQvaluesPlotContainer.propTypes = {
+DiscreteActionValuePlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedStep: PropTypes.number.isRequired,
   hoverOnStep: PropTypes.func.isRequired,
@@ -71,4 +71,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(DiscreteQvaluesPlotContainer);
+})(DiscreteActionValuePlotContainer);
