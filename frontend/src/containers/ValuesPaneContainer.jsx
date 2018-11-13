@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import DiscreteQvaluesContainer from './DiscreteQvaluesContainer';
-import ContinuousStochasticActionsContainer from './ContinuousStochasticActionsContainer';
-import DiscreteStochasticActionsContainer from './DiscreteStochasticActionsContainer';
+import DiscreteActionValuePaneContainer from './valuePanes/DiscreteActionValuePaneContainer';
+import GaussianDistributionPaneContainer from './valuePanes/GaussianDistributionPaneContainer';
+import SoftmaxDistributionPaneContainer from './valuePanes/SoftmaxDistributionPaneContainer';
 
 import {
   mapAgentProfileToValuesPaneList,
@@ -19,13 +19,13 @@ import {
 const ValuesPaneContainer = ({ valuesPaneName }) => {
   switch (valuesPaneName) {
     case DISCRETE_ACTION_VALUE_PANE:
-      return <DiscreteQvaluesContainer />;
+      return <DiscreteActionValuePaneContainer />;
     case QUADRATIC_ACTION_VALUE_PANE:
       return <div />; // TODO: implement QuadraticActionValuePane
     case GAUSSIAN_DISTRIBUTION_PANE:
-      return <ContinuousStochasticActionsContainer />;
+      return <GaussianDistributionPaneContainer />;
     case SOFTMAX_DISTRIBUTION_PANE:
-      return <DiscreteStochasticActionsContainer />;
+      return <SoftmaxDistributionPaneContainer />;
     case MELLOWMAX_DISTRIBUTION_PANE:
       return <div />; // TODO: implement MellowmaxDistributionPane
     case CONTINUOUS_DETERMINISTIC_DISTRIBUTION_PANE:

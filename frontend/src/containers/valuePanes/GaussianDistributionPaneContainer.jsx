@@ -8,7 +8,7 @@ import {
   AreaChart, Area, XAxis, ReferenceLine,
 } from 'recharts';
 
-import { mapAgentProfileToValuesPaneTitle } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings/agent';
 
 const gauseDistributionData = (mean, variance, bins) => {
   const stdDev = Math.sqrt(variance);
@@ -48,7 +48,7 @@ const actionDistributionChart = (actionMean, actionVar, actionTaken, actionColor
   </AreaChart>
 );
 
-const ContinuousStochasticActionsContainer = ({
+const GaussianDistributionPaneContainer = ({
   logDataRow, actionMeanings, paneTitle, actionColors,
 }) => {
   if (Object.keys(logDataRow).length === 0) {
@@ -91,7 +91,7 @@ const ContinuousStochasticActionsContainer = ({
   );
 };
 
-ContinuousStochasticActionsContainer.propTypes = {
+GaussianDistributionPaneContainer.propTypes = {
   logDataRow: PropTypes.shape({
     action: PropTypes.arrayOf(PropTypes.number),
     action_means: PropTypes.arrayOf(PropTypes.number),
@@ -102,7 +102,7 @@ ContinuousStochasticActionsContainer.propTypes = {
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-ContinuousStochasticActionsContainer.defaultProps = {
+GaussianDistributionPaneContainer.defaultProps = {
   logDataRow: {},
   actionMeanings: {},
 };
@@ -114,4 +114,4 @@ const mapStateToProps = (state) => ({
   actionColors: state.settings.actionColors,
 });
 
-export default connect(mapStateToProps, null)(ContinuousStochasticActionsContainer);
+export default connect(mapStateToProps, null)(GaussianDistributionPaneContainer);

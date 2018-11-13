@@ -8,11 +8,11 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
 
-import { mapAgentProfileToValuesPaneTitle } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings/agent';
 
 /* eslint-disable prefer-destructuring */
 
-const DiscreteStochasticActionsContainer = ({
+const SoftmaxDistributionPaneContainer = ({
   actionProbs, actionTaken, actionMeanings, actionColors, paneTitle,
 }) => {
   const legendPayload = Object.values(actionMeanings).map((actionMeaning, actionIdx) => ({
@@ -89,7 +89,7 @@ const DiscreteStochasticActionsContainer = ({
   );
 };
 
-DiscreteStochasticActionsContainer.propTypes = {
+SoftmaxDistributionPaneContainer.propTypes = {
   actionProbs: PropTypes.arrayOf(PropTypes.shape({
     actionName: PropTypes.string.isRequired,
     prob: PropTypes.number.isRequired,
@@ -142,4 +142,4 @@ const mapStateToProps = (state) => ({
   paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
 });
 
-export default connect(mapStateToProps, null)(DiscreteStochasticActionsContainer);
+export default connect(mapStateToProps, null)(SoftmaxDistributionPaneContainer);
