@@ -5,7 +5,7 @@ import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 
-import { hoverOnStep } from '../../actions/index';
+import { hoverOnStep } from '../../actions';
 
 /* eslint-disable prefer-destructuring */
 /* eslint-disable react/destructuring-assignment */
@@ -91,7 +91,7 @@ class GaussianDistributionPlotContainer extends React.Component {
           dataKey="state_value"
         />
         <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="steps" />
+        <XAxis dataKey="step" />
         <YAxis yAxisId="left" domain={['dataMin', 'dataMax']} tickFormatter={(v) => Number.parseFloat(v).toFixed(3)} />
         <YAxis yAxisId="right" orientation="right" />
         <Tooltip />

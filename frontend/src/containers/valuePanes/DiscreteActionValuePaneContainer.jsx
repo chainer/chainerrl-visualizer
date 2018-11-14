@@ -11,7 +11,7 @@ import {
 import { mapAgentProfileToValuesPaneTitle } from '../../settings';
 
 const DiscreteActionValuePaneContainer = ({
-  sortedQvalues, actionTaken, paneTitle, actionMeanings,
+  sortedActionValues, actionTaken, paneTitle, actionMeanings,
 }) => (
   <div>
     <Card>
@@ -30,9 +30,9 @@ const DiscreteActionValuePaneContainer = ({
           layout="vertical"
           width={390}
           height={330}
-          data={sortedQvalues}
+          data={sortedActionValues}
         >
-          <Bar dataKey="qvalue" fill="#8884d8" isAnimationActive={false}>
+          <Bar dataKey="actionValue" fill="#8884d8" isAnimationActive={false}>
             <LabelList
               dataKey="name"
               position="insideRight"
@@ -57,28 +57,30 @@ const DiscreteActionValuePaneContainer = ({
 );
 
 DiscreteActionValuePaneContainer.propTypes = {
-  sortedQvalues: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sortedActionValues: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionTaken: PropTypes.number.isRequired,
   paneTitle: PropTypes.string.isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
 };
 
-const mapStateToSortedQvalues = (state) => {
+const mapStateToSortedActionvalues = (state) => {
   const logDataRow = state.log.logDataRows[state.plotRange.focusedStep];
-  const actionMeanings = state.serverState.actionMeanings; /* eslint-disable-line prefer-destructuring */
+  const actionMeanings = state.settings.actionMeanings; /* eslint-disable-line prefer-destructuring */
 
   if (!logDataRow) {
     return [];
   }
 
-  if (!Object.prototype.hasOwnProperty.call(logDataRow, 'qvalues')) {
+  if (!Object.prototype.hasOwnProperty.call(logDataRow, 'action_values')) {
     return [];
   }
 
-  return logDataRow.qvalues.map((qvalue, idx) => (
-    { name: actionMeanings[idx], qvalue }
+  console.log(logDataRow.action_values);
+
+  return logDataRow.action_values.map((actionValue, idx) => (
+    { name: actionMeanings[idx], actionValue }
   )).sort((a, b) => (
-    b.qvalue - a.qvalue
+    b.actionValue - a.actionValue
   ));
 };
 
@@ -97,7 +99,7 @@ const mapStateToActionTaken = (state) => {
 };
 
 const mapStateToProps = (state) => ({
-  sortedQvalues: mapStateToSortedQvalues(state),
+  sortedActionValues: mapStateToSortedActionvalues(state),
   actionTaken: mapStateToActionTaken(state),
   paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
   actionMeanings: state.settings.actionMeanings,

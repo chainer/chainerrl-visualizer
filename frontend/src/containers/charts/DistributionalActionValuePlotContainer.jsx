@@ -36,18 +36,18 @@ const DistributionalActionValuePlotContainer = ({ actionMeanings, actionColors, 
 
 const mapStateToQvalueDist = (state) => {
   const logDataRow = state.log.logDataRows[state.plotRange.focusedStep];
-  const actionMeanings = state.serverState.actionMeanings;
+  const actionMeanings = state.settings.actionMeanings;
 
-  if (!logDataRow || !Object.prototype.hasOwnProperty.call(logDataRow, 'qvalue_dist')) {
+  if (!logDataRow || !Object.prototype.hasOwnProperty.call(logDataRow, 'action_value_dist')) {
     return [];
   }
 
   const qvalueDist = [];
-  for (let i = 0; i < logDataRow.qvalue_dist.length; i++) {
-    const rowArr = logDataRow.qvalue_dist[i];
+  for (let i = 0; i < logDataRow.action_value_dist.length; i++) {
+    const distRow = logDataRow.action_value_dist[i];
     const rowObj = {};
-    for (let j = 0; j < rowArr.length; j++) {
-      rowObj[actionMeanings[j]] = rowArr[j];
+    for (let j = 0; j < distRow.length; j++) {
+      rowObj[actionMeanings[j]] = distRow[j];
     }
     rowObj.z_value = logDataRow.z_values[i];
     qvalueDist.push(rowObj);

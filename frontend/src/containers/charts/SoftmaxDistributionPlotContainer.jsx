@@ -5,7 +5,7 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
 } from 'recharts';
 
-import { hoverOnStep } from '../../actions/index';
+import { hoverOnStep } from '../../actions';
 
 const toPercent = (decimal, fixed = 0) => (
   `${(decimal * 100).toFixed(fixed)}%`
@@ -43,7 +43,7 @@ class SoftmaxDistributionPlotContainer extends React.Component {
           }}
           ref={this.chartRef}
         >
-          <XAxis dataKey="steps">
+          <XAxis dataKey="step">
             <Label value="step" position="insideBottomLeft" offset={-10} />
           </XAxis>
           <YAxis
