@@ -9,5 +9,6 @@ class AgentProfileAPI(MethodView):
         profile.update({
             'agent_type': type(current_app.agent).__name__,
             'action_meanings': current_app.action_meanings,
+            'raw_image_input': current_app.raw_image_input,
         })
         return jsonify(profile)

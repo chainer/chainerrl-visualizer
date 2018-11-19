@@ -20,7 +20,7 @@ const CommandsContainer = (props) => {
     isRolloutReady,
     isSaliencyReady,
     rolloutId,
-    agentType,
+    rawImageInput,
   } = props;
 
   return (
@@ -35,7 +35,7 @@ const CommandsContainer = (props) => {
             Rollout 1 episode
           </Button>
           {
-            agentType !== 'PPO' && ( // TODO: decide by whether state input is raw image or not
+            rawImageInput && (
               <div>
                 <InputGroup style={{ marginTop: '20px' }}>
                   <InputGroupAddon addonType="prepend">
@@ -84,7 +84,7 @@ CommandsContainer.propTypes = {
   isRolloutReady: PropTypes.bool.isRequired,
   isSaliencyReady: PropTypes.bool.isRequired,
   rolloutId: PropTypes.string.isRequired,
-  agentType: PropTypes.string.isRequired,
+  rawImageInput: PropTypes.bool.isRequired,
   clickRollout: PropTypes.func.isRequired,
   clickSaliency: PropTypes.func.isRequired,
   changeSaliencyRangeLeft: PropTypes.func.isRequired,
@@ -97,7 +97,7 @@ const mapStateToProps = (state) => ({
   isRolloutReady: !state.serverState.isJobRunning,
   isSaliencyReady: !state.serverState.isJobRunning && state.serverState.isRolloutOnMemory,
   rolloutId: path.basename(state.log.rolloutPath),
-  agentType: state.agentProfile.agentType,
+  rawImageInput: state.agentProfile.rawImageInput,
 });
 
 export default connect(mapStateToProps, {

@@ -15,6 +15,15 @@ const agentType = (state = '', action) => {
   }
 };
 
+const rawImageInput = (state = false, action) => {
+  switch (action.type) {
+    case SUCCESS_FETCH_AGENT_PROFILE:
+      return action.rawImageInput;
+    default:
+      return state;
+  }
+};
+
 const containsRecurrentModel = (state = false, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_AGENT_PROFILE:
@@ -53,6 +62,7 @@ const actionValueType = (state = null, action) => {
 
 const agentProfile = combineReducers({
   agentType,
+  rawImageInput,
   containsRecurrentModel,
   stateValueReturned,
   distributionType,

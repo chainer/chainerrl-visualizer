@@ -40,6 +40,7 @@ export const getLatestLogInfo = () => (
 export const getAgentProfile = () => (
   axios.get('http://localhost:5002/api/agent_profile').then((res) => ({
     agentType: res.data.agent_type,
+    rawImageInput: res.data.raw_image_input,
     actionMeanings: res.data.action_meanings,
     containsRecurrentModel: res.data.contains_recurrent_model,
     stateValueReturned: res.data.state_value_returned,

@@ -112,6 +112,7 @@ export const startFetchAgentProfile = () => ({
 export const successFetchAgentProfile = (agentProfile) => ({
   type: SUCCESS_FETCH_AGENT_PROFILE,
   agentType: agentProfile.agentType,
+  rawImageInput: agentProfile.rawImageInput,
   actionMeanings: agentProfile.actionMeanings,
   containsRecurrentModel: agentProfile.containsRecurrentModel,
   stateValueReturned: agentProfile.stateValueReturned,

@@ -4,19 +4,19 @@ from chainerrl.agent import Agent
 from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
 
 
-def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings, job_queue, is_job_running,
+def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings, raw_image_input, job_queue, is_job_running,
                is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
-    app = create_app(agent, gymlike_env, profile, log_dir, action_meanings, job_queue, is_job_running, is_rollout_on_memory)
+    app = create_app(agent, gymlike_env, profile, log_dir, action_meanings, raw_image_input, job_queue, is_job_running, is_rollout_on_memory)
 
     app.config['ENV'] = 'development'
     app.run(host=host, port=port, debug=True, threaded=True, use_reloader=False)
 
 
-def create_app(agent, gymlike_env, profile, log_dir, action_meanings, q, is_job_running, is_rollout_on_memory):
+def create_app(agent, gymlike_env, profile, log_dir, action_meanings, raw_image_input, q, is_job_running, is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
     app = App(__name__, agent=agent, gymlike_env=gymlike_env, profile=profile, log_dir=log_dir, action_meanings=action_meanings,
-              job_queue=q, is_job_running=is_job_running, is_rollout_on_memory=is_rollout_on_memory)
+              raw_image_input=raw_image_input, job_queue=q, is_job_running=is_job_running, is_rollout_on_memory=is_rollout_on_memory)
 
     server_state_resource = ServerStateAPI.as_view('server_state_resource')
     agent_profile_resource = AgentProfileAPI.as_view('agent_profile_resource')
@@ -71,6 +71,7 @@ class App(Flask):
         profile = kwargs['profile']
         log_dir = kwargs['log_dir']
         action_meanings = kwargs['action_meanings']
+        raw_image_input = kwargs['raw_image_input']
         job_queue = kwargs['job_queue']
         # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
         is_job_running = kwargs['is_job_running']
@@ -81,6 +82,7 @@ class App(Flask):
         del kwargs['profile']
         del kwargs['log_dir']
         del kwargs['action_meanings']
+        del kwargs['raw_image_input']
         del kwargs['job_queue']
         del kwargs['is_job_running']
         del kwargs['is_rollout_on_memory']
@@ -97,6 +99,7 @@ class App(Flask):
         self.profile = profile
         self.log_dir = log_dir
         self.action_meanings = action_meanings
+        self.raw_image_input = raw_image_input
         self.job_queue = job_queue
         self.is_job_running = is_job_running
         self.is_rollout_on_memory = is_rollout_on_memory
