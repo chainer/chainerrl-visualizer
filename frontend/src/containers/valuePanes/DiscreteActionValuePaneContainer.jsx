@@ -75,8 +75,6 @@ const mapStateToSortedActionvalues = (state) => {
     return [];
   }
 
-  console.log(logDataRow.action_values);
-
   return logDataRow.action_values.map((actionValue, idx) => (
     { name: actionMeanings[idx], actionValue }
   )).sort((a, b) => (

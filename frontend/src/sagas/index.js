@@ -32,14 +32,7 @@ function* requestSaliencyFlow() {
   while (true) {
     const { rolloutId, fromStep, toStep } = yield take(CLICK_SALIENCY);
 
-    const { isSaliencyStarted } = yield call(postSaliency, rolloutId, fromStep, toStep);
-
-    // for debug
-    if (isSaliencyStarted) {
-      console.log('saliency started!');
-    } else {
-      console.log('saliency not started..');
-    }
+    yield call(postSaliency, rolloutId, fromStep, toStep);
   }
 }
 
