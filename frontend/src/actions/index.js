@@ -72,6 +72,8 @@ export const START_FETCH_SERVER_STATE = 'START_FETCH_SERVER_STATE';
 export const SUCCESS_FETCH_SERVER_STATE = 'SUCCESS_FETCH_SERVER_STATE';
 export const START_FETCH_LATEST_LOG_INFO = 'START_FETCH_LATEST_LOG_INFO';
 export const SUCCESS_FETCH_LATEST_LOG_INFO = 'SUCCESS_FETCH_LATEST_LOG_INFO';
+export const START_FETCH_AGENT_PROFILE = 'START_FETCH_AGENT_PROFILE';
+export const SUCCESS_FETCH_AGENT_PROFILE = 'SUCCESS_FETCH_AGENT_PROFILE';
 
 export const startFetchLog = (rolloutId) => ({
   type: START_FETCH_LOG,
@@ -88,10 +90,8 @@ export const startFetchServerState = () => ({
   type: START_FETCH_SERVER_STATE,
 });
 
-export const successFetchServerState = (agentType, actionMeanings, isJobRunning, isRolloutOnMemory) => ({
+export const successFetchServerState = (isJobRunning, isRolloutOnMemory) => ({
   type: SUCCESS_FETCH_SERVER_STATE,
-  agentType,
-  actionMeanings,
   isJobRunning,
   isRolloutOnMemory,
 });
@@ -103,6 +103,21 @@ export const startFetchLatestLogInfo = () => ({
 export const successFetchLatestLogInfo = (rolloutPath) => ({
   type: SUCCESS_FETCH_LATEST_LOG_INFO,
   rolloutPath,
+});
+
+export const startFetchAgentProfile = () => ({
+  type: START_FETCH_AGENT_PROFILE,
+});
+
+export const successFetchAgentProfile = (agentProfile) => ({
+  type: SUCCESS_FETCH_AGENT_PROFILE,
+  agentType: agentProfile.agentType,
+  rawImageInput: agentProfile.rawImageInput,
+  actionMeanings: agentProfile.actionMeanings,
+  containsRecurrentModel: agentProfile.containsRecurrentModel,
+  stateValueReturned: agentProfile.stateValueReturned,
+  distributionType: agentProfile.distributionType,
+  actionValueType: agentProfile.actionValueType,
 });
 
 export const TOGGLE_ACTION_DIMENSION_SELECT = 'TOGGLE_ACTION_DIMENSION_SELECT';

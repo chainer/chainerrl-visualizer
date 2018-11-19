@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
-import MainPage from './MainPage';
+import MainPageContainer from '../containers/MainPageContainer';
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware];
@@ -21,7 +21,7 @@ sagaMiddleware.run(rootSaga);
 const Root = () => (
   <Provider store={store}>
     <div>
-      <MainPage />
+      <MainPageContainer />
     </div>
   </Provider>
 );

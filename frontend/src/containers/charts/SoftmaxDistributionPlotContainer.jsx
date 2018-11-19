@@ -5,13 +5,13 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
 } from 'recharts';
 
-import { hoverOnStep } from '../actions';
+import { hoverOnStep } from '../../actions';
 
 const toPercent = (decimal, fixed = 0) => (
   `${(decimal * 100).toFixed(fixed)}%`
 );
 
-class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
+class SoftmaxDistributionPlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -20,7 +20,7 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
 
   render() {
     const {
-      logDataRows, actionMeanings, actionColors, focusedStep,
+      logDataRows, actionMeanings, actionColors, stateValueReturned, focusedStep,
     } = this.props;
 
     const legendPayload = Object.values(actionMeanings).map((actionMeaning, actionIdx) => ({
@@ -43,7 +43,7 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
           }}
           ref={this.chartRef}
         >
-          <XAxis dataKey="steps">
+          <XAxis dataKey="step">
             <Label value="step" position="insideBottomLeft" offset={-10} />
           </XAxis>
           <YAxis
@@ -76,7 +76,11 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
               />
             ))
           }
-          <Area fill="#00000000" dataKey="state_value" stroke="red" yAxisId="right" type="monotone" />
+          {
+            stateValueReturned && (
+              <Area fill="#00000000" dataKey="state_value" stroke="red" yAxisId="right" type="monotone" />
+            )
+          }
           <Legend payload={legendPayload} />
         </AreaChart>
       </div>
@@ -84,21 +88,23 @@ class DiscreteStochasticActionsAndValuePlotContainer extends React.Component {
   }
 }
 
-DiscreteStochasticActionsAndValuePlotContainer.propTypes = {
+SoftmaxDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  stateValueReturned: PropTypes.bool.isRequired,
   focusedStep: PropTypes.number.isRequired,
   hoverOnStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
-  actionMeanings: state.serverState.actionMeanings,
-  actionColors: state.serverState.actionColors,
+  actionMeanings: state.settings.actionMeanings,
+  actionColors: state.settings.actionColors,
+  stateValueReturned: state.agentProfile.stateValueReturned,
   focusedStep: state.plotRange.focusedStep,
 });
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(DiscreteStochasticActionsAndValuePlotContainer);
+})(SoftmaxDistributionPlotContainer);

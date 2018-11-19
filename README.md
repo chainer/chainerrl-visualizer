@@ -1,10 +1,6 @@
 # UI for ChainerRL
 You can anaylize learned ChainerRL agent's behavior in well visualized way, making debug easier.
 
-### NOTICE
-This library is under development, and not all ChainerRL agents are supported yet.
-Until 20.9.2018, only `CategoricalDQN`, `A3C`, `PPO` are supported.
-
 # Usage
 Just pass `agent` and `env` object to `chainerrlui.launch_visuzlizer` function.
 ```python

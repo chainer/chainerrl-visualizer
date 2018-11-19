@@ -8,11 +8,11 @@ import {
   PieChart, Pie, Cell, Legend,
 } from 'recharts';
 
-import { AGENT_TO_VALUES_PANE, VALUES_PANE_TO_TITLE } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings';
 
 /* eslint-disable prefer-destructuring */
 
-const DiscreteStochasticActionsContainer = ({
+const SoftmaxDistributionPaneContainer = ({
   actionProbs, actionTaken, actionMeanings, actionColors, paneTitle,
 }) => {
   const legendPayload = Object.values(actionMeanings).map((actionMeaning, actionIdx) => ({
@@ -89,9 +89,9 @@ const DiscreteStochasticActionsContainer = ({
   );
 };
 
-DiscreteStochasticActionsContainer.propTypes = {
+SoftmaxDistributionPaneContainer.propTypes = {
   actionProbs: PropTypes.arrayOf(PropTypes.shape({
-    actionName: PropTypes.string.isRequried,
+    actionName: PropTypes.string.isRequired,
     prob: PropTypes.number.isRequired,
   })).isRequired,
   actionTaken: PropTypes.number.isRequired,
@@ -102,8 +102,8 @@ DiscreteStochasticActionsContainer.propTypes = {
 
 const mapStateToActionProbs = (state) => {
   const logDataRow = state.log.logDataRows[state.plotRange.focusedStep];
-  const actionMeanings = state.serverState.actionMeanings;
-  const actionColors = state.serverState.actionColors;
+  const actionMeanings = state.settings.actionMeanings;
+  const actionColors = state.settings.actionColors;
 
   if (!logDataRow) {
     return [];
@@ -137,9 +137,9 @@ const mapStateToActionTaken = (state) => {
 const mapStateToProps = (state) => ({
   actionProbs: mapStateToActionProbs(state),
   actionTaken: mapStateToActionTaken(state),
-  actionMeanings: state.serverState.actionMeanings,
-  actionColors: state.serverState.actionColors,
-  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.serverState.agentType]],
+  actionMeanings: state.settings.actionMeanings,
+  actionColors: state.settings.actionColors,
+  paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
 });
 
-export default connect(mapStateToProps, null)(DiscreteStochasticActionsContainer);
+export default connect(mapStateToProps, null)(SoftmaxDistributionPaneContainer);
