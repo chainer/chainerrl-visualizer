@@ -19,12 +19,6 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
-    # TODO: When other agents supported, change this validation.
-    if not type(agent).__name__ in ['CategoricalDQN', 'A3C', 'PPO']:
-        raise Exception(
-            '\033[93m' + 'For now, only `CategoricalDQN`, `A3C` and `PPO` agents are supported . Please wait support'
-                         'for other agents or feel free to contribute to development of this library!' + '\033[0m')
-
     """
     if os.path.isdir(os.path.join(os.getcwd(), log_dir)):
         reply = str(input('Directory `{}` is already exists. Do you use this directory for log output? (y/n) '.format(
