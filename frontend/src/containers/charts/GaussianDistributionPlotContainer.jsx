@@ -5,12 +5,12 @@ import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 
-import { hoverOnStep } from '../actions';
+import { hoverOnStep } from '../../actions';
 
 /* eslint-disable prefer-destructuring */
 /* eslint-disable react/destructuring-assignment */
 
-class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
+class GaussianDistributionPlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -19,7 +19,7 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
 
   render() {
     const {
-      logDataRows, focusedStep, selectedActionDimensionIndices, actionColors,
+      logDataRows, focusedStep, selectedActionDimensionIndices, actionColors, stateValueReturned,
     } = this.props;
 
     logDataRows.forEach((logDataRow) => {
@@ -72,26 +72,30 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
           ))
         }
         {
-          // TODO: If `key` attribute to Area added, chart broken. Why?
           selectedActionDimensionIndices.map((actionIdx) => (
             <Area
               yAxisId="left"
               dataKey={(row) => row.trustRange[actionIdx]}
               stroke={actionColors[actionIdx]}
               fill={actionColors[actionIdx]}
+              key={`${actionIdx}_trust_range`}
             />
           ))
         }
-        <Area
-          yAxisId="right"
-          type="monotone"
-          dot={false}
-          fill="#00000000"
-          stroke="red"
-          dataKey="state_value"
-        />
+        {
+          stateValueReturned && (
+            <Area
+              yAxisId="right"
+              type="monotone"
+              dot={false}
+              fill="#00000000"
+              stroke="red"
+              dataKey="state_value"
+            />
+          )
+        }
         <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="steps" />
+        <XAxis dataKey="step" />
         <YAxis yAxisId="left" domain={['dataMin', 'dataMax']} tickFormatter={(v) => Number.parseFloat(v).toFixed(3)} />
         <YAxis yAxisId="right" orientation="right" />
         <Tooltip />
@@ -102,21 +106,23 @@ class ContinuousStochasticActionsAndValuePlotContainer extends React.Component {
 }
 
 
-ContinuousStochasticActionsAndValuePlotContainer.propTypes = {
+GaussianDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedStep: PropTypes.number.isRequired,
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
   hoverOnStep: PropTypes.func.isRequired,
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  stateValueReturned: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   focusedStep: state.plotRange.focusedStep,
-  selectedActionDimensionIndices: state.selectedActionDimensionIndices,
-  actionColors: state.serverState.actionColors,
+  selectedActionDimensionIndices: state.chartControl.selectedActionDimensionIndices,
+  actionColors: state.settings.actionColors,
+  stateValueReturned: state.agentProfile.stateValueReturned,
 });
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(ContinuousStochasticActionsAndValuePlotContainer);
+})(GaussianDistributionPlotContainer);

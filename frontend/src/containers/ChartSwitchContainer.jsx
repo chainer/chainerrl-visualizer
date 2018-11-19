@@ -5,7 +5,10 @@ import {
   Card, CardBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Input, FormGroup,
 } from 'reactstrap';
 
-import { AGENT_TO_CHARTS, AGENT_TO_VALUES_PANE, CONTINUOUS_STOCHASTIC_ACTIONS_PANE } from '../settings/agent';
+import {
+  GAUSSIAN_DISTRIBUTION_PLOT,
+  mapAgentProfileToChartList,
+} from '../settings';
 import { changeDisplayedChart, toggleActionDimensionSelect } from '../actions';
 
 /* eslint-disable react/destructuring-assignment */
@@ -25,7 +28,9 @@ class ChartSwitchContainer extends React.Component {
   }
 
   render() {
-    const { selectedActionDimensionIndices, agentType, actionMeanings } = this.props;
+    const {
+      selectedActionDimensionIndices, actionMeanings, agentProfile,
+    } = this.props;
 
     return (
       <div>
@@ -37,7 +42,7 @@ class ChartSwitchContainer extends React.Component {
               </DropdownToggle>
               <DropdownMenu>
                 {
-                  agentType && AGENT_TO_CHARTS[agentType].map((chartName) => (
+                  mapAgentProfileToChartList(agentProfile).map((chartName) => (
                     <DropdownItem
                       key={chartName}
                       onClick={(e) => {
@@ -51,7 +56,8 @@ class ChartSwitchContainer extends React.Component {
               </DropdownMenu>
             </Dropdown>
             {
-               AGENT_TO_VALUES_PANE[agentType] === CONTINUOUS_STOCHASTIC_ACTIONS_PANE && (
+              // TODO: deal with multiple pane switching
+               mapAgentProfileToChartList(agentProfile).includes(GAUSSIAN_DISTRIBUTION_PLOT) && (
                  <div style={{ marginTop: '10px' }}>
                    {
                      Object.keys(actionMeanings).map((key) => (
@@ -80,16 +86,16 @@ class ChartSwitchContainer extends React.Component {
 
 ChartSwitchContainer.propTypes = {
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
-  agentType: PropTypes.string.isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
+  agentProfile: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   changeDisplayedChart: PropTypes.func.isRequired,
   toggleActionDimensionSelect: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  selectedActionDimensionIndices: state.selectedActionDimensionIndices,
-  agentType: state.serverState.agentType,
-  actionMeanings: state.serverState.actionMeanings,
+  selectedActionDimensionIndices: state.chartControl.selectedActionDimensionIndices,
+  actionMeanings: state.settings.actionMeanings,
+  agentProfile: state.agentProfile,
 });
 
 export default connect(mapStateToProps, {

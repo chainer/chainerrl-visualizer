@@ -87,4 +87,4 @@ ACTION_MEANING = {
     17: "DOWNLEFTFIRE",
 }
 
-launch_visualizer(agent, env, action_meanings=ACTION_MEANING)
+launch_visualizer(agent, env, action_meanings=ACTION_MEANING, raw_image_input=True)

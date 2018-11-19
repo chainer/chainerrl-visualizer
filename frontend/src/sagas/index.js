@@ -3,10 +3,21 @@ import {
 } from 'redux-saga/effects';
 
 import {
-  CLICK_ROLLOUT, CLICK_SALIENCY, START_FETCH_LOG, START_FETCH_SERVER_STATE, START_FETCH_LATEST_LOG_INFO, receiveRolloutResponse, successFetchLog, successFetchServerState, successFetchLatestLogInfo,
+  CLICK_ROLLOUT,
+  CLICK_SALIENCY,
+  START_FETCH_LOG,
+  START_FETCH_SERVER_STATE,
+  START_FETCH_LATEST_LOG_INFO,
+  START_FETCH_AGENT_PROFILE,
+  receiveRolloutResponse,
+  successFetchLog,
+  successFetchServerState,
+  successFetchLatestLogInfo,
+  successFetchAgentProfile,
 } from '../actions';
+
 import {
-  postRollout, postSaliency, getRolloutLog, getServerState, getLatestLogInfo,
+  postRollout, postSaliency, getRolloutLog, getServerState, getLatestLogInfo, getAgentProfile,
 } from '../services';
 
 function* requestRolloutFlow() {
@@ -21,14 +32,7 @@ function* requestSaliencyFlow() {
   while (true) {
     const { rolloutId, fromStep, toStep } = yield take(CLICK_SALIENCY);
 
-    const { isSaliencyStarted } = yield call(postSaliency, rolloutId, fromStep, toStep);
-
-    // for debug
-    if (isSaliencyStarted) {
-      console.log('saliency started!');
-    } else {
-      console.log('saliency not started..');
-    }
+    yield call(postSaliency, rolloutId, fromStep, toStep);
   }
 }
 
@@ -37,7 +41,6 @@ function* fetchRolloutLogFlow() {
     const { rolloutId } = yield take(START_FETCH_LOG);
 
     if (!rolloutId) {
-      console.log('rolloutId has not been set...');
       continue;
     }
 
@@ -55,9 +58,9 @@ function* fetchServerStateFlow() {
   while (true) {
     yield take(START_FETCH_SERVER_STATE);
     const {
-      agentType, actionMeanings, isJobRunning, isRolloutOnMemory,
+      isJobRunning, isRolloutOnMemory,
     } = yield call(getServerState);
-    yield put(successFetchServerState(agentType, actionMeanings, isJobRunning, isRolloutOnMemory));
+    yield put(successFetchServerState(isJobRunning, isRolloutOnMemory));
   }
 }
 
@@ -69,12 +72,21 @@ function* fetchLatestLogInfoFlow() {
   }
 }
 
+function* fetchAgentProfileFlow() {
+  while (true) {
+    yield take(START_FETCH_AGENT_PROFILE);
+    const agentProfile = yield call(getAgentProfile);
+    yield put(successFetchAgentProfile(agentProfile));
+  }
+}
+
 function* rootSaga() {
   yield fork(requestRolloutFlow);
   yield fork(requestSaliencyFlow);
   yield fork(fetchRolloutLogFlow);
   yield fork(fetchServerStateFlow);
   yield fork(fetchLatestLogInfoFlow);
+  yield fork(fetchAgentProfileFlow);
 }
 
 export default rootSaga;

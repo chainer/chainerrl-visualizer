@@ -8,7 +8,7 @@ import {
 
 /* eslint-disable prefer-destructuring */
 
-const QvaluesDistributionPlotContainer = ({ actionMeanings, actionColors, qvalueDist }) => (
+const DistributionalActionValuePlotContainer = ({ actionMeanings, actionColors, qvalueDist }) => (
   <div>
     <BarChart
       width={830}
@@ -36,18 +36,18 @@ const QvaluesDistributionPlotContainer = ({ actionMeanings, actionColors, qvalue
 
 const mapStateToQvalueDist = (state) => {
   const logDataRow = state.log.logDataRows[state.plotRange.focusedStep];
-  const actionMeanings = state.serverState.actionMeanings;
+  const actionMeanings = state.settings.actionMeanings;
 
-  if (!logDataRow || !Object.prototype.hasOwnProperty.call(logDataRow, 'qvalue_dist')) {
+  if (!logDataRow || !Object.prototype.hasOwnProperty.call(logDataRow, 'action_value_dist')) {
     return [];
   }
 
   const qvalueDist = [];
-  for (let i = 0; i < logDataRow.qvalue_dist.length; i++) {
-    const rowArr = logDataRow.qvalue_dist[i];
+  for (let i = 0; i < logDataRow.action_value_dist.length; i++) {
+    const distRow = logDataRow.action_value_dist[i];
     const rowObj = {};
-    for (let j = 0; j < rowArr.length; j++) {
-      rowObj[actionMeanings[j]] = rowArr[j];
+    for (let j = 0; j < distRow.length; j++) {
+      rowObj[actionMeanings[j]] = distRow[j];
     }
     rowObj.z_value = logDataRow.z_values[i];
     qvalueDist.push(rowObj);
@@ -56,16 +56,16 @@ const mapStateToQvalueDist = (state) => {
   return qvalueDist;
 };
 
-QvaluesDistributionPlotContainer.propTypes = {
+DistributionalActionValuePlotContainer.propTypes = {
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
   qvalueDist: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  actionColors: state.serverState.actionColors,
-  actionMeanings: state.serverState.actionMeanings,
+  actionColors: state.settings.actionColors,
+  actionMeanings: state.settings.actionMeanings,
   qvalueDist: mapStateToQvalueDist(state),
 });
 
-export default connect(mapStateToProps, null)(QvaluesDistributionPlotContainer);
+export default connect(mapStateToProps, null)(DistributionalActionValuePlotContainer);

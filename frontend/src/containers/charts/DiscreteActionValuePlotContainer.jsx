@@ -5,9 +5,9 @@ import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, Label,
 } from 'recharts';
 
-import { hoverOnStep } from '../actions';
+import { hoverOnStep } from '../../actions/index';
 
-class DiscreteQvaluesPlotContainer extends React.Component {
+class DiscreteActionValuePlotContainer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -30,17 +30,17 @@ class DiscreteQvaluesPlotContainer extends React.Component {
           }}
         >
           {
-            logDataRows.length > 0 && logDataRows[0].qvalues.map((qvalue, idx) => (
+            logDataRows.length > 0 && logDataRows[0].action_values.map((actionValue, idx) => (
               <Line
                 type="monotone"
                 dot={false}
-                dataKey={(v) => v.qvalues[idx]}
+                dataKey={(v) => v.action_values[idx]}
                 key={idx} /* eslint-disable-line react/no-array-index-key */ // TODO: semantics of qvalues
               />
             ))
           }
           <CartesianGrid strokeDasharray="5 5" />
-          <XAxis dataKey="steps" height={45}>
+          <XAxis dataKey="step" height={45}>
             <Label value="step" position="insideBottomLeft" offset={5} />
           </XAxis>
           <YAxis
@@ -58,7 +58,7 @@ class DiscreteQvaluesPlotContainer extends React.Component {
   }
 }
 
-DiscreteQvaluesPlotContainer.propTypes = {
+DiscreteActionValuePlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   focusedStep: PropTypes.number.isRequired,
   hoverOnStep: PropTypes.func.isRequired,
@@ -71,4 +71,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   hoverOnStep,
-})(DiscreteQvaluesPlotContainer);
+})(DiscreteActionValuePlotContainer);

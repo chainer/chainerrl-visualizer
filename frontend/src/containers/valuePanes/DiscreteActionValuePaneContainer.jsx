@@ -8,10 +8,10 @@ import {
   BarChart, Bar, LabelList, XAxis, YAxis,
 } from 'recharts';
 
-import { AGENT_TO_VALUES_PANE, VALUES_PANE_TO_TITLE } from '../settings/agent';
+import { mapAgentProfileToValuesPaneTitle } from '../../settings';
 
-const DiscreteQvaluesContainer = ({
-  sortedQvalues, actionTaken, paneTitle, actionMeanings,
+const DiscreteActionValuePaneContainer = ({
+  sortedActionValues, actionTaken, paneTitle, actionMeanings,
 }) => (
   <div>
     <Card>
@@ -30,9 +30,9 @@ const DiscreteQvaluesContainer = ({
           layout="vertical"
           width={390}
           height={330}
-          data={sortedQvalues}
+          data={sortedActionValues}
         >
-          <Bar dataKey="qvalue" fill="#8884d8" isAnimationActive={false}>
+          <Bar dataKey="actionValue" fill="#8884d8" isAnimationActive={false}>
             <LabelList
               dataKey="name"
               position="insideRight"
@@ -56,29 +56,29 @@ const DiscreteQvaluesContainer = ({
   </div>
 );
 
-DiscreteQvaluesContainer.propTypes = {
-  sortedQvalues: PropTypes.arrayOf(PropTypes.object).isRequired,
+DiscreteActionValuePaneContainer.propTypes = {
+  sortedActionValues: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionTaken: PropTypes.number.isRequired,
   paneTitle: PropTypes.string.isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
 };
 
-const mapStateToSortedQvalues = (state) => {
+const mapStateToSortedActionvalues = (state) => {
   const logDataRow = state.log.logDataRows[state.plotRange.focusedStep];
-  const actionMeanings = state.serverState.actionMeanings; /* eslint-disable-line prefer-destructuring */
+  const actionMeanings = state.settings.actionMeanings; /* eslint-disable-line prefer-destructuring */
 
   if (!logDataRow) {
     return [];
   }
 
-  if (!Object.prototype.hasOwnProperty.call(logDataRow, 'qvalues')) {
+  if (!Object.prototype.hasOwnProperty.call(logDataRow, 'action_values')) {
     return [];
   }
 
-  return logDataRow.qvalues.map((qvalue, idx) => (
-    { name: actionMeanings[idx], qvalue }
+  return logDataRow.action_values.map((actionValue, idx) => (
+    { name: actionMeanings[idx], actionValue }
   )).sort((a, b) => (
-    b.qvalue - a.qvalue
+    b.actionValue - a.actionValue
   ));
 };
 
@@ -97,10 +97,10 @@ const mapStateToActionTaken = (state) => {
 };
 
 const mapStateToProps = (state) => ({
-  sortedQvalues: mapStateToSortedQvalues(state),
+  sortedActionValues: mapStateToSortedActionvalues(state),
   actionTaken: mapStateToActionTaken(state),
-  paneTitle: VALUES_PANE_TO_TITLE[AGENT_TO_VALUES_PANE[state.serverState.agentType]],
-  actionMeanings: state.serverState.actionMeanings,
+  paneTitle: mapAgentProfileToValuesPaneTitle(state.agentProfile),
+  actionMeanings: state.settings.actionMeanings,
 });
 
-export default connect(mapStateToProps, null)(DiscreteQvaluesContainer);
+export default connect(mapStateToProps, null)(DiscreteActionValuePaneContainer);

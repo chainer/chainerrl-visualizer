@@ -1,7 +1,11 @@
 import os
+from collections.abc import Iterable
+
 from PIL import Image
 import jsonlines
 import numpy as np
+import chainer
+import chainerrl
 
 from chainerrlui.utils import generate_random_string
 
@@ -12,18 +16,12 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
     obs_list[:] = []  # Clear the shared observations list
     render_img_list[:] = []  # Clear the shared render images list
 
-    # TODO: Generalize for all agents in ChainerRL
-    if type(agent).__name__ == 'CategoricalDQN':
-        _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, obs_list, render_img_list)
-    elif type(agent).__name__ == 'PPO':
-        _rollout_ppo(agent, gymlike_env, rollout_dir, obs_list, render_img_list)
-    elif type(agent).__name__ == 'A3C':
-        _rollout_a3c(agent, gymlike_env, rollout_dir, obs_list, render_img_list)
+    # workaround
+    if hasattr(agent, 'xp'):
+        xp = agent.xp
     else:
-        raise Exception('Unsupported agent')
+        xp = np
 
-
-def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
     log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
     writer = jsonlines.Writer(log_fp)
 
@@ -33,120 +31,69 @@ def _rollout_categorical_dqn(agent, gymlike_env, rollout_dir, obs_list, render_i
 
     while not (done or t == 1800):
         rendered = gymlike_env.render(mode='rgb_array')
+        image_path = _save_env_render(rendered, rollout_dir)
 
+        # save to shared memory
         obs_list.append(obs)
         render_img_list.append(rendered)
 
-        image_path = _save_env_render(rendered, rollout_dir)
+        if isinstance(agent, chainerrl.recurrent.RecurrentChainMixin):
+            with agent.model.state_kept():
+                outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
+        else:
+            outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
 
-        action_value = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
-        qvalues = action_value.q_values.data[0]
-        z_values = action_value.z_values
-        qvalue_dist = action_value.q_dist.data[0].T
-        a = agent.act(obs)
-        obs, r, done, info = gymlike_env.step(a)
+        if not isinstance(outputs, tuple):
+            outputs = tuple((outputs,))
 
-        writer.write({
-            'steps': t,
-            'action': int(a),
-            'reward': r,
-            'image_path': image_path,
-            'qvalues': [float(qvalue) for qvalue in qvalues],
-            'z_values': [float('%.2f' % float(v)) for v in z_values],
-            'qvalue_dist': [['%f' % float(v) for v in qvalue_dist_row] for qvalue_dist_row in qvalue_dist],
-        })
+        action = agent.act(obs)
+        obs, r, done, info = gymlike_env.step(action)
 
-        t += 1
+        log_entries = dict()
+        log_entries['step'] = t
+        log_entries['reward'] = r
+        log_entries['image_path'] = image_path
 
-        # workaround: to change file modified time during rollout
-        if t % 10 == 0:
-            writer.close()
-            log_fp.close()
+        if isinstance(action, Iterable):
+            log_entries['action'] = [float(v) for v in action]
+        else:
+            log_entries['action'] = int(action)  # Object of type int32 is not JSON serializable
 
-            log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
-            writer = jsonlines.Writer(log_fp)
+        for output in outputs:
+            if isinstance(output, chainer.Variable):
+                log_entries['state_value'] = float(output.data[0][0])
 
-    agent.stop_episode()
+            if isinstance(output, chainerrl.distribution.Distribution):
+                if isinstance(output, chainerrl.distribution.SoftmaxDistribution):
+                    log_entries['action_probs'] = [float(v) for v in output.all_prob.data[0]]
+                elif isinstance(output, chainerrl.distribution.MellowmaxDistribution):
+                    raise Exception('Not implemented for MellowmaxDistribution yet')
+                elif isinstance(output, chainerrl.distribution.GaussianDistribution):
+                    log_entries['action_means'] = [float(v) for v in output.mean.data[0]]
+                    log_entries['action_vars'] = [float(v) for v in output.var.data[0]]
+                elif isinstance(output, chainerrl.distribution.ContinuousDeterministicDistribution):
+                    raise Exception('Not implemented for ContinuousDeterministicDistribution yes')
+                else:
+                    raise Exception('Output of model in passed agent contains unsupported Distribution named {}'.format(
+                        type(output).__name__))
 
-    writer.close()
-    log_fp.close()
+            if isinstance(output, chainerrl.action_value.ActionValue):
+                if isinstance(output, chainerrl.action_value.DiscreteActionValue):
+                    log_entries['action_values'] = output.q_values.data[0]
+                elif isinstance(output, chainerrl.action_value.DistributionalDiscreteActionValue):
+                    log_entries['action_values'] = [float(v) for v in output.q_values.data[0]]
+                    log_entries['z_values'] = [float('%.2f' % float(v)) for v in output.z_values]
+                    log_entries['action_value_dist'] = [['%f' % float(v) for v in dist_row] for dist_row in
+                                                        output.q_dist.data[0].T]
+                elif isinstance(output, chainerrl.action_value.QuadraticActionValue):
+                    raise Exception('Not implemented for QuadraticActionValue')
+                elif isinstance(output, chainerrl.action_value.SingleActionValue):
+                    raise Exception('Not implemented for SingleActionValue')
+                else:
+                    raise Exception('Output of model in passed agent contains unsupported ActionValue named {}'.format(
+                        type(output).__name__))
 
-
-def _rollout_a3c(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
-    log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
-    writer = jsonlines.Writer(log_fp)
-
-    obs = gymlike_env.reset()
-    done = False
-    t = 0
-
-    while not (done or t == 1800):
-        rendered = gymlike_env.render(mode='rgb_array')
-
-        obs_list.append(obs)
-        render_img_list.append(rendered)
-
-        image_path = _save_env_render(rendered, rollout_dir)
-
-        softmax_dist, state_value = agent.model(agent.batch_states([obs], np, agent.phi))
-        a = agent.act(obs)
-        obs, r, done, info = gymlike_env.step(a)
-
-        writer.write({
-            'steps': t,
-            'action': int(a),
-            'reward': r,
-            'image_path': image_path,
-            'state_value': float(state_value.data[0][0]),
-            'action_probs': [float(v) for v in softmax_dist.all_prob.data[0]],
-        })
-
-        t += 1
-
-        # workaround: to change file modified time during rollout
-        if t % 10 == 0:
-            writer.close()
-            log_fp.close()
-
-            log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
-            writer = jsonlines.Writer(log_fp)
-
-    agent.stop_episode()
-
-    writer.close()
-    log_fp.close()
-
-
-def _rollout_ppo(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
-    log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
-    writer = jsonlines.Writer(log_fp)
-
-    obs = gymlike_env.reset()
-    done = False
-    t = 0
-
-    while not (done or t == 100):
-        rendered = gymlike_env.render(mode='rgb_array')
-
-        obs_list.append(obs)
-        render_img_list.append(rendered)
-
-        image_path = _save_env_render(rendered, rollout_dir)
-
-        action_dist, state_value = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
-        a = agent.act(obs)
-        obs, r, done, info = gymlike_env.step(a)
-
-        writer.write({
-            'steps': t,
-            'reward': r,
-            'image_path': image_path,
-            'action': [float(v) for v in a],
-            'state_value': float(state_value.data[0][0]),
-            'action_means': [float(v) for v in action_dist.mean.data[0]],
-            'action_vars': [float(v) for v in action_dist.var.data[0]],
-        })
-
+        writer.write(log_entries)
         t += 1
 
         # workaround: to change file modified time during rollout
