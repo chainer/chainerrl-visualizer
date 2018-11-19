@@ -19,7 +19,7 @@ class GaussianDistributionPlotContainer extends React.Component {
 
   render() {
     const {
-      logDataRows, focusedStep, selectedActionDimensionIndices, actionColors,
+      logDataRows, focusedStep, selectedActionDimensionIndices, actionColors, stateValueReturned,
     } = this.props;
 
     logDataRows.forEach((logDataRow) => {
@@ -82,14 +82,18 @@ class GaussianDistributionPlotContainer extends React.Component {
             />
           ))
         }
-        <Area
-          yAxisId="right"
-          type="monotone"
-          dot={false}
-          fill="#00000000"
-          stroke="red"
-          dataKey="state_value"
-        />
+        {
+          stateValueReturned && (
+            <Area
+              yAxisId="right"
+              type="monotone"
+              dot={false}
+              fill="#00000000"
+              stroke="red"
+              dataKey="state_value"
+            />
+          )
+        }
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="step" />
         <YAxis yAxisId="left" domain={['dataMin', 'dataMax']} tickFormatter={(v) => Number.parseFloat(v).toFixed(3)} />
@@ -108,6 +112,7 @@ GaussianDistributionPlotContainer.propTypes = {
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
   hoverOnStep: PropTypes.func.isRequired,
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  stateValueReturned: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -115,6 +120,7 @@ const mapStateToProps = (state) => ({
   focusedStep: state.plotRange.focusedStep,
   selectedActionDimensionIndices: state.chartControl.selectedActionDimensionIndices,
   actionColors: state.settings.actionColors,
+  stateValueReturned: state.agentProfile.stateValueReturned,
 });
 
 export default connect(mapStateToProps, {

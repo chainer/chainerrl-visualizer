@@ -20,7 +20,7 @@ class SoftmaxDistributionPlotContainer extends React.Component {
 
   render() {
     const {
-      logDataRows, actionMeanings, actionColors, focusedStep,
+      logDataRows, actionMeanings, actionColors, stateValueReturned, focusedStep,
     } = this.props;
 
     const legendPayload = Object.values(actionMeanings).map((actionMeaning, actionIdx) => ({
@@ -76,7 +76,11 @@ class SoftmaxDistributionPlotContainer extends React.Component {
               />
             ))
           }
-          <Area fill="#00000000" dataKey="state_value" stroke="red" yAxisId="right" type="monotone" />
+          {
+            stateValueReturned && (
+              <Area fill="#00000000" dataKey="state_value" stroke="red" yAxisId="right" type="monotone" />
+            )
+          }
           <Legend payload={legendPayload} />
         </AreaChart>
       </div>
@@ -88,6 +92,7 @@ SoftmaxDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  stateValueReturned: PropTypes.bool.isRequired,
   focusedStep: PropTypes.number.isRequired,
   hoverOnStep: PropTypes.func.isRequired,
 };
@@ -96,6 +101,7 @@ const mapStateToProps = (state) => ({
   logDataRows: state.log.logDataRows.slice(state.plotRange.plotRangeLeft, state.plotRange.plotRangeRight + 1),
   actionMeanings: state.settings.actionMeanings,
   actionColors: state.settings.actionColors,
+  stateValueReturned: state.agentProfile.stateValueReturned,
   focusedStep: state.plotRange.focusedStep,
 });
 
