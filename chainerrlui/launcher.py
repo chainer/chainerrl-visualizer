@@ -12,16 +12,21 @@ from chainerrlui.web_server import web_server
 from chainerrlui.job_worker import job_worker
 
 
-def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002, action_meanings={}, raw_image_input=False):
-    assert issubclass(type(agent), Agent), 'Agent object has to be subclass of Agent class defined in chainerrl'
+def launch_visualizer(agent, gymlike_env, log_dir='log_space',
+                      host='localhost', port=5002, action_meanings={},
+                      raw_image_input=False):
+    assert issubclass(type(agent), Agent), 'Agent object has to be subclass' \
+                                           ' of chainerrl.agent.Agent'
 
-    assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'
+    assert hasattr(
+        gymlike_env, 'render'), 'Env object must have `render` method'
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
     """
     if os.path.isdir(os.path.join(os.getcwd(), log_dir)):
-        reply = str(input('Directory `{}` is already exists. Do you use this directory for log output? (y/n) '.format(
+        reply = str(input('Directory `{}` is already exists.'
+        'Do you use this directory for log output? (y/n) '.format(
             log_dir))).lower().strip()
 
         if not reply == 'y':
@@ -48,10 +53,11 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     is_rollout_on_memory = Value(c_bool, False)
 
     server_process = Process(target=web_server, args=(
-        agent, gymlike_env, profile, log_dir, host, port, action_meanings, raw_image_input, job_queue, is_job_running,
-        is_rollout_on_memory))
-    worker_process = Process(target=job_worker,
-                             args=(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory))
+        agent, gymlike_env, profile, log_dir, host, port, action_meanings,
+        raw_image_input, job_queue, is_job_running, is_rollout_on_memory))
+
+    worker_process = Process(target=job_worker, args=(
+        agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory))
 
     server_process.start()
     worker_process.start()
@@ -94,7 +100,8 @@ def inspect_agent(agent, gymlike_env):
         outputs = tuple((outputs,))
 
     for output in outputs:
-        if isinstance(output, chainer.Variable):  # state value returned as chainer.Variable
+        # state value returned as chainer.Variable
+        if isinstance(output, chainer.Variable):
             profile['state_value_returned'] = True
 
         if isinstance(output, chainerrl.distribution.Distribution):

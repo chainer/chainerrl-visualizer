@@ -1,22 +1,49 @@
 from flask import Flask, render_template, send_file, request
 from chainerrl.agent import Agent
 
-from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
+from chainerrlui.views import (RolloutAPI,
+                               SaliencyAPI,
+                               ServerStateAPI,
+                               AgentProfileAPI)
 
 
-def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings, raw_image_input, job_queue, is_job_running,
+def web_server(agent, gymlike_env, profile, log_dir, host, port,
+               action_meanings, raw_image_input, job_queue, is_job_running,
                is_rollout_on_memory):
-    # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
-    app = create_app(agent, gymlike_env, profile, log_dir, action_meanings, raw_image_input, job_queue, is_job_running, is_rollout_on_memory)
+    # is_job_running, is_rollout_on_memory :
+    # <Synchronized wrapper for c_bool>, on shared memory, process safe
+
+    app = create_app(
+        agent,
+        gymlike_env,
+        profile,
+        log_dir,
+        action_meanings,
+        raw_image_input,
+        job_queue,
+        is_job_running,
+        is_rollout_on_memory)
 
     app.config['ENV'] = 'development'
-    app.run(host=host, port=port, debug=True, threaded=True, use_reloader=False)
+    app.run(
+        host=host, port=port, debug=True, threaded=True, use_reloader=False)
 
 
-def create_app(agent, gymlike_env, profile, log_dir, action_meanings, raw_image_input, q, is_job_running, is_rollout_on_memory):
-    # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
-    app = App(__name__, agent=agent, gymlike_env=gymlike_env, profile=profile, log_dir=log_dir, action_meanings=action_meanings,
-              raw_image_input=raw_image_input, job_queue=q, is_job_running=is_job_running, is_rollout_on_memory=is_rollout_on_memory)
+def create_app(agent, gymlike_env, profile, log_dir, action_meanings,
+               raw_image_input, q, is_job_running, is_rollout_on_memory):
+    # is_job_running, is_rollout_on_memory :
+    # <Synchronized wrapper for c_bool>, on shared memory, process safe
+    app = App(
+        __name__,
+        agent=agent,
+        gymlike_env=gymlike_env,
+        profile=profile,
+        log_dir=log_dir,
+        action_meanings=action_meanings,
+        raw_image_input=raw_image_input,
+        job_queue=q,
+        is_job_running=is_job_running,
+        is_rollout_on_memory=is_rollout_on_memory)
 
     server_state_resource = ServerStateAPI.as_view('server_state_resource')
     agent_profile_resource = AgentProfileAPI.as_view('agent_profile_resource')
@@ -29,7 +56,8 @@ def create_app(agent, gymlike_env, profile, log_dir, action_meanings, raw_image_
 
     @app.route('/images')
     def get_image():
-        return send_file(request.args.get('image_path'), mimetype='image/image')
+        return send_file(
+            request.args.get('image_path'), mimetype='image/image')
 
     app.add_url_rule(
         '/api/server_state',
@@ -73,7 +101,9 @@ class App(Flask):
         action_meanings = kwargs['action_meanings']
         raw_image_input = kwargs['raw_image_input']
         job_queue = kwargs['job_queue']
-        # is_job_running, is_rollout_on_memory : <Synchronized wrapper for c_bool>, on shared memory, process safe
+
+        # is_job_running, is_rollout_on_memory :
+        # <Synchronized wrapper for c_bool>, on shared memory, process safe
         is_job_running = kwargs['is_job_running']
         is_rollout_on_memory = kwargs['is_rollout_on_memory']
 
@@ -89,10 +119,15 @@ class App(Flask):
 
         super().__init__(*args, **kwargs)
 
-        assert issubclass(type(agent), Agent), 'Agent object has to be subclass of Agent class defined in chainerrl'
-        assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'
-        assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
-        assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
+        assert issubclass(
+            type(agent), Agent), 'Agent object has to be subclass of Agent ' \
+                                 'class defined in chainerrl'
+        assert hasattr(
+            gymlike_env, 'render'), 'Env object must have `render` method'
+        assert hasattr(
+            gymlike_env, 'reset'), 'Env object must have `reset` method'
+        assert hasattr(
+            gymlike_env, 'step'), 'Env object must have `step` method'
 
         self.agent = agent
         self.gymlike_env = gymlike_env

@@ -1,2 +1,2 @@
-from chainerrlui.worker_jobs.rollout_job import rollout
-from chainerrlui.worker_jobs.saliency_job import create_and_save_saliency_images
+from chainerrlui.worker_jobs.rollout_job import rollout # NOQA
+from chainerrlui.worker_jobs.saliency_job import create_and_save_saliency_images # NOQA
