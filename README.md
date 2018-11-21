@@ -1,6 +1,16 @@
 # UI for ChainerRL
 You can anaylize learned ChainerRL agent's behavior in well visualized way, making debug easier.
 
+## Installation
+To install UI for ChainerRL from source.
+
+```sh
+$ git clone https://github.com/pfnet/i18-sykwer.git
+$ cd i18-sykwer/frontend
+$ npm install && npm run build && cd ..
+$ pip install -e .
+```
+
 ## Usage
 Just pass `agent` and `env` object to `chainerrlui.launch_visuzlizer` function.
 ```python
