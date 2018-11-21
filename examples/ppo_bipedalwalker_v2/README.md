@@ -1,21 +1,4 @@
 # How to run example
-Clone the repo and change directory to the project.
-```
-$ git clone https://github.com/pfn-intern/i18-sykwer.git
-$ cd i18-sykwer
-```
-
-Prepare environment (such as venv) for running example.
-```
-$ python -m venv venv
-$ source venv/bin/activate
-```
-
-Install packages in development mode.
-```
-$ python setup.py develop
-```
-
 In this example, you need to install `box2d`. [For some reason](https://github.com/openai/gym/issues/100#issuecomment-260095406), you have to install box2d from source.
 ```
 # Install swig in proper way to your OS.
