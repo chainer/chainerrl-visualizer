@@ -84,8 +84,8 @@ class ChartSwitchContainer extends React.Component {
 
 ChartSwitchContainer.propTypes = {
   selectedActionDimensionIndices: PropTypes.arrayOf(PropTypes.number).isRequired,
-  actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
-  agentProfile: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
+  actionMeanings: PropTypes.object.isRequired,
+  agentProfile: PropTypes.object.isRequired,
   changeDisplayedChart: PropTypes.func.isRequired,
   toggleActionDimensionSelect: PropTypes.func.isRequired,
 };
