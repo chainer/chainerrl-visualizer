@@ -5,7 +5,7 @@ import {
   Card, CardBody, CardTitle,
 } from 'reactstrap';
 import {
-  BarChart, Bar, LabelList, XAxis, YAxis,
+  ResponsiveContainer, BarChart, Bar, LabelList, XAxis, YAxis,
 } from 'recharts';
 
 import { mapAgentProfileToValuesPaneTitle } from '../../settings';
@@ -26,31 +26,31 @@ const DiscreteActionValuePaneContainer = ({
           </strong>
           {' )'}
         </p>
-        <BarChart
-          layout="vertical"
-          width={390}
-          height={330}
-          data={sortedActionValues}
-        >
-          <Bar dataKey="actionValue" fill="#8884d8" isAnimationActive={false}>
-            <LabelList
-              dataKey="name"
-              position="insideRight"
-              style={{ fontSize: '8px' }}
+        <ResponsiveContainer aspect={1.4} width="100%" height={null}>
+          <BarChart
+            layout="vertical"
+            data={sortedActionValues}
+          >
+            <Bar dataKey="actionValue" fill="#8884d8" isAnimationActive={false}>
+              <LabelList
+                dataKey="name"
+                position="insideRight"
+                style={{ fontSize: '8px' }}
+              />
+            </Bar>
+            <XAxis
+              type="number"
+              tickFormatter={(v) => Number.parseFloat(v).toFixed(2)}
+              domain={['dataMin - 0.05', 'dataMax']}
+              padding={{ right: 10 }}
             />
-          </Bar>
-          <XAxis
-            type="number"
-            tickFormatter={(v) => Number.parseFloat(v).toFixed(2)}
-            domain={['dataMin - 0.05', 'dataMax']}
-            padding={{ right: 10 }}
-          />
-          <YAxis
-            type="category"
-            tick={false}
-            width={2}
-          />
-        </BarChart>
+            <YAxis
+              type="category"
+              tick={false}
+              width={2}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </CardBody>
     </Card>
   </div>

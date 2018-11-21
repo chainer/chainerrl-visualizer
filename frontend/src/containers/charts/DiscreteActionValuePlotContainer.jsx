@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, Label,
+  ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, Label,
 } from 'recharts';
 
 import { hoverOnStep } from '../../actions/index';
@@ -18,10 +18,8 @@ class DiscreteActionValuePlotContainer extends React.Component {
     const { logDataRows, focusedStep } = this.props;
 
     return (
-      <div>
+      <ResponsiveContainer aspect={(16 / (9 * 0.85))} width="100%" height={null}>
         <LineChart
-          width={830}
-          height={450}
           data={logDataRows}
           ref={this.chartRef}
           onMouseMove={() => {
@@ -53,7 +51,7 @@ class DiscreteActionValuePlotContainer extends React.Component {
           <Tooltip />
           <ReferenceLine x={focusedStep} stroke="green" />
         </LineChart>
-      </div>
+      </ResponsiveContainer>
     );
   }
 }
