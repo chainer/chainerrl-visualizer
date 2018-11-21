@@ -7,7 +7,7 @@ import numpy as np
 
 from chainerrlui import launch_visualizer
 
-import atari_wrappers
+from chainerrl.wrappers import atari_wrappers
 
 seed = 0
 env_name = "SeaquestNoFrameskip-v4"
