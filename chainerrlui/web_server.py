@@ -1,15 +1,11 @@
 from flask import Flask, render_template, send_file, request
 from chainerrl.agent import Agent
 
-from chainerrlui.views import (RolloutAPI,
-                               SaliencyAPI,
-                               ServerStateAPI,
-                               AgentProfileAPI)
+from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
 
 
-def web_server(agent, gymlike_env, profile, log_dir, host, port,
-               action_meanings, raw_image_input, job_queue, is_job_running,
-               is_rollout_on_memory):
+def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings,
+               raw_image_input, job_queue, is_job_running, is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory :
     # <Synchronized wrapper for c_bool>, on shared memory, process safe
 
@@ -56,8 +52,7 @@ def create_app(agent, gymlike_env, profile, log_dir, action_meanings,
 
     @app.route('/images')
     def get_image():
-        return send_file(
-            request.args.get('image_path'), mimetype='image/image')
+        return send_file(request.args.get('image_path'), mimetype='image/image')
 
     app.add_url_rule(
         '/api/server_state',
@@ -119,15 +114,12 @@ class App(Flask):
 
         super().__init__(*args, **kwargs)
 
-        assert issubclass(
-            type(agent), Agent), 'Agent object has to be subclass of Agent ' \
-                                 'class defined in chainerrl'
-        assert hasattr(
-            gymlike_env, 'render'), 'Env object must have `render` method'
-        assert hasattr(
-            gymlike_env, 'reset'), 'Env object must have `reset` method'
-        assert hasattr(
-            gymlike_env, 'step'), 'Env object must have `step` method'
+        assert issubclass(type(agent), Agent), 'Agent object has to be subclass of ' \
+                                               'Agent class defined in chainerrl'
+
+        assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'
+        assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
+        assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
         self.agent = agent
         self.gymlike_env = gymlike_env

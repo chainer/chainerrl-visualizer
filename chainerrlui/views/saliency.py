@@ -10,8 +10,7 @@ class SaliencyAPI(MethodView):
         from_step = int(data['from_step'])
         to_step = int(data['to_step'])
 
-        if current_app.is_job_running.value or \
-                (not current_app.is_rollout_on_memory.value):
+        if current_app.is_job_running.value or (not current_app.is_rollout_on_memory.value):
             return jsonify({
                 'is_saliency_started': False,
             })

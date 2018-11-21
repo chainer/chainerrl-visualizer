@@ -1,7 +1,17 @@
 # UI for ChainerRL
 You can anaylize learned ChainerRL agent's behavior in well visualized way, making debug easier.
 
-# Usage
+## Installation
+To install UI for ChainerRL from source.
+
+```sh
+$ git clone https://github.com/pfnet/i18-sykwer.git
+$ cd i18-sykwer/frontend
+$ npm install && npm run build && cd ..
+$ pip install -e .
+```
+
+## Usage
 Just pass `agent` and `env` object to `chainerrlui.launch_visuzlizer` function.
 ```python
 from chainerrlui import launch_visualizer
@@ -24,7 +34,7 @@ launch_visualizer(agent, env, action_meanings=ACTION_MEANINGS)
   - `reset`: Reset the environment to initial state.
   - `step` : Take `numpy.ndarray` action as argument, and proceed enviroment one step.
   - `render` : Return 3D `numpy.ndarray` which represents RGB image describing env state.
-  
+
 ## Env object interface
 ### reset
 Reset the environment state and returns initial array-like observation object.
@@ -38,7 +48,7 @@ Run the timestep of environment's dynamics.
 ```
 Args:
   - action (numpy.ndarray): ndarray representing next action to take
-  
+
 Returns:
   - observation (array-like object): agent's observation of the current environment
   - reward (float): amount of reward returned after args action taken
@@ -53,8 +63,8 @@ Returns:
   - image (3d numpy.ndarray): RGB image of current environment appearance.
 ```
 
-# Quick start
+## Quick start
 Follow instructions of each example.
-- [CategoricalDQN at seaquest](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/categorical_dqn_seaquest)
-- [A3C at breakout](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/a3c_breakout)
-- [PPO at bipedalwalker-v2](https://github.com/pfn-intern/i18-sykwer/tree/master/examples/ppo_bipedalwalker_v2)
+- [CategoricalDQN at seaquest](examples/categorical_dqn_seaquest)
+- [A3C at breakout](examples/a3c_breakout)
+- [PPO at bipedalwalker-v2](examples/ppo_bipedalwalker_v2)

@@ -24,5 +24,4 @@ def get_latest_rollout_info():
 
     latest_rollout_id = latest.strftime(timestamp_format)
 
-    return latest_rollout_id, os.path.join(
-            current_app.log_dir, 'rollouts', latest_rollout_id)
+    return latest_rollout_id, os.path.join(current_app.log_dir, 'rollouts', latest_rollout_id)

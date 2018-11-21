@@ -1,8 +1,14 @@
-venv/
-.idea/
-
-dist/
-build/
+# python
+*.pyc
+**/__pycache__
 *.egg-info
 *.egg
-**/__pycache__
+build/
+dist/
+venv/
+
+# frontend
+chainerrlui/static/dist
+
+# IDE
+.idea/
