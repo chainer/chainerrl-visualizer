@@ -10,5 +10,4 @@ def generate_timestamp():
 
 
 def generate_random_string(length):
-    return ''.join([random.choice(
-        string.ascii_letters + string.digits) for _ in range(length)])
+    return ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(length)])

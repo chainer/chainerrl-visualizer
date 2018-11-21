@@ -12,14 +12,13 @@ from chainerrlui.web_server import web_server
 from chainerrlui.job_worker import job_worker
 
 
-def launch_visualizer(agent, gymlike_env, log_dir='log_space',
-                      host='localhost', port=5002, action_meanings={},
-                      raw_image_input=False):
-    assert issubclass(type(agent), Agent), 'Agent object has to be subclass' \
-                                           ' of chainerrl.agent.Agent'
+def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002,
+                      action_meanings={}, raw_image_input=False):
 
-    assert hasattr(
-        gymlike_env, 'render'), 'Env object must have `render` method'
+    assert issubclass(type(agent), Agent), 'Agent object has to be ' \
+                                           'subclass of chainerrl.agent.Agent'
+
+    assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
