@@ -6,6 +6,16 @@ import jsonlines
 import numpy as np
 import chainer
 import chainerrl
+from chainerrl.distribution import (Distribution,
+                                    SoftmaxDistribution,
+                                    MellowmaxDistribution,
+                                    GaussianDistribution,
+                                    ContinuousDeterministicDistribution)
+from chainerrl.action_value import (ActionValue,
+                                    DiscreteActionValue,
+                                    DistributionalDiscreteActionValue,
+                                    QuadraticActionValue,
+                                    SingleActionValue)
 
 from chainerrlui.utils import generate_random_string
 
@@ -39,7 +49,8 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
 
         if isinstance(agent, chainerrl.recurrent.RecurrentChainMixin):
             with agent.model.state_kept():
-                outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
+                outputs = agent.model(
+                    agent.batch_states([obs], xp, agent.phi))
         else:
             outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
 
@@ -57,41 +68,53 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
         if isinstance(action, Iterable):
             log_entries['action'] = [float(v) for v in action]
         else:
-            log_entries['action'] = int(action)  # Object of type int32 is not JSON serializable
+            # Object of type int32 is not JSON serializable
+            log_entries['action'] = int(action)
 
         for output in outputs:
             if isinstance(output, chainer.Variable):
                 log_entries['state_value'] = float(output.data[0][0])
 
-            if isinstance(output, chainerrl.distribution.Distribution):
-                if isinstance(output, chainerrl.distribution.SoftmaxDistribution):
-                    log_entries['action_probs'] = [float(v) for v in output.all_prob.data[0]]
-                elif isinstance(output, chainerrl.distribution.MellowmaxDistribution):
-                    raise Exception('Not implemented for MellowmaxDistribution yet')
-                elif isinstance(output, chainerrl.distribution.GaussianDistribution):
-                    log_entries['action_means'] = [float(v) for v in output.mean.data[0]]
-                    log_entries['action_vars'] = [float(v) for v in output.var.data[0]]
-                elif isinstance(output, chainerrl.distribution.ContinuousDeterministicDistribution):
-                    raise Exception('Not implemented for ContinuousDeterministicDistribution yes')
+            if isinstance(output, Distribution):
+                if isinstance(output, SoftmaxDistribution):
+                    log_entries['action_probs'] = [
+                        float(v) for v in output.all_prob.data[0]]
+                elif isinstance(output, MellowmaxDistribution):
+                    raise Exception(
+                        'Not implemented for MellowmaxDistribution yet')
+                elif isinstance(output, GaussianDistribution):
+                    log_entries['action_means'] = [
+                        float(v) for v in output.mean.data[0]]
+                    log_entries['action_vars'] = [
+                        float(v) for v in output.var.data[0]]
+                elif isinstance(output, ContinuousDeterministicDistribution):
+                    raise Exception('Not implemented for'
+                                    'ContinuousDeterministicDistribution yes')
                 else:
-                    raise Exception('Output of model in passed agent contains unsupported Distribution named {}'.format(
-                        type(output).__name__))
+                    raise Exception('Output of model in passed agent contains'
+                                    ' unsupported Distribution'
+                                    ' named {}'.format(type(output).__name__))
 
-            if isinstance(output, chainerrl.action_value.ActionValue):
-                if isinstance(output, chainerrl.action_value.DiscreteActionValue):
+            if isinstance(output, ActionValue):
+                if isinstance(output, DiscreteActionValue):
                     log_entries['action_values'] = output.q_values.data[0]
-                elif isinstance(output, chainerrl.action_value.DistributionalDiscreteActionValue):
-                    log_entries['action_values'] = [float(v) for v in output.q_values.data[0]]
-                    log_entries['z_values'] = [float('%.2f' % float(v)) for v in output.z_values]
-                    log_entries['action_value_dist'] = [['%f' % float(v) for v in dist_row] for dist_row in
-                                                        output.q_dist.data[0].T]
-                elif isinstance(output, chainerrl.action_value.QuadraticActionValue):
-                    raise Exception('Not implemented for QuadraticActionValue')
-                elif isinstance(output, chainerrl.action_value.SingleActionValue):
+                elif isinstance(output, DistributionalDiscreteActionValue):
+                    log_entries['action_values'] = [
+                        float(v) for v in output.q_values.data[0]]
+                    log_entries['z_values'] = [
+                        float('%.2f' % float(v)) for v in output.z_values]
+                    log_entries['action_value_dist'] =\
+                        [['%f' % float(v) for v in dist_row]
+                         for dist_row in output.q_dist.data[0].T]
+                elif isinstance(output, QuadraticActionValue):
+                    raise Exception(
+                        'Not implemented for QuadraticActionValue')
+                elif isinstance(output, SingleActionValue):
                     raise Exception('Not implemented for SingleActionValue')
                 else:
-                    raise Exception('Output of model in passed agent contains unsupported ActionValue named {}'.format(
-                        type(output).__name__))
+                    raise Exception('Output of model in passed agent contains'
+                                    ' unsupported ActionValue named '
+                                    '{}'.format(type(output).__name__))
 
         writer.write(log_entries)
         t += 1
@@ -101,7 +124,8 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
             writer.close()
             log_fp.close()
 
-            log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
+            log_fp = open(os.path.join(
+                rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
             writer = jsonlines.Writer(log_fp)
 
     agent.stop_episode()
@@ -112,6 +136,7 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
 
 def _save_env_render(rendered, rollout_dir):
     image = Image.fromarray(rendered)
-    image_path = os.path.join(rollout_dir, 'images', generate_random_string(11) + '.png')
+    image_path = os.path.join(
+        rollout_dir, 'images', generate_random_string(11) + '.png')
     image.save(image_path)
     return image_path

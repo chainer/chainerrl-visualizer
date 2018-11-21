@@ -16,4 +16,3 @@ def prepare_rollout_dir():
     rollout_dir = os.path.join(os.getcwd(), rollout_dir)
 
     return rollout_dir
-
