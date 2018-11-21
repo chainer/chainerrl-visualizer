@@ -64,7 +64,7 @@ class ChartControlContainer extends React.Component {
                 type="number"
                 step="10"
                 value={plotRangeLeft}
-                onInput={(e) => { this.props.changePlotRangeLeft(parseInt(e.target.value, 10)); }}
+                onChange={(e) => { this.props.changePlotRangeLeft(parseInt(e.target.value, 10)); }}
               />
               <InputGroupAddon addonType="prepend">
                 Right
@@ -73,7 +73,7 @@ class ChartControlContainer extends React.Component {
                 type="number"
                 step="10"
                 value={plotRangeRight}
-                onInput={(e) => { this.props.changePlotRangeRight(parseInt(e.target.value, 10)); }}
+                onChange={(e) => { this.props.changePlotRangeRight(parseInt(e.target.value, 10)); }}
               />
             </InputGroup>
           </CardBody>

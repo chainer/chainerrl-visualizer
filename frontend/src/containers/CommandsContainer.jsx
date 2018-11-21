@@ -45,7 +45,7 @@ const CommandsContainer = (props) => {
                     type="number"
                     step="10"
                     value={saliencyRangeLeft}
-                    onInput={(e) => {
+                    onChange={(e) => {
                       props.changeSaliencyRangeLeft(parseInt(e.target.value, 10));
                     }}
                   />
@@ -56,7 +56,7 @@ const CommandsContainer = (props) => {
                     type="number"
                     step="10"
                     value={saliencyRangeRight}
-                    onInput={(e) => {
+                    onChange={(e) => {
                       props.changeSaliencyRangeRight(parseInt(e.target.value, 10));
                     }}
                   />
