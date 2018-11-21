@@ -7,7 +7,7 @@ from chainerrl.optimizers import rmsprop_async
 from chainerrl import policy
 from chainerrl import v_function
 
-import atari_wrappers
+from chainerrl.wrappers import atari_wrappers
 
 from chainerrlui import launch_visualizer
 
