@@ -11,8 +11,6 @@ import {
 } from '../settings';
 import { changeDisplayedChart, toggleActionDimensionSelect } from '../actions';
 
-/* eslint-disable react/destructuring-assignment */
-
 class ChartSwitchContainer extends React.Component {
   constructor(props) {
     super(props);

@@ -12,8 +12,6 @@ import {
 const ARROW_LEFT_KEY = 37;
 const ARROW_RIGHT_KEY = 39;
 
-/* eslint-disable react/destructuring-assignment */
-
 class ChartControlContainer extends React.Component {
   constructor(props) {
     super(props);

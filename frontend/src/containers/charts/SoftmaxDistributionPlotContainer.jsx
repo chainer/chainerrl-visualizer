@@ -38,7 +38,6 @@ class SoftmaxDistributionPlotContainer extends React.Component {
           data={logDataRows}
           stackOffset="expand"
           onMouseMove={() => {
-            /* eslint-disable-next-line react/destructuring-assignment */
             this.props.hoverOnStep(this.chartRef.current.state.activeLabel);
           }}
           ref={this.chartRef}

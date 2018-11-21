@@ -11,8 +11,6 @@ import {
 
 const path = require('path');
 
-/* eslint-disable react/destructuring-assignment */
-
 const CommandsContainer = (props) => {
   const {
     saliencyRangeLeft,
