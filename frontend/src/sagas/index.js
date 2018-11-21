@@ -48,7 +48,7 @@ function* fetchRolloutLogFlow() {
 
     const { log } = yield select();
     const prevLogLastUpdated = log.logLastUpdated;
-    if (prevLogLastUpdated === null || (new Date()).setISO8601(prevLogLastUpdated) < (new Date()).setISO8601(logLastUpdated)) {
+    if (prevLogLastUpdated === null || new Date(prevLogLastUpdated) < new Date(logLastUpdated)) {
       yield put(successFetchLog(logDataRows, logLastUpdated));
     }
   }
