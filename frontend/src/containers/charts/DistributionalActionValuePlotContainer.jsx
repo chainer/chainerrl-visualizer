@@ -1,17 +1,17 @@
 import React from 'react';
+
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  BarChart, Bar, CartesianGrid, XAxis, YAxis, Legend, Label,
+  ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Legend, Label,
 } from 'recharts';
 
 
 /* eslint-disable prefer-destructuring */
 
 const DistributionalActionValuePlotContainer = ({ actionMeanings, actionColors, qvalueDist }) => (
-  <div>
+  <ResponsiveContainer aspect={(16 / (9 * 0.85))} width="100%" height={null}>
     <BarChart
-      width={830}
       height={450}
       data={qvalueDist}
     >
@@ -31,7 +31,7 @@ const DistributionalActionValuePlotContainer = ({ actionMeanings, actionColors, 
       />
       <Legend align="right" width={700} />
     </BarChart>
-  </div>
+  </ResponsiveContainer>
 );
 
 const mapStateToQvalueDist = (state) => {

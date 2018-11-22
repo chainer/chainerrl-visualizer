@@ -85,16 +85,17 @@ const plotRange = (state = initialPlotRange, action) => {
       });
     case SUCCESS_FETCH_LOG:
       if (action.logDataRows.length !== state.logLength) {
+        const newFocusedStep = state.focusedStep > action.logDataRows.length - 1 ? 0 : state.focusedStep;
+
         return Object.assign({}, state, {
           plotRangeLeft: 0,
           plotRangeRight: action.logDataRows.length > 0 ? action.logDataRows.length - 1 : 0,
+          focusedStep: newFocusedStep,
           logLength: action.logDataRows.length,
         });
       }
 
-      return Object.assign({}, state, {
-        logLength: action.logDataRows.length,
-      });
+      return state;
     default:
       return state;
   }
