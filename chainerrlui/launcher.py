@@ -10,11 +10,11 @@ from chainerrl.agent import Agent
 
 from chainerrlui.web_server import web_server
 from chainerrlui.job_worker import job_worker
+from chainerrlui.config import SUPPORTED_ACTION_VALUES, SUPPORTED_DISTRIBUTIONS
 
 
 def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002,
                       action_meanings={}, raw_image_input=False):
-
     assert issubclass(type(agent), Agent), 'Agent object has to be ' \
                                            'subclass of chainerrl.agent.Agent'
 
@@ -114,5 +114,19 @@ def inspect_agent(agent, gymlike_env):
 
         raise Exception(
             'Model output type of {} is not supported for now'.format(type(output).__name__))
+
+    # Validations
+    if profile['distribution_type'] is None and profile['action_value_type'] is None:
+        raise Exception('Outputs of model do not contain ActionValue nor DistributionType')
+
+    if profile['action_value_type'] is not None \
+            and profile['action_value_type'] not in SUPPORTED_ACTION_VALUES:
+        raise Exception('ActionValue type {} is not supported for now'.format(
+                profile['action_value_type']))
+
+    if profile['distribution_type'] is not None \
+            and profile['distribution_type'] not in SUPPORTED_DISTRIBUTIONS:
+        raise Exception('Distribution type {} is not supported for now'.format(
+                profile['distribution_type']))
 
     return profile
