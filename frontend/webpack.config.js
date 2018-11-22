@@ -31,13 +31,13 @@ module.exports = {
         options: {
           presets: [
             [
-              'env',
+              '@babel/preset-env',
               {
                 modules: false,
                 targets,
               },
             ],
-            'react',
+            '@babel/preset-react',
           ],
         },
       },
