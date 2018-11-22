@@ -22,28 +22,11 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
-    """
-    if os.path.isdir(os.path.join(os.getcwd(), log_dir)):
-        reply = str(input('Directory `{}` is already exists.'
-        'Do you use this directory for log output? (y/n) '.format(
-            log_dir))).lower().strip()
-
-        if not reply == 'y':
-            return EmptyServer()
-    else:
-        os.makedirs(log_dir)
-    """
-
     os.environ['OBJC_DISABLE_INITIALIZE_FORK_SAFETY'] = 'YES'
 
     log_dir = os.path.join(os.getcwd(), log_dir)
-    rollouts_dir = os.path.join(log_dir, 'rollouts')
-
-    if not os.path.isdir(log_dir):
-        os.makedirs(log_dir)
-
-    if not os.path.isdir(rollouts_dir):
-        os.makedirs(rollouts_dir)
+    if not prepare_log_directory(log_dir):
+        return
 
     profile = inspect_agent(agent, gymlike_env)
 
@@ -69,6 +52,24 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     except(KeyboardInterrupt, SystemExit):
         os.kill(worker_process.pid, signal.SIGTERM)
         os.kill(server_process.pid, signal.SIGTERM)
+
+
+def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
+    if os.path.isdir(log_dir):
+        reply = str(input('\u001b[32m Directory `{}` is already exists. Do you use this directory '
+                          'for log output? (y/n) \u001b[0m'.format(log_dir))).lower().strip()
+
+        if not reply == 'y':
+            return False
+    else:
+        os.makedirs(log_dir)
+
+    rollouts_dir = os.path.join(log_dir, 'rollouts')
+
+    if not os.path.isdir(rollouts_dir):
+        os.makedirs(rollouts_dir)
+
+    return True
 
 
 # Create and return dict contains agent profile

@@ -13,21 +13,24 @@ const saliencyRange = (state = initialSaliencyRange, action) => {
         return state;
       }
 
-      return Object.assign({}, state, {
+      return {
+        ...state,
         saliencyRangeLeft: action.step,
-      });
+      };
     case CHANGE_SALIENCY_RANGE_RIGHT:
       if (action.step > state.logLength - 1 || action.step < state.saliencyRangeLeft) {
         return state;
       }
 
-      return Object.assign({}, state, {
+      return {
+        ...state,
         saliencyRangeRight: action.step,
-      });
+      };
     case SUCCESS_FETCH_LOG:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         logLength: action.logDataRows.length,
-      });
+      };
     default:
       return state;
   }
