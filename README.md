@@ -26,7 +26,7 @@ $ pip install -e .
 ```
 
 ## Usage
-Just pass `agent` and `env` object to `chainerrlui.launch_visuzlizer` function.
+Just pass `agent` and `env` object to `chainerrlui.launch_visualizer` function.
 ```python
 from chainerrlui import launch_visualizer
 
