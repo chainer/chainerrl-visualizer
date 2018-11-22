@@ -1,6 +1,20 @@
 # UI for ChainerRL
 You can anaylize learned ChainerRL agent's behavior in well visualized way, making debug easier.
 
+#### NOTICE
+This library is under development and all modules in chainerrl are not supported yet.
+Supported and unsupported modules are listed below.
+- ActionValue
+  - `DiscreteActionValue` : supported
+  - `DistributionalDiscreteActionValue` : supported
+  - `QuadraticActionValue` : unsupported
+  - `SingleActionValue` : unsupported
+- Distribution
+  - `SoftmaxDistribution` : supported
+  - `MellowmaxDistribution` : unsupported
+  - `GaussianDistribution` : supported
+  - `ContinuousDeterministicDistribution` : unsupported
+
 ## Installation
 To install UI for ChainerRL from source.
 
