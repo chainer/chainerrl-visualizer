@@ -1,5 +1,4 @@
 from flask import Flask, render_template, send_file, request
-from chainerrl.agent import Agent
 
 from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
 
@@ -10,34 +9,34 @@ def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings
     # <Synchronized wrapper for c_bool>, on shared memory, process safe
 
     app = create_app(
-        agent,
-        gymlike_env,
-        profile,
-        log_dir,
-        action_meanings,
-        raw_image_input,
-        job_queue,
-        is_job_running,
-        is_rollout_on_memory)
-
-    app.config['ENV'] = 'development'
-    app.run(
-        host=host, port=port, debug=True, threaded=True, use_reloader=False)
-
-
-def create_app(agent, gymlike_env, profile, log_dir, action_meanings,
-               raw_image_input, q, is_job_running, is_rollout_on_memory):
-    # is_job_running, is_rollout_on_memory :
-    # <Synchronized wrapper for c_bool>, on shared memory, process safe
-    app = App(
-        __name__,
         agent=agent,
         gymlike_env=gymlike_env,
         profile=profile,
         log_dir=log_dir,
         action_meanings=action_meanings,
         raw_image_input=raw_image_input,
-        job_queue=q,
+        job_queue=job_queue,
+        is_job_running=is_job_running,
+        is_rollout_on_memory=is_rollout_on_memory)
+
+    app.config['ENV'] = 'development'
+    app.run(host=host, port=port, debug=True, threaded=True, use_reloader=False)
+
+
+def create_app(agent, gymlike_env, profile, log_dir, action_meanings,
+               raw_image_input, job_queue, is_job_running, is_rollout_on_memory):
+    app = App(__name__)
+
+    app.set_shared_properties(
+        agent=agent,
+        gymlike_env=gymlike_env,
+        profile=profile,
+        log_dir=log_dir,
+        action_meanings=action_meanings,
+        raw_image_input=raw_image_input)
+
+    app.set_objects_on_shared_memory(
+        job_queue=job_queue,
         is_job_running=is_job_running,
         is_rollout_on_memory=is_rollout_on_memory)
 
@@ -89,44 +88,32 @@ def create_app(agent, gymlike_env, profile, log_dir, action_meanings,
 
 class App(Flask):
     def __init__(self, *args, **kwargs):
-        agent = kwargs['agent']
-        gymlike_env = kwargs['gymlike_env']
-        profile = kwargs['profile']
-        log_dir = kwargs['log_dir']
-        action_meanings = kwargs['action_meanings']
-        raw_image_input = kwargs['raw_image_input']
-        job_queue = kwargs['job_queue']
-
-        # is_job_running, is_rollout_on_memory :
-        # <Synchronized wrapper for c_bool>, on shared memory, process safe
-        is_job_running = kwargs['is_job_running']
-        is_rollout_on_memory = kwargs['is_rollout_on_memory']
-
-        del kwargs['agent']
-        del kwargs['gymlike_env']
-        del kwargs['profile']
-        del kwargs['log_dir']
-        del kwargs['action_meanings']
-        del kwargs['raw_image_input']
-        del kwargs['job_queue']
-        del kwargs['is_job_running']
-        del kwargs['is_rollout_on_memory']
-
         super().__init__(*args, **kwargs)
 
-        assert issubclass(type(agent), Agent), 'Agent object has to be subclass of ' \
-                                               'Agent class defined in chainerrl'
+        self.agent = None
+        self.gymlike_env = None
+        self.profile = None
+        self.log_dir = None
+        self.action_meanings = None
+        self.raw_image_input = None
 
-        assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'
-        assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
-        assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
+        self.job_queue = None
+        self.is_job_running = None
+        self.is_rollout_on_memory = None
 
+    def set_shared_properties(self, agent, gymlike_env, profile, log_dir,
+                              action_meanings, raw_image_input):
         self.agent = agent
         self.gymlike_env = gymlike_env
         self.profile = profile
         self.log_dir = log_dir
         self.action_meanings = action_meanings
         self.raw_image_input = raw_image_input
+
+    def set_objects_on_shared_memory(self, job_queue, is_job_running, is_rollout_on_memory):
+        # is_job_running, is_rollout_on_memory :
+        # <Synchronized wrapper for c_bool>, on shared memory, process safe
+
         self.job_queue = job_queue
         self.is_job_running = is_job_running
         self.is_rollout_on_memory = is_rollout_on_memory
