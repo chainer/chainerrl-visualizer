@@ -38,7 +38,6 @@ class SoftmaxDistributionPlotContainer extends React.Component {
           data={logDataRows}
           stackOffset="expand"
           onMouseMove={() => {
-            /* eslint-disable-next-line react/destructuring-assignment */
             this.props.hoverOnStep(this.chartRef.current.state.activeLabel);
           }}
           ref={this.chartRef}
@@ -90,7 +89,7 @@ class SoftmaxDistributionPlotContainer extends React.Component {
 
 SoftmaxDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
+  actionMeanings: PropTypes.object.isRequired,
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
   stateValueReturned: PropTypes.bool.isRequired,
   focusedStep: PropTypes.number.isRequired,

@@ -98,7 +98,7 @@ GaussianDistributionPaneContainer.propTypes = {
     action_vars: PropTypes.arrayOf(PropTypes.number),
   }),
   paneTitle: PropTypes.string.isRequired,
-  actionMeanings: PropTypes.object, /* eslint-disable-line react/forbid-prop-types */
+  actionMeanings: PropTypes.object,
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

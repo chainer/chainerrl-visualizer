@@ -8,7 +8,6 @@ import {
 import { hoverOnStep } from '../../actions';
 
 /* eslint-disable prefer-destructuring */
-/* eslint-disable react/destructuring-assignment */
 
 class GaussianDistributionPlotContainer extends React.Component {
   constructor(props) {

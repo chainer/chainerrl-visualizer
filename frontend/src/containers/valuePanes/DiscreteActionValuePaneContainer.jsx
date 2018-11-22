@@ -60,7 +60,7 @@ DiscreteActionValuePaneContainer.propTypes = {
   sortedActionValues: PropTypes.arrayOf(PropTypes.object).isRequired,
   actionTaken: PropTypes.number.isRequired,
   paneTitle: PropTypes.string.isRequired,
-  actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
+  actionMeanings: PropTypes.object.isRequired,
 };
 
 const mapStateToSortedActionvalues = (state) => {

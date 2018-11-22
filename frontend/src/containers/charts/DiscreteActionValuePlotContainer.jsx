@@ -25,7 +25,6 @@ class DiscreteActionValuePlotContainer extends React.Component {
           data={logDataRows}
           ref={this.chartRef}
           onMouseMove={() => {
-            /* eslint-disable-next-line react/destructuring-assignment */
             this.props.hoverOnStep(this.chartRef.current.state.activeLabel);
           }}
         >
