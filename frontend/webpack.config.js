@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const distDir = path.resolve(path.dirname(__dirname), 'chainerrlui', 'static', 'dist');
@@ -58,9 +57,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'chainerrlUI',
-    }),
     new CleanWebpackPlugin([distDir]),
   ],
   resolve: {
