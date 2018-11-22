@@ -9,22 +9,25 @@ const initialLog = {
 const log = (state = initialLog, action) => {
   switch (action.type) {
     case SUCCESS_FETCH_LOG:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         logDataRows: action.logDataRows,
         logLastUpdated: action.logLastUpdated,
-      });
+      };
     case RECEIVE_ROLLOUT_RESPONSE:
       if (action.isRolloutStarted) {
-        return Object.assign({}, state, {
+        return {
+          ...state,
           rolloutPath: action.rolloutPath,
-        });
+        };
       }
 
       return state;
     case SUCCESS_FETCH_LATEST_LOG_INFO:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         rolloutPath: action.rolloutPath,
-      });
+      };
     default:
       return state;
   }
