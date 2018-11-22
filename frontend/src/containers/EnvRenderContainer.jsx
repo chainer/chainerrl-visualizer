@@ -7,22 +7,22 @@ import {
 
 const EnvRenderContainer = ({ imagePath }) => (
   <div>
-    <Card style={{ marginTop: '5px' }}>
+    <Card style={{ marginTop: '5px', marginBottom: '10px' }}>
       <CardBody>
         <CardTitle>Current environemnt</CardTitle>
         {
           imagePath ? (
             <img
-              src={`http://localhost:5002/images?image_path=${imagePath}`}
+              src={`/images?image_path=${imagePath}`}
               alt="env render"
               style={{
-                height: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
+                width: '45%', margin: '0 auto', display: 'block',
               }}
             />
           ) : (
             <div
               style={{
-                height: '340px', maxWidth: '400px', margin: '0 auto', display: 'block',
+                height: '45%', margin: '0 auto', display: 'block',
               }}
             />
           )

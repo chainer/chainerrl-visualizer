@@ -17,8 +17,6 @@ const path = require('path');
 
 const POLLING_INTERVAL_MS = 3000;
 
-/* eslint-disable react/destructuring-assignment */
-
 class MainPageContainer extends React.Component {
   componentDidMount() {
     this.props.startFetchAgentProfile();

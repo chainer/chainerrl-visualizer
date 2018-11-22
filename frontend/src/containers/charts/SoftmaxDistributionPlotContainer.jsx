@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
+  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, ReferenceLine, Legend, Label,
 } from 'recharts';
 
 import { hoverOnStep } from '../../actions';
@@ -31,14 +31,11 @@ class SoftmaxDistributionPlotContainer extends React.Component {
     }));
 
     return (
-      <div>
+      <ResponsiveContainer aspect={(16 / (9 * 0.85))} width="100%" height={null}>
         <AreaChart
-          width={1000}
-          height={450}
           data={logDataRows}
           stackOffset="expand"
           onMouseMove={() => {
-            /* eslint-disable-next-line react/destructuring-assignment */
             this.props.hoverOnStep(this.chartRef.current.state.activeLabel);
           }}
           ref={this.chartRef}
@@ -83,14 +80,14 @@ class SoftmaxDistributionPlotContainer extends React.Component {
           }
           <Legend payload={legendPayload} />
         </AreaChart>
-      </div>
+      </ResponsiveContainer>
     );
   }
 }
 
 SoftmaxDistributionPlotContainer.propTypes = {
   logDataRows: PropTypes.arrayOf(PropTypes.object).isRequired,
-  actionMeanings: PropTypes.object.isRequired, /* eslint-disable-line react/forbid-prop-types */
+  actionMeanings: PropTypes.object.isRequired,
   actionColors: PropTypes.arrayOf(PropTypes.string).isRequired,
   stateValueReturned: PropTypes.bool.isRequired,
   focusedStep: PropTypes.number.isRequired,

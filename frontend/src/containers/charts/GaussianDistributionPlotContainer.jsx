@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
+  ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine,
 } from 'recharts';
 
 import { hoverOnStep } from '../../actions';
 
 /* eslint-disable prefer-destructuring */
-/* eslint-disable react/destructuring-assignment */
 
 class GaussianDistributionPlotContainer extends React.Component {
   constructor(props) {
@@ -36,71 +35,72 @@ class GaussianDistributionPlotContainer extends React.Component {
     });
 
     return (
-      <AreaChart
-        width={900}
-        height={460}
-        data={logDataRows}
-        ref={this.chart}
-        onMouseMove={() => { this.props.hoverOnStep(this.chart.current.state.activeLabel); }}
-        stackOffset="silhouette"
-      >
-        {
-          selectedActionDimensionIndices.map((actionIdx) => (
-            <Area
-              yAxisId="left"
-              type="monotone"
-              dot={false}
-              dataKey={(v) => v.action[actionIdx]}
-              key={`${actionIdx}_taken`}
-              fill="#00000000"
-              stroke={actionColors[actionIdx]}
-            />
-          ))
-        }
-        {
-          selectedActionDimensionIndices.map((actionIdx) => (
-            <Area
-              yAxisId="left"
-              type="monotone"
-              dot={false}
-              stroke={actionColors[actionIdx]}
-              fill="#00000000"
-              strokeDasharray="3 4 5 2"
-              dataKey={(v) => v.action_means[actionIdx]}
-              key={`${actionIdx}_mean`}
-            />
-          ))
-        }
-        {
-          selectedActionDimensionIndices.map((actionIdx) => (
-            <Area
-              yAxisId="left"
-              dataKey={(row) => row.trustRange[actionIdx]}
-              stroke={actionColors[actionIdx]}
-              fill={actionColors[actionIdx]}
-              key={`${actionIdx}_trust_range`}
-            />
-          ))
-        }
-        {
-          stateValueReturned && (
-            <Area
-              yAxisId="right"
-              type="monotone"
-              dot={false}
-              fill="#00000000"
-              stroke="red"
-              dataKey="state_value"
-            />
-          )
-        }
-        <CartesianGrid strokeDasharray="5 5" />
-        <XAxis dataKey="step" />
-        <YAxis yAxisId="left" domain={['dataMin', 'dataMax']} tickFormatter={(v) => Number.parseFloat(v).toFixed(3)} />
-        <YAxis yAxisId="right" orientation="right" />
-        <Tooltip />
-        <ReferenceLine yAxisId="left" x={focusedStep} stroke="green" />
-      </AreaChart>
+      <ResponsiveContainer aspect={(16 / (9 * 0.85))} width="100%" height={null}>
+        <AreaChart
+          height={460}
+          data={logDataRows}
+          ref={this.chart}
+          onMouseMove={() => { this.props.hoverOnStep(this.chart.current.state.activeLabel); }}
+          stackOffset="silhouette"
+        >
+          {
+            selectedActionDimensionIndices.map((actionIdx) => (
+              <Area
+                yAxisId="left"
+                type="monotone"
+                dot={false}
+                dataKey={(v) => v.action[actionIdx]}
+                key={`${actionIdx}_taken`}
+                fill="#00000000"
+                stroke={actionColors[actionIdx]}
+              />
+            ))
+          }
+          {
+            selectedActionDimensionIndices.map((actionIdx) => (
+              <Area
+                yAxisId="left"
+                type="monotone"
+                dot={false}
+                stroke={actionColors[actionIdx]}
+                fill="#00000000"
+                strokeDasharray="3 4 5 2"
+                dataKey={(v) => v.action_means[actionIdx]}
+                key={`${actionIdx}_mean`}
+              />
+            ))
+          }
+          {
+            selectedActionDimensionIndices.map((actionIdx) => (
+              <Area
+                yAxisId="left"
+                dataKey={(row) => row.trustRange[actionIdx]}
+                stroke={actionColors[actionIdx]}
+                fill={actionColors[actionIdx]}
+                key={`${actionIdx}_trust_range`}
+              />
+            ))
+          }
+          {
+            stateValueReturned && (
+              <Area
+                yAxisId="right"
+                type="monotone"
+                dot={false}
+                fill="#00000000"
+                stroke="red"
+                dataKey="state_value"
+              />
+            )
+          }
+          <CartesianGrid strokeDasharray="5 5" />
+          <XAxis dataKey="step" />
+          <YAxis yAxisId="left" domain={['dataMin', 'dataMax']} tickFormatter={(v) => Number.parseFloat(v).toFixed(3)} />
+          <YAxis yAxisId="right" orientation="right" />
+          <Tooltip />
+          <ReferenceLine yAxisId="left" x={focusedStep} stroke="green" />
+        </AreaChart>
+      </ResponsiveContainer>
     );
   }
 }
