@@ -102,11 +102,17 @@ def inspect_agent(agent, gymlike_env):
         # state value returned as chainer.Variable
         if isinstance(output, chainer.Variable):
             profile['state_value_returned'] = True
+            continue
 
         if isinstance(output, chainerrl.distribution.Distribution):
             profile['distribution_type'] = type(output).__name__
+            continue
 
         if isinstance(output, chainerrl.action_value.ActionValue):
             profile['action_value_type'] = type(output).__name__
+            continue
+
+        raise Exception(
+            'Model output type of {} is not supported for now'.format(type(output).__name__))
 
     return profile
