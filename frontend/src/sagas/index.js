@@ -22,8 +22,8 @@ import {
 
 function* requestRolloutFlow() {
   while (true) {
-    yield take(CLICK_ROLLOUT);
-    const { rolloutPath, isRolloutStarted } = yield call(postRollout);
+    const { stepCount } = yield take(CLICK_ROLLOUT);
+    const { rolloutPath, isRolloutStarted } = yield call(postRollout, stepCount);
     yield put(receiveRolloutResponse(rolloutPath, isRolloutStarted));
   }
 }

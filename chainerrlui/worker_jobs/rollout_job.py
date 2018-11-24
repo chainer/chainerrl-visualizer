@@ -22,7 +22,7 @@ from chainerrlui.utils import generate_random_string
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 
 
-def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
+def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_list):
     obs_list[:] = []  # Clear the shared observations list
     render_img_list[:] = []  # Clear the shared render images list
 
@@ -39,7 +39,7 @@ def rollout(agent, gymlike_env, rollout_dir, obs_list, render_img_list):
     done = False
     t = 0
 
-    while not (done or t == 1800):
+    while not (t == step_count or done):
         rendered = gymlike_env.render(mode='rgb_array')
         image_path = _save_env_render(rendered, rollout_dir)
 

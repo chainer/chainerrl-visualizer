@@ -7,6 +7,7 @@ import serverState from './serverState';
 import agentProfile from './agentProfile';
 import settings from './settings';
 import chartControl from './chartControl';
+import rollout from './rollout';
 
 const rootReducer = combineReducers({
   agentProfile,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   saliencyRange,
   serverState,
   settings,
+  rollout,
 });
 
 export default rootReducer;
