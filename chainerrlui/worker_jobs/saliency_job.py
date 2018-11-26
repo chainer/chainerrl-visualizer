@@ -68,19 +68,20 @@ def _saliency_on_atari_frame(saliency, atari, fudge_factor, size=[210, 160], cha
     return img
 
 
-def _score_frame_discrete_qvalues(agent, input_array, radius=5, density=5, size=(4, 84, 84)):
+def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=5):
+    size = input_np_array.shape
     height = size[1]
     width = size[2]
 
     scores = np.zeros((int(height / density) + 1, int(width / density) + 1))
 
     qvalues = agent.model(
-        agent.batch_states([input_array], agent.xp, agent.phi)).q_values.data
+        agent.batch_states([input_np_array], agent.xp, agent.phi)).q_values.data
 
     for i in range(0, 80, density):
         for j in range(0, 80, density):
             mask = _get_mask([i, j], size=[height, width], radius=radius)
-            perturbed_img = _occlude(input_array, mask)
+            perturbed_img = _occlude(input_np_array, mask)
             perturbated_qvalues = agent.model(
                 agent.batch_states([perturbed_img], agent.xp, agent.phi)).q_values.data
             scores[int(i / density), int(j / density)] =\
@@ -91,22 +92,22 @@ def _score_frame_discrete_qvalues(agent, input_array, radius=5, density=5, size=
     return pmax * scores / scores.max()
 
 
-def _score_frame_softmax_policy_and_state_value(agent, input_array, radius=5,
-                                                density=5, size=(4, 84, 84)):
+def _score_frame_softmax_policy_and_state_value(agent, input_np_array, radius=5, density=5):
+    size = input_np_array.shape
     height = size[1]
     width = size[2]
 
     softmax_policy_score = np.zeros((int(height / density) + 1, int(width / density) + 1))
     state_value_score = np.zeros((int(height / density) + 1, int(width / density) + 1))
 
-    softmax_dist, state_value = agent.model(agent.batch_states([input_array], np, agent.phi))
+    softmax_dist, state_value = agent.model(agent.batch_states([input_np_array], np, agent.phi))
     dist_logits = softmax_dist.logits.data[0]
     state_value = state_value.data[0]
 
     for i in range(0, 80, density):
         for j in range(0, 80, density):
             mask = _get_mask([i, j], size=[height, width], radius=radius)
-            perturbated_img = _occlude(input_array, mask)
+            perturbated_img = _occlude(input_np_array, mask)
 
             perturbated_softmax_dist, perturbated_state_value = agent.model(
                 agent.batch_states([perturbated_img], np, agent.phi))
