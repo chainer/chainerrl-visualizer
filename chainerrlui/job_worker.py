@@ -6,7 +6,7 @@ import signal
 from chainerrlui.worker_jobs import rollout, create_and_save_saliency_images
 
 
-def job_worker(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory):
+def job_worker(agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory :
     # <Synchronized wrapper for c_bool>, on shared memory, process safe
     obs_manager = Manager()
@@ -51,7 +51,7 @@ def job_worker(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memo
                 continue
 
             saliency_process = Process(target=create_and_save_saliency_images, args=(
-                agent, rollout_path, from_step, to_step, obs_list, render_img_list))
+                agent, profile, rollout_path, from_step, to_step, obs_list, render_img_list))
             saliency_process.start()
 
             try:

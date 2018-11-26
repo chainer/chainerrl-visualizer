@@ -39,7 +39,7 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
         raw_image_input, job_queue, is_job_running, is_rollout_on_memory))
 
     worker_process = Process(target=job_worker, args=(
-        agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memory))
+        agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory))
 
     server_process.start()
     worker_process.start()

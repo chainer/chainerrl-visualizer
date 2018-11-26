@@ -7,11 +7,14 @@ from scipy.misc import imsave
 import jsonlines
 
 from chainerrlui.utils import generate_random_string
+from chainerrlui.config import (DISCRETE_ACTION_VALUE,
+                                DISTRIBUTIONAL_DISCRETE_ACTION_VALUE,
+                                SOFTMAX_DISTRIBUTION)
 
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 
 
-def create_and_save_saliency_images(agent, rollout_path, from_step, to_step,
+def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_step,
                                     obs_list, render_img_list):
     image_paths = []
 
@@ -19,17 +22,18 @@ def create_and_save_saliency_images(agent, rollout_path, from_step, to_step,
         obs = np.asarray(obs_list[step])
         base_img = render_img_list[step]
 
-        # TODO: Generalize to all agent
-        if type(agent).__name__ == 'CategoricalDQN':
+        if profile['action_value_type'] in \
+                [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE]:
             output = _saliency_on_atari_frame(
                 _score_frame_discrete_qvalues(agent, obs), base_img, 50, channel=0)
-        elif type(agent).__name__ == 'A3C':
+        elif profile['state_value_returned'] and \
+                profile['distribution_type'] == SOFTMAX_DISTRIBUTION:
             softmax_policy_score, state_value_score =\
                 _score_frame_softmax_policy_and_state_value(agent, obs)
             output = _saliency_on_atari_frame(state_value_score, base_img, 50, channel=0)
             output = _saliency_on_atari_frame(softmax_policy_score, output, 25, channel=2)
         else:
-            raise Exception('unsupported agent')
+            raise Exception('unsupported agent for saliency map create')
 
         image_path = os.path.join(rollout_path, 'images', generate_random_string(11) + '.png')
         imsave(image_path, output)
