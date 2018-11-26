@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-export const postRollout = () => (
-  axios.post('/api/rollouts').then((res) => ({
+export const postRollout = (stepCount) => (
+  axios.post('/api/rollouts', {
+    step_count: stepCount,
+  }).then((res) => ({
     rolloutPath: res.data.rollout_path,
     isRolloutStarted: res.data.is_rollout_started,
   }))

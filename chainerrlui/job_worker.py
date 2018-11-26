@@ -25,9 +25,10 @@ def job_worker(agent, gymlike_env, job_queue, is_job_running, is_rollout_on_memo
             data = ipc_msg['data']
             rollout_dir = data['rollout_dir']
             latest_rollout_id = data['rollout_id']
+            step_count = data['step_count']
 
             rollout_process = Process(target=rollout, args=(
-                agent, gymlike_env, rollout_dir, obs_list, render_img_list))
+                agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_list))
             rollout_process.start()
 
             try:

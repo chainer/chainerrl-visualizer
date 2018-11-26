@@ -59,8 +59,11 @@ class RolloutAPI(MethodView):
                 'is_rollout_started': False,
             })
 
+        data = request.get_json()
+        step_count = int(data['step_count'])
+
         rollout_path = prepare_rollout_dir()
-        dispatch_rollout_job(rollout_path)
+        dispatch_rollout_job(rollout_path, step_count)
 
         return jsonify({
             'rollout_path': rollout_path,

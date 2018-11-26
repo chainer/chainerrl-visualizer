@@ -5,8 +5,9 @@ export const CLICK_PREV_STEP = 'CLICK_PREV_STEP';
 export const CLICK_NEXT_STEP = 'CLICK_NEXT_STEP';
 export const HOVER_ON_STEP = 'HOVER_ON_STEP';
 
-export const clickRollout = () => ({
+export const clickRollout = (stepCount) => ({
   type: CLICK_ROLLOUT,
+  stepCount,
 });
 
 export const receiveRolloutResponse = (rolloutPath, isRolloutStarted) => ({
@@ -39,6 +40,7 @@ export const CHANGE_PLOT_RANGE_LEFT = 'CHANGE_PLOT_RANGE_LEFT';
 export const CHANGE_PLOT_RANGE_RIGHT = 'CHANGE_PLOT_RANGE_RIGHT';
 export const CHANGE_SALIENCY_RANGE_LEFT = 'CHANGE_SALIENCY_RANGE_LEFT';
 export const CHANGE_SALIENCY_RANGE_RIGHT = 'CHANGE_SALIENCY_RANGE_RIGHT';
+export const CHANGE_ROLLOUT_STEP = 'CHANGE_ROLLOUT_STEP';
 export const CHANGE_DISPLAYED_CHART = 'CHANGE_DISPLAYED_CHART';
 
 export const changePlotRangeLeft = (step) => ({
@@ -59,6 +61,11 @@ export const changeSaliencyRangeLeft = (step) => ({
 export const changeSaliencyRangeRight = (step) => ({
   type: CHANGE_SALIENCY_RANGE_RIGHT,
   step,
+});
+
+export const changeRolloutStep = (rolloutStep) => ({
+  type: CHANGE_ROLLOUT_STEP,
+  rolloutStep,
 });
 
 export const changeDisplayedChart = (chartName) => ({

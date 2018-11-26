@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 
 import {
-  clickRollout, clickSaliency, changeSaliencyRangeLeft, changeSaliencyRangeRight,
+  clickRollout, clickSaliency, changeSaliencyRangeLeft, changeSaliencyRangeRight, changeRolloutStep,
 } from '../actions';
 
 const path = require('path');
@@ -19,6 +19,7 @@ const CommandsContainer = (props) => {
     isSaliencyReady,
     rolloutId,
     rawImageInput,
+    rolloutStep,
   } = props;
 
   return (
@@ -26,9 +27,23 @@ const CommandsContainer = (props) => {
       <Card>
         <CardBody>
           <CardTitle>Commands</CardTitle>
+          <InputGroup>
+            <InputGroupAddon addonType="prepend">
+              <InputGroupText>max step</InputGroupText>
+            </InputGroupAddon>
+            <Input
+              type="number"
+              step="10"
+              value={rolloutStep}
+              onChange={(e) => {
+                props.changeRolloutStep(parseInt(e.target.value, 10));
+              }}
+            />
+          </InputGroup>
           <Button
-            onClick={props.clickRollout}
+            onClick={() => { props.clickRollout(rolloutStep); }}
             disabled={!isRolloutReady}
+            style={{ marginTop: '8px' }}
           >
             Rollout 1 episode
           </Button>
@@ -83,10 +98,12 @@ CommandsContainer.propTypes = {
   isSaliencyReady: PropTypes.bool.isRequired,
   rolloutId: PropTypes.string.isRequired,
   rawImageInput: PropTypes.bool.isRequired,
+  rolloutStep: PropTypes.number.isRequired,
   clickRollout: PropTypes.func.isRequired,
   clickSaliency: PropTypes.func.isRequired,
   changeSaliencyRangeLeft: PropTypes.func.isRequired,
   changeSaliencyRangeRight: PropTypes.func.isRequired,
+  changeRolloutStep: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -96,6 +113,7 @@ const mapStateToProps = (state) => ({
   isSaliencyReady: !state.serverState.isJobRunning && state.serverState.isRolloutOnMemory,
   rolloutId: path.basename(state.log.rolloutPath),
   rawImageInput: state.agentProfile.rawImageInput,
+  rolloutStep: state.rollout.stepCount,
 });
 
 export default connect(mapStateToProps, {
@@ -103,4 +121,5 @@ export default connect(mapStateToProps, {
   clickSaliency,
   changeSaliencyRangeLeft,
   changeSaliencyRangeRight,
+  changeRolloutStep,
 })(CommandsContainer);
