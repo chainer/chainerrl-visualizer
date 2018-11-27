@@ -66,8 +66,9 @@ const CommandsContainer = (props) => {
             Rollout 1 episode
           </Button>
           {
-            rawImageInput && (
-              <div>
+            rawImageInput && ((stateValueReturned && distributionType === SOFTMAX_DISTRIBUTION)
+              || [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE].includes(actionValueType)) && (
+                <div>
                   {
                     stateValueReturned && distributionType === SOFTMAX_DISTRIBUTION && (
                       <InputGroup style={{ marginTop: '20px' }}>
@@ -113,43 +114,43 @@ const CommandsContainer = (props) => {
                       </InputGroup>
                     )
                   }
-                <InputGroup style={{ marginTop: '8px' }}>
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>from</InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    type="number"
-                    step="10"
-                    value={saliencyRangeLeft}
-                    onChange={(e) => {
-                      props.changeSaliencyRangeLeft(parseInt(e.target.value, 10));
+                  <InputGroup style={{ marginTop: '8px' }}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>from</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      type="number"
+                      step="10"
+                      value={saliencyRangeLeft}
+                      onChange={(e) => {
+                        props.changeSaliencyRangeLeft(parseInt(e.target.value, 10));
+                      }}
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText placeholder="step">to</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      type="number"
+                      step="10"
+                      value={saliencyRangeRight}
+                      onChange={(e) => {
+                        props.changeSaliencyRangeRight(parseInt(e.target.value, 10));
+                      }}
+                    />
+                  </InputGroup>
+                  <Button
+                    onClick={() => {
+                      props.clickSaliency(
+                        rolloutId, saliencyRangeLeft, saliencyRangeRight,
+                        actorIntensity, criticIntensity, qfuncIntensity
+                      );
                     }}
-                  />
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText placeholder="step">to</InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    type="number"
-                    step="10"
-                    value={saliencyRangeRight}
-                    onChange={(e) => {
-                      props.changeSaliencyRangeRight(parseInt(e.target.value, 10));
-                    }}
-                  />
-                </InputGroup>
-                <Button
-                  onClick={() => {
-                    props.clickSaliency(
-                      rolloutId, saliencyRangeLeft, saliencyRangeRight,
-                      actorIntensity, criticIntensity, qfuncIntensity
-                    );
-                  }}
-                  disabled={!isSaliencyReady}
-                  style={{ marginTop: '8px' }}
-                >
+                    disabled={!isSaliencyReady}
+                    style={{ marginTop: '8px' }}
+                  >
                   Create saliency map
-                </Button>
-              </div>
+                  </Button>
+                </div>
             )
           }
         </CardBody>
