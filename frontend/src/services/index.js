@@ -9,10 +9,13 @@ export const postRollout = (stepCount) => (
   }))
 );
 
-export const postSaliency = (rolloutId, fromStep, toStep) => (
+export const postSaliency = (rolloutId, fromStep, toStep, actorIntensity, criticIntensity, qfuncIntensity) => (
   axios.post(`/api/rollouts/${rolloutId}/saliency`, {
     from_step: fromStep,
     to_step: toStep,
+    actor_intensity: actorIntensity,
+    critic_intensity: criticIntensity,
+    qfunc_intensity: qfuncIntensity,
   }).then((res) => ({
     isSaliencyStarted: res.data.is_saliency_started,
   }))

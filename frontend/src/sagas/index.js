@@ -30,9 +30,11 @@ function* requestRolloutFlow() {
 
 function* requestSaliencyFlow() {
   while (true) {
-    const { rolloutId, fromStep, toStep } = yield take(CLICK_SALIENCY);
+    const {
+      rolloutId, fromStep, toStep, actorIntensity, criticIntensity, qfuncIntensity,
+    } = yield take(CLICK_SALIENCY);
 
-    yield call(postSaliency, rolloutId, fromStep, toStep);
+    yield call(postSaliency, rolloutId, fromStep, toStep, actorIntensity, criticIntensity, qfuncIntensity);
   }
 }
 
