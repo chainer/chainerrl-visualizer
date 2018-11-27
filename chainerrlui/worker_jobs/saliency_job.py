@@ -58,7 +58,9 @@ def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_
             writer.write(line)
 
 
-def _saliency_on_base_image(saliency, base_img, fudge_factor, size=[210, 160], channel=2, sigma=0):
+def _saliency_on_base_image(saliency, base_img, fudge_factor, channel=2, sigma=0):
+    # base_img shape is intended to be (height, width, channel)
+    size = base_img.shape[0:2]  # height, width
     saliency_max = saliency.max()
     saliency = imresize(saliency, size=size, interp="bilinear").astype(np.float32)
 
