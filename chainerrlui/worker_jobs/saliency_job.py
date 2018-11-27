@@ -7,29 +7,35 @@ from scipy.misc import imsave
 import jsonlines
 
 from chainerrlui.utils import generate_random_string
+from chainerrlui.config import (DISCRETE_ACTION_VALUE,
+                                DISTRIBUTIONAL_DISCRETE_ACTION_VALUE,
+                                SOFTMAX_DISTRIBUTION)
 
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 
 
-def create_and_save_saliency_images(agent, rollout_path, from_step, to_step,
-                                    obs_list, render_img_list):
+def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_step,
+                                    intensity, obs_list, render_img_list):
     image_paths = []
 
     for step in range(from_step, to_step + 1):
         obs = np.asarray(obs_list[step])
         base_img = render_img_list[step]
 
-        # TODO: Generalize to all agent
-        if type(agent).__name__ == 'CategoricalDQN':
-            output = _saliency_on_atari_frame(
-                _score_frame_discrete_qvalues(agent, obs), base_img, 50, channel=0)
-        elif type(agent).__name__ == 'A3C':
+        if profile['action_value_type'] in \
+                [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE]:
+            output = _saliency_on_base_image(
+                _score_frame_discrete_qvalues(agent, obs), base_img, intensity['qfunc_intensity'], channel=0)
+        elif profile['state_value_returned'] and \
+                profile['distribution_type'] == SOFTMAX_DISTRIBUTION:
             softmax_policy_score, state_value_score =\
                 _score_frame_softmax_policy_and_state_value(agent, obs)
-            output = _saliency_on_atari_frame(state_value_score, base_img, 50, channel=0)
-            output = _saliency_on_atari_frame(softmax_policy_score, output, 25, channel=2)
+            output = _saliency_on_base_image(
+                state_value_score, base_img, intensity['critic_intensity'], channel=0)
+            output = _saliency_on_base_image(
+                softmax_policy_score, output, intensity['actor_intensity'], channel=2)
         else:
-            raise Exception('unsupported agent')
+            raise Exception('unsupported agent for saliency map create')
 
         image_path = os.path.join(rollout_path, 'images', generate_random_string(11) + '.png')
         imsave(image_path, output)
@@ -52,57 +58,65 @@ def create_and_save_saliency_images(agent, rollout_path, from_step, to_step,
             writer.write(line)
 
 
-def _saliency_on_atari_frame(saliency, atari, fudge_factor, size=[210, 160], channel=2, sigma=0):
-    pmax = saliency.max()
-    S = imresize(saliency, size=size, interp="bilinear").astype(np.float32)
-    S = S if sigma == 0 else gaussian_filter(S, sigma=sigma)
-    S -= S.min()
-    S = fudge_factor * pmax * S / S.max()
-    img = atari.astype("uint16")
-    img[:, :, channel] += S.astype("uint16")
+def _saliency_on_base_image(saliency, base_img, fudge_factor, channel=2, sigma=0):
+    # base_img shape is intended to be (height, width, channel)
+    size = base_img.shape[0:2]  # height, width
+    saliency_max = saliency.max()
+    saliency = imresize(saliency, size=size, interp="bilinear").astype(np.float32)
+
+    if sigma is not 0:
+        saliency = gaussian_filter(saliency, sigma=sigma)
+
+    saliency -= saliency.min()
+    saliency = fudge_factor * saliency_max * saliency / saliency.max()
+
+    img = base_img.astype("uint16")
+    img[:, :, channel] += saliency.astype("uint16")
     img = img.clip(1, 255).astype("uint8")
+
     return img
 
 
-def _score_frame_discrete_qvalues(agent, input_array, radius=5, density=5, size=(4, 84, 84)):
+def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=10):
+    size = input_np_array.shape
     height = size[1]
     width = size[2]
 
     scores = np.zeros((int(height / density) + 1, int(width / density) + 1))
 
     qvalues = agent.model(
-        agent.batch_states([input_array], agent.xp, agent.phi)).q_values.data
+        agent.batch_states([input_np_array], agent.xp, agent.phi)).q_values.data
 
-    for i in range(0, 80, density):
-        for j in range(0, 80, density):
+    for i in range(0, height, density):
+        for j in range(0, width, density):
             mask = _get_mask([i, j], size=[height, width], radius=radius)
-            perturbed_img = _occlude(input_array, mask)
+            perturbed_img = _occlude(input_np_array, mask)
             perturbated_qvalues = agent.model(
                 agent.batch_states([perturbed_img], agent.xp, agent.phi)).q_values.data
             scores[int(i / density), int(j / density)] =\
                 np.power(qvalues - perturbated_qvalues, 2).sum()
-    pmax = scores.max()
+    scores_max = scores.max()
     scores = imresize(scores, size=[height, width], interp="bilinear").astype(np.float32)
 
-    return pmax * scores / scores.max()
+    return scores_max * scores / scores.max()
 
 
-def _score_frame_softmax_policy_and_state_value(agent, input_array, radius=5,
-                                                density=5, size=(4, 84, 84)):
+def _score_frame_softmax_policy_and_state_value(agent, input_np_array, radius=5, density=10):
+    size = input_np_array.shape
     height = size[1]
     width = size[2]
 
     softmax_policy_score = np.zeros((int(height / density) + 1, int(width / density) + 1))
     state_value_score = np.zeros((int(height / density) + 1, int(width / density) + 1))
 
-    softmax_dist, state_value = agent.model(agent.batch_states([input_array], np, agent.phi))
+    softmax_dist, state_value = agent.model(agent.batch_states([input_np_array], np, agent.phi))
     dist_logits = softmax_dist.logits.data[0]
     state_value = state_value.data[0]
 
-    for i in range(0, 80, density):
-        for j in range(0, 80, density):
+    for i in range(0, height, density):
+        for j in range(0, width, density):
             mask = _get_mask([i, j], size=[height, width], radius=radius)
-            perturbated_img = _occlude(input_array, mask)
+            perturbated_img = _occlude(input_np_array, mask)
 
             perturbated_softmax_dist, perturbated_state_value = agent.model(
                 agent.batch_states([perturbated_img], np, agent.phi))

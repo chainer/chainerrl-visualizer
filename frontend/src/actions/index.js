@@ -16,11 +16,14 @@ export const receiveRolloutResponse = (rolloutPath, isRolloutStarted) => ({
   isRolloutStarted,
 });
 
-export const clickSaliency = (rolloutId, fromStep, toStep) => ({
+export const clickSaliency = (rolloutId, fromStep, toStep, actorIntensity, criticIntensity, qfuncIntensity) => ({
   type: CLICK_SALIENCY,
   rolloutId,
   fromStep,
   toStep,
+  actorIntensity,
+  criticIntensity,
+  qfuncIntensity,
 });
 
 export const clickPrevStep = () => ({
@@ -38,6 +41,9 @@ export const hoverOnStep = (step) => ({
 
 export const CHANGE_PLOT_RANGE_LEFT = 'CHANGE_PLOT_RANGE_LEFT';
 export const CHANGE_PLOT_RANGE_RIGHT = 'CHANGE_PLOT_RANGE_RIGHT';
+export const CHANGE_ACTOR_INTENSITY = 'CHANGE_ACTOR_INTENSITY';
+export const CHANGE_CRITIC_INTENSITY = 'CHANGE_CRITIC_INTENSITY';
+export const CHANGE_QFUNC_INTENSITY = 'CHANGE_QFUNC_INTENSITY';
 export const CHANGE_SALIENCY_RANGE_LEFT = 'CHANGE_SALIENCY_RANGE_LEFT';
 export const CHANGE_SALIENCY_RANGE_RIGHT = 'CHANGE_SALIENCY_RANGE_RIGHT';
 export const CHANGE_ROLLOUT_STEP = 'CHANGE_ROLLOUT_STEP';
@@ -51,6 +57,21 @@ export const changePlotRangeLeft = (step) => ({
 export const changePlotRangeRight = (step) => ({
   type: CHANGE_PLOT_RANGE_RIGHT,
   step,
+});
+
+export const changeActorIntensity = (intensity) => ({
+  type: CHANGE_ACTOR_INTENSITY,
+  intensity,
+});
+
+export const changeCriticIntensity = (intensity) => ({
+  type: CHANGE_CRITIC_INTENSITY,
+  intensity,
+});
+
+export const changeQfuncIntensity = (intensity) => ({
+  type: CHANGE_QFUNC_INTENSITY,
+  intensity,
 });
 
 export const changeSaliencyRangeLeft = (step) => ({

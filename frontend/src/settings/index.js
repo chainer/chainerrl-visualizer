@@ -23,16 +23,16 @@ const profileProperties = [
 ];
 
 // Agent profile property - 'distributionType'
-const GAUSSIAN_DISTRIBUTION = 'GaussianDistribution';
-const SOFTMAX_DISTRIBUTION = 'SoftmaxDistribution';
-const MELLOWMAX_DISTRIBUTION = 'MellowmaxDistribution';
-const CONTINUOUS_DETERMINISTIC_DISTRIBUTION = 'ContinuousDeterministicDistribution';
+export const GAUSSIAN_DISTRIBUTION = 'GaussianDistribution';
+export const SOFTMAX_DISTRIBUTION = 'SoftmaxDistribution';
+export const MELLOWMAX_DISTRIBUTION = 'MellowmaxDistribution';
+export const CONTINUOUS_DETERMINISTIC_DISTRIBUTION = 'ContinuousDeterministicDistribution';
 
 // Agent profile property - 'actionValueType'
-const DISCRETE_ACTION_VALUE = 'DiscreteActionValue';
-const DISTRIBUTIONAL_DISCRETE_ACTION_VALUE = 'DistributionalDiscreteActionValue';
-const QUADRATIC_ACTION_VALUE = 'QuadraticActionValue';
-const SINGLE_ACTION_VALUE = 'SingleActionValue'; // eslint-disable-line no-unused-vars
+export const DISCRETE_ACTION_VALUE = 'DiscreteActionValue';
+export const DISTRIBUTIONAL_DISCRETE_ACTION_VALUE = 'DistributionalDiscreteActionValue';
+export const QUADRATIC_ACTION_VALUE = 'QuadraticActionValue';
+export const SINGLE_ACTION_VALUE = 'SingleActionValue'; // eslint-disable-line no-unused-vars
 
 export const validateProfile = (profile) => {
   let validProfile = true;
