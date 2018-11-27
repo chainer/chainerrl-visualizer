@@ -30,8 +30,8 @@ def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_
                 profile['distribution_type'] == SOFTMAX_DISTRIBUTION:
             softmax_policy_score, state_value_score =\
                 _score_frame_softmax_policy_and_state_value(agent, obs)
-            output = _saliency_on_base_image(state_value_score, base_img, 50, channel=0)
-            output = _saliency_on_base_image(softmax_policy_score, output, 25, channel=2)
+            output = _saliency_on_base_image(state_value_score, base_img, 5, channel=0)
+            output = _saliency_on_base_image(softmax_policy_score, output, 15, channel=2)
         else:
             raise Exception('unsupported agent for saliency map create')
 
@@ -73,7 +73,7 @@ def _saliency_on_base_image(saliency, base_img, fudge_factor, size=[210, 160], c
     return img
 
 
-def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=5):
+def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=10):
     size = input_np_array.shape
     height = size[1]
     width = size[2]
@@ -97,7 +97,7 @@ def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=5):
     return scores_max * scores / scores.max()
 
 
-def _score_frame_softmax_policy_and_state_value(agent, input_np_array, radius=5, density=5):
+def _score_frame_softmax_policy_and_state_value(agent, input_np_array, radius=5, density=10):
     size = input_np_array.shape
     height = size[1]
     width = size[2]
