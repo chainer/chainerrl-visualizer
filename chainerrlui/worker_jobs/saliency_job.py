@@ -15,7 +15,7 @@ ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 
 
 def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_step,
-                                    obs_list, render_img_list):
+                                    intensity, obs_list, render_img_list):
     image_paths = []
 
     for step in range(from_step, to_step + 1):
@@ -25,13 +25,15 @@ def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_
         if profile['action_value_type'] in \
                 [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE]:
             output = _saliency_on_base_image(
-                _score_frame_discrete_qvalues(agent, obs), base_img, 50, channel=0)
+                _score_frame_discrete_qvalues(agent, obs), base_img, intensity['qfunc_intensity'], channel=0)
         elif profile['state_value_returned'] and \
                 profile['distribution_type'] == SOFTMAX_DISTRIBUTION:
             softmax_policy_score, state_value_score =\
                 _score_frame_softmax_policy_and_state_value(agent, obs)
-            output = _saliency_on_base_image(state_value_score, base_img, 5, channel=0)
-            output = _saliency_on_base_image(softmax_policy_score, output, 15, channel=2)
+            output = _saliency_on_base_image(
+                state_value_score, base_img, intensity['critic_intensity'], channel=0)
+            output = _saliency_on_base_image(
+                softmax_policy_score, output, intensity['actor_intensity'], channel=2)
         else:
             raise Exception('unsupported agent for saliency map create')
 

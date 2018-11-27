@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import log from './log';
 import plotRange from './plotRange';
 import saliencyRange from './saliencyRange';
+import saliencyIntensity from './saliencyIntensity';
 import serverState from './serverState';
 import agentProfile from './agentProfile';
 import settings from './settings';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   chartControl,
   log,
   plotRange,
+  saliencyIntensity,
   saliencyRange,
   serverState,
   settings,

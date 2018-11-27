@@ -45,13 +45,15 @@ def job_worker(agent, gymlike_env, profile, job_queue, is_job_running, is_rollou
             rollout_path = data['rollout_dir']  # full path
             from_step = data['from_step']
             to_step = data['to_step']
+            intensity = data['intensity']
 
             if rollout_id != latest_rollout_id:
                 print('rollout_id != latest_rollout_id')  # for debug
                 continue
 
             saliency_process = Process(target=create_and_save_saliency_images, args=(
-                agent, profile, rollout_path, from_step, to_step, obs_list, render_img_list))
+                agent, profile, rollout_path, from_step, to_step, intensity,
+                obs_list, render_img_list))
             saliency_process.start()
 
             try:
