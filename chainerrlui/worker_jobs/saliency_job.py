@@ -24,14 +24,14 @@ def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_
 
         if profile['action_value_type'] in \
                 [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE]:
-            output = _saliency_on_atari_frame(
+            output = _saliency_on_base_image(
                 _score_frame_discrete_qvalues(agent, obs), base_img, 50, channel=0)
         elif profile['state_value_returned'] and \
                 profile['distribution_type'] == SOFTMAX_DISTRIBUTION:
             softmax_policy_score, state_value_score =\
                 _score_frame_softmax_policy_and_state_value(agent, obs)
-            output = _saliency_on_atari_frame(state_value_score, base_img, 50, channel=0)
-            output = _saliency_on_atari_frame(softmax_policy_score, output, 25, channel=2)
+            output = _saliency_on_base_image(state_value_score, base_img, 50, channel=0)
+            output = _saliency_on_base_image(softmax_policy_score, output, 25, channel=2)
         else:
             raise Exception('unsupported agent for saliency map create')
 
@@ -56,15 +56,20 @@ def create_and_save_saliency_images(agent, profile, rollout_path, from_step, to_
             writer.write(line)
 
 
-def _saliency_on_atari_frame(saliency, atari, fudge_factor, size=[210, 160], channel=2, sigma=0):
-    pmax = saliency.max()
-    S = imresize(saliency, size=size, interp="bilinear").astype(np.float32)
-    S = S if sigma == 0 else gaussian_filter(S, sigma=sigma)
-    S -= S.min()
-    S = fudge_factor * pmax * S / S.max()
-    img = atari.astype("uint16")
-    img[:, :, channel] += S.astype("uint16")
+def _saliency_on_base_image(saliency, base_img, fudge_factor, size=[210, 160], channel=2, sigma=0):
+    saliency_max = saliency.max()
+    saliency = imresize(saliency, size=size, interp="bilinear").astype(np.float32)
+
+    if sigma is not 0:
+        saliency = gaussian_filter(saliency, sigma=sigma)
+
+    saliency -= saliency.min()
+    saliency = fudge_factor * saliency_max * saliency / saliency.max()
+
+    img = base_img.astype("uint16")
+    img[:, :, channel] += saliency.astype("uint16")
     img = img.clip(1, 255).astype("uint8")
+
     return img
 
 
@@ -86,10 +91,10 @@ def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=5):
                 agent.batch_states([perturbed_img], agent.xp, agent.phi)).q_values.data
             scores[int(i / density), int(j / density)] =\
                 np.power(qvalues - perturbated_qvalues, 2).sum()
-    pmax = scores.max()
+    scores_max = scores.max()
     scores = imresize(scores, size=[height, width], interp="bilinear").astype(np.float32)
 
-    return pmax * scores / scores.max()
+    return scores_max * scores / scores.max()
 
 
 def _score_frame_softmax_policy_and_state_value(agent, input_np_array, radius=5, density=5):
