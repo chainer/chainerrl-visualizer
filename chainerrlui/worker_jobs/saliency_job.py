@@ -87,8 +87,8 @@ def _score_frame_discrete_qvalues(agent, input_np_array, radius=5, density=10):
     qvalues = agent.model(
         agent.batch_states([input_np_array], agent.xp, agent.phi)).q_values.data
 
-    for i in range(0, 80, density):
-        for j in range(0, 80, density):
+    for i in range(0, height, density):
+        for j in range(0, width, density):
             mask = _get_mask([i, j], size=[height, width], radius=radius)
             perturbed_img = _occlude(input_np_array, mask)
             perturbated_qvalues = agent.model(
@@ -113,8 +113,8 @@ def _score_frame_softmax_policy_and_state_value(agent, input_np_array, radius=5,
     dist_logits = softmax_dist.logits.data[0]
     state_value = state_value.data[0]
 
-    for i in range(0, 80, density):
-        for j in range(0, 80, density):
+    for i in range(0, height, density):
+        for j in range(0, width, density):
             mask = _get_mask([i, j], size=[height, width], radius=radius)
             perturbated_img = _occlude(input_np_array, mask)
 
