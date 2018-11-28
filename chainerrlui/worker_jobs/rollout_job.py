@@ -83,7 +83,7 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
                     log_entries['action_means'] = [float(v) for v in output.mean.data[0]]
                     log_entries['action_vars'] = [float(v) for v in output.var.data[0]]
                 elif isinstance(output, ContinuousDeterministicDistribution):
-                    raise Exception('Not implemented for ContinuousDeterministicDistribution yes')
+                    raise Exception('Not implemented for ContinuousDeterministicDistribution yet')
                 else:
                     raise Exception('Output of model in passed agent contains unsupported '
                                     'Distribution named {}'.format(type(output).__name__))
