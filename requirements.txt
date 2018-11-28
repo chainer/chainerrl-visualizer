@@ -1,3 +1,4 @@
 Flask
 chainerrl==0.5.0
 jsonlines
+gym

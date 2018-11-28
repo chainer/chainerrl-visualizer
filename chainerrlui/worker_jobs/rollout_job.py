@@ -40,7 +40,7 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
     t = 0
 
     while not (t == step_count or done):
-        rendered = gymlike_env.render(mode='rgb_array')
+        rendered = gymlike_env.render()
         image_path = _save_env_render(rendered, rollout_dir)
 
         # save to shared memory
