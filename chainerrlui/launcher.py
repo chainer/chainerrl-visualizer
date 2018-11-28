@@ -11,6 +11,7 @@ from chainerrl.agent import Agent
 from chainerrlui.web_server import web_server
 from chainerrlui.job_worker import job_worker
 from chainerrlui.config import SUPPORTED_ACTION_VALUES, SUPPORTED_DISTRIBUTIONS
+import gym
 
 
 def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002,
@@ -27,6 +28,9 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     log_dir = os.path.join(os.getcwd(), log_dir)
     if not prepare_log_directory(log_dir):
         return
+
+    if isinstance(gymlike_env, gym.Env):
+        modify_gym_env_render(gymlike_env)
 
     profile = inspect_agent(agent, gymlike_env)
 
@@ -52,6 +56,15 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     except(KeyboardInterrupt, SystemExit):
         os.kill(worker_process.pid, signal.SIGTERM)
         os.kill(server_process.pid, signal.SIGTERM)
+
+
+def modify_gym_env_render(gym_env):
+    old_render = gym_env.render
+
+    def render():
+        return old_render(mode='rgb_array')
+
+    gym_env.render = render
 
 
 def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
