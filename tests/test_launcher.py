@@ -39,18 +39,18 @@ def test_launch_visualizer(tmpdir, outs):
     worker_called_touch = os.path.join(tmpdir, 'worker_called.log')
 
     def assert_server_called(*args):
-        open(websrv_called_touch, 'w').close()
         assert len(args) == 11
         assert id(args[0]) == id(agent)
         assert id(args[1]) == id(gymlike_env)
+        open(websrv_called_touch, 'w').close()
 
     web_server = MagicMock(side_effect=assert_server_called)
 
     def assert_worker_called(*args):
-        open(worker_called_touch, 'w'). close()
         assert len(args) == 6
         assert id(args[0]) == id(agent)
         assert id(args[1]) == id(gymlike_env)
+        open(worker_called_touch, 'w'). close()
 
     job_worker = MagicMock(side_effect=assert_worker_called)
 
