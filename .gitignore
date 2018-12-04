@@ -7,6 +7,7 @@ build/
 dist/
 venv/
 .coverage
+htmlcov/
 
 # frontend
 chainerrlui/static/dist
