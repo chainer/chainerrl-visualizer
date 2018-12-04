@@ -32,8 +32,8 @@ def test_launch_visualizer(tmpdir, outs):
     gymlike_env = MagicMock()
 
     # This assertion checks the instances is called correctly.
-    # In the target luncher function, the instance is called from  forked process internally,
-    # which process is created internally. So cannot use `assert_called` and shared values.
+    # In the target luncher function, the instance is called from forked process internally,
+    # So cannot use `assert_called` and shared values.
     # It's not smart, and address with touch file to check called or not.
     websrv_called_touch = os.path.join(tmpdir, 'websrv_called.log')
     worker_called_touch = os.path.join(tmpdir, 'worker_called.log')
