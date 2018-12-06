@@ -19,10 +19,9 @@ class MockAgent(MagicMock, a3c.A3C):
 
 @pytest.mark.parametrize('outs', [
     (
-        chainer.Variable(numpy.zeros(1)),
+        chainer.Variable(numpy.zeros(1).reshape(1, 1)),
         chainerrl.distribution.SoftmaxDistribution(chainer.Variable(numpy.zeros(2).reshape(1, 2)))
     ), (
-        chainer.Variable(numpy.zeros(1)),
         chainerrl.action_value.DiscreteActionValue(chainer.Variable(numpy.ones(2).reshape(1, 2)))
     )
 ])
