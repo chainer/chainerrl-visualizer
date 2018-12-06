@@ -53,11 +53,15 @@ def test_launch_visualizer(tmpdir, outs):
 
     job_worker = MagicMock(side_effect=assert_worker_called)
 
+    webbrowser = MagicMock()
+    webbrowser.open_new_tab = MagicMock()
+
     cwd = os.getcwd()
     try:
         os.chdir(tmpdir)
         with patch('chainerrlui.launcher.web_server', web_server), \
-                patch('chainerrlui.launcher.job_worker', job_worker):
+                patch('chainerrlui.launcher.job_worker', job_worker), \
+                    patch('chainerrlui.launcher.webbrowser', webbrowser):
             launch_visualizer(agent, gymlike_env)
             assert os.path.exists(websrv_called_touch)
             assert os.path.exists(worker_called_touch)
