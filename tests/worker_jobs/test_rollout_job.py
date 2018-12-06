@@ -35,7 +35,7 @@ ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
         'PPO',
         (
             chainer.Variable(np.zeros(1).reshape(1, 1)),
-            chainerrl.distribution.GaussianDistribution(np.zeros(4).reshape(1, 4), np.ones(4).reshape(1, 4)),
+            chainerrl.distribution.GaussianDistribution(np.zeros((1, 4)), np.ones((1, 4))),
         ),
         np.random.rand(4),  # randomly select action for each dimension
     ),
