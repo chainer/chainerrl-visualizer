@@ -66,6 +66,13 @@ const plotRange = (state = initialPlotRange, action) => {
         focusedStep: action.step,
       };
     case CHANGE_PLOT_RANGE_LEFT:
+      if (!action.step) {
+        return {
+          ...state,
+          plotRangeLeft: 0,
+        };
+      }
+
       if (action.step < 0) {
         return state;
       }
@@ -79,6 +86,13 @@ const plotRange = (state = initialPlotRange, action) => {
         plotRangeLeft: action.step,
       };
     case CHANGE_PLOT_RANGE_RIGHT:
+      if (!action.step) {
+        return {
+          ...state,
+          plotRangeRight: 0,
+        };
+      }
+
       if (action.step > state.logLength - 1) {
         return state;
       }
