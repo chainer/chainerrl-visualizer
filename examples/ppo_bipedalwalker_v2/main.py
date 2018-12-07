@@ -74,7 +74,7 @@ opt.setup(model)
 agent = PPO(model, opt, gpu=-1, phi=phi, update_interval=2048, minibatch_size=64, epochs=10, clip_eps_vf=None,
             entropy_coef=0.0, standardize_advantages=False)
 
-agent.load("10000000_finish")
+agent.load("parameters")
 
 ACTION_MEANINGS = {
     0: 'Hip1(Torque/Velocity)',

@@ -64,7 +64,7 @@ agent = chainerrl.agents.CategoricalDQN(
     target_update_interval=10 ** 4, update_interval=4, batch_accumulator="mean", phi=phi,
 )
 
-agent.load("results/213921/20180807T064140.265982/50000000_finish")
+agent.load("parameters")
 
 ACTION_MEANING = {
     0: "NOOP",
