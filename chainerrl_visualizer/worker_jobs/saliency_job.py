@@ -7,9 +7,8 @@ from scipy.misc import imsave
 import jsonlines
 
 from chainerrl_visualizer.utils import generate_random_string
-from chainerrl_visualizer.config import (DISCRETE_ACTION_VALUE,
-                                DISTRIBUTIONAL_DISCRETE_ACTION_VALUE,
-                                SOFTMAX_DISTRIBUTION)
+from chainerrl_visualizer.config import (
+    DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE, SOFTMAX_DISTRIBUTION)
 
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 

@@ -62,19 +62,22 @@ ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
     ),
     (
         'Unsupported',
-        chainerrl.distribution.ContinuousDeterministicDistribution(chainer.Variable(np.zeros((1, 4)))),
+        chainerrl.distribution.ContinuousDeterministicDistribution(
+            chainer.Variable(np.zeros((1, 4)))),
         0,
     ),
     (
         'Unsupported',
-        chainerrl.action_value.QuadraticActionValue(chainer.Variable(np.zeros((1, 4))),
-                                                    chainer.Variable(np.zeros((1, 4, 4))), chainer.Variable(np.zeros(0))),
+        chainerrl.action_value.QuadraticActionValue(
+            chainer.Variable(np.zeros((1, 4))), chainer.Variable(np.zeros((1, 4, 4))),
+            chainer.Variable(np.zeros(0))),
         0,
     ),
     (
         'Unsupported',
         chainerrl.action_value.SingleActionValue(
-            lambda *args: chainer.Variable(np.zeros(1)), lambda *args: chainer.Variable(np.zeros((1, 4)))),
+            lambda *args: chainer.Variable(np.zeros(1)),
+            lambda *args: chainer.Variable(np.zeros((1, 4)))),
         0,
     ),
 ])
