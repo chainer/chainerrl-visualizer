@@ -53,6 +53,30 @@ ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
             np.linspace(-10, 10, num=51)),
         2,  # always select index-2 action
     ),
+    # Unsupported modules
+    #
+    (
+        'Unsupported',
+        chainerrl.distribution.MellowmaxDistribution(chainer.Variable(np.zeros((1, 4)))),
+        0,
+    ),
+    (
+        'Unsupported',
+        chainerrl.distribution.ContinuousDeterministicDistribution(chainer.Variable(np.zeros((1, 4)))),
+        0,
+    ),
+    (
+        'Unsupported',
+        chainerrl.action_value.QuadraticActionValue(chainer.Variable(np.zeros((1, 4))),
+                                                    chainer.Variable(np.zeros((1, 4, 4))), chainer.Variable(np.zeros(0))),
+        0,
+    ),
+    (
+        'Unsupported',
+        chainerrl.action_value.SingleActionValue(
+            lambda *args: chainer.Variable(np.zeros(1)), lambda *args: chainer.Variable(np.zeros((1, 4)))),
+        0,
+    ),
 ])
 def test_rollout(tmpdir, test_case, model_outs, act_outs):
     agent = MagicMock()
@@ -69,18 +93,26 @@ def test_rollout(tmpdir, test_case, model_outs, act_outs):
     gymlike_env.step = MagicMock(side_effect=lambda *args: (observation, 0.0, False, {}))
 
     rollout_dir = tmpdir  # use tmpdir as this rollout directory
-    step_count = 2
+    step_count = 15
     obs_list = MagicMock()
     render_img_list = MagicMock()
 
     os.makedirs(os.path.join(tmpdir, 'images'))
+
+    if test_case == 'Unsupported':
+        with pytest.raises(Exception):
+            rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_list)
+            agent.stop_episode.assert_called_once()
+        return
+
     rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_list)
+    agent.stop_episode.assert_called_once()
 
     with jsonlines.open('{}/{}'.format(tmpdir, ROLLOUT_LOG_FILE_NAME)) as reader:
         lines_num = 0
         for log_line in reader.iter(type=dict):
             lines_num += 1
-        assert lines_num == 2
+        assert lines_num == 15
 
         # Common log entries for each test case
         assert 'step' in log_line
