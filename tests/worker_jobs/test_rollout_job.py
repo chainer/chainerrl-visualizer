@@ -6,7 +6,7 @@ import chainerrl
 import numpy as np
 import jsonlines
 
-from chainerrlui.worker_jobs import rollout
+from chainerrl_visualizer.worker_jobs import rollout
 
 
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'

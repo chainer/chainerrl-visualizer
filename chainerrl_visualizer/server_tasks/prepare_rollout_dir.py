@@ -1,7 +1,7 @@
 from flask import current_app
 import os
 
-from chainerrlui.utils import generate_timestamp
+from chainerrl_visualizer.utils import generate_timestamp
 
 
 def prepare_rollout_dir():

@@ -1,7 +1,7 @@
 from flask.views import MethodView
 from flask import request, jsonify, current_app
 
-from chainerrlui.job_dispatchers import dispatch_saliency_job
+from chainerrl_visualizer.job_dispatchers import dispatch_saliency_job
 
 
 class SaliencyAPI(MethodView):

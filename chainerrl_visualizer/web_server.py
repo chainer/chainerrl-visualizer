@@ -1,6 +1,6 @@
 from flask import Flask, render_template, send_file, request
 
-from chainerrlui.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
+from chainerrl_visualizer.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
 
 
 def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings,

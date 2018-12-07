@@ -8,9 +8,9 @@ import chainer
 import chainerrl
 from chainerrl.agent import Agent
 
-from chainerrlui.web_server import web_server
-from chainerrlui.job_worker import job_worker
-from chainerrlui.config import SUPPORTED_ACTION_VALUES, SUPPORTED_DISTRIBUTIONS
+from chainerrl_visualizer.web_server import web_server
+from chainerrl_visualizer.job_worker import job_worker
+from chainerrl_visualizer.config import SUPPORTED_ACTION_VALUES, SUPPORTED_DISTRIBUTIONS
 import gym
 
 
