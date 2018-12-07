@@ -38,6 +38,7 @@ const CommandsContainer = (props) => {
     stateValueReturned,
     distributionType,
     actionValueType,
+    containsRecurrentModel,
   } = props;
 
   return (
@@ -66,7 +67,7 @@ const CommandsContainer = (props) => {
             Rollout 1 episode
           </Button>
           {
-            rawImageInput && ((stateValueReturned && distributionType === SOFTMAX_DISTRIBUTION)
+            rawImageInput && !containsRecurrentModel && ((stateValueReturned && distributionType === SOFTMAX_DISTRIBUTION)
               || [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE].includes(actionValueType)) && (
                 <div>
                   {
@@ -174,6 +175,7 @@ CommandsContainer.propTypes = {
   stateValueReturned: PropTypes.bool.isRequired,
   distributionType: PropTypes.string,
   actionValueType: PropTypes.string,
+  containsRecurrentModel: PropTypes.bool.isRequired,
   clickRollout: PropTypes.func.isRequired,
   clickSaliency: PropTypes.func.isRequired,
   changeActorIntensity: PropTypes.func.isRequired,
@@ -203,6 +205,7 @@ const mapStateToProps = (state) => ({
   stateValueReturned: state.agentProfile.stateValueReturned,
   distributionType: state.agentProfile.distributionType,
   actionValueType: state.agentProfile.actionValueType,
+  containsRecurrentModel: state.agentProfile.containsRecurrentModel,
 });
 
 export default connect(mapStateToProps, {
