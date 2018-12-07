@@ -38,7 +38,7 @@ def test_launch_visualizer(tmpdir, outs):
     worker_called_touch = os.path.join(tmpdir, 'worker_called.log')
 
     def assert_server_called(*args):
-        assert len(args) == 11
+        assert len(args) == 12
         assert id(args[0]) == id(agent)
         assert id(args[1]) == id(gymlike_env)
         open(websrv_called_touch, 'w').close()
