@@ -9,6 +9,13 @@ const initialSaliencyRange = {
 const saliencyRange = (state = initialSaliencyRange, action) => {
   switch (action.type) {
     case CHANGE_SALIENCY_RANGE_LEFT:
+      if (!action.step) {
+        return {
+          ...state,
+          saliencyRangeLeft: 0,
+        };
+      }
+
       if (action.step < 0 || action.step > state.saliencyRangeRight) {
         return state;
       }
@@ -18,6 +25,13 @@ const saliencyRange = (state = initialSaliencyRange, action) => {
         saliencyRangeLeft: action.step,
       };
     case CHANGE_SALIENCY_RANGE_RIGHT:
+      if (!action.step) {
+        return {
+          ...state,
+          saliencyRangeRight: 0,
+        };
+      }
+
       if (action.step > state.logLength - 1 || action.step < state.saliencyRangeLeft) {
         return state;
       }

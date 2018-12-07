@@ -12,6 +12,10 @@ const MIN_INTENSITY = 0;
 const actorIntensity = (state = 15, action) => {
   switch (action.type) {
     case CHANGE_ACTOR_INTENSITY:
+      if (!action.intensity) {
+        return 0;
+      }
+
       if (action.intensity < MIN_INTENSITY || action.intensity > MAX_INTENSITY) {
         return state;
       }
@@ -25,6 +29,10 @@ const actorIntensity = (state = 15, action) => {
 const criticIntensity = (state = 5, action) => {
   switch (action.type) {
     case CHANGE_CRITIC_INTENSITY:
+      if (!action.intensity) {
+        return 0;
+      }
+
       if (action.intensity < MIN_INTENSITY || action.intensity > MAX_INTENSITY) {
         return state;
       }
@@ -38,6 +46,10 @@ const criticIntensity = (state = 5, action) => {
 const qfuncIntensity = (state = 50, action) => {
   switch (action.type) {
     case CHANGE_QFUNC_INTENSITY:
+      if (!action.intensity) {
+        return 0;
+      }
+
       if (action.intensity < MIN_INTENSITY || action.intensity > MAX_INTENSITY) {
         return state;
       }
