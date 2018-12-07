@@ -69,7 +69,7 @@ def test_rollout(tmpdir, test_case, model_outs, act_outs):
     gymlike_env.step = MagicMock(side_effect=lambda *args: (observation, 0.0, False, {}))
 
     rollout_dir = tmpdir  # use tmpdir as this rollout directory
-    step_count = 2
+    step_count = 15
     obs_list = MagicMock()
     render_img_list = MagicMock()
 
@@ -80,7 +80,7 @@ def test_rollout(tmpdir, test_case, model_outs, act_outs):
         lines_num = 0
         for log_line in reader.iter(type=dict):
             lines_num += 1
-        assert lines_num == 2
+        assert lines_num == 15
 
         # Common log entries for each test case
         assert 'step' in log_line
