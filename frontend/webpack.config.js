@@ -1,7 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-const distDir = path.resolve(path.dirname(__dirname), 'chainerrlui', 'static', 'dist');
+const distDir = path.resolve(path.dirname(__dirname), 'chainerrl_visualizer', 'static', 'dist');
 const targets = {
   browsers: ['last 2 versions'],
 };
@@ -13,7 +13,7 @@ module.exports = {
   ],
   output: {
     path: distDir,
-    filename: 'chainerrlui.js',
+    filename: 'chainerrl_visualizer.js',
   },
   module: {
     rules: [

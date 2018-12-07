@@ -8,7 +8,7 @@ import chainerrl.distribution
 import numpy
 import pytest
 
-from chainerrlui import launch_visualizer
+from chainerrl_visualizer import launch_visualizer
 
 
 # argument must be a subclass of Agent, using A3c is no particular meaning.
@@ -59,9 +59,9 @@ def test_launch_visualizer(tmpdir, outs):
     cwd = os.getcwd()
     try:
         os.chdir(tmpdir)
-        with patch('chainerrlui.launcher.web_server', web_server), \
-                patch('chainerrlui.launcher.job_worker', job_worker), \
-                patch('chainerrlui.launcher.webbrowser', webbrowser):
+        with patch('chainerrl_visualizer.launcher.web_server', web_server), \
+                patch('chainerrl_visualizer.launcher.job_worker', job_worker), \
+                patch('chainerrl_visualizer.launcher.webbrowser', webbrowser):
             launch_visualizer(agent, gymlike_env)
             assert os.path.exists(websrv_called_touch)
             assert os.path.exists(worker_called_touch)

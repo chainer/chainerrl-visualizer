@@ -6,20 +6,20 @@ with open("requirements.txt") as f:
     dependencies = f.read().splitlines()
 
 
-class chainerrlui_sdist(sdist):
+class chainerrl_visualizer_sdist(sdist):
     def run(self):
         subprocess.check_call('cd frontend && npm run build', shell=True)
         sdist.run(self)
 
 
 setup(
-    name="chainerrlui",
+    name="chainerrl_visualizer",
     version="0.1",
     packages=find_packages(exclude=("tests", "docs")),
     install_requires=dependencies,
     include_package_data=True,
     package_data={
-        "chainerrlui": {
+        "chainerrl_visualizer": {
             "templates/*",
             "static/**/*",
         }
@@ -28,6 +28,6 @@ setup(
     author_email="sykwer@gmail.com",
     description="UI tool for chainerrl",
     cmdclass={
-        'sdist': chainerrlui_sdist
+        'sdist': chainerrl_visualizer_sdist
     },
 )

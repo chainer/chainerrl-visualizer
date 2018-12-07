@@ -9,7 +9,7 @@ from chainerrl import policies
 import gym
 import gym.wrappers
 
-from chainerrlui import launch_visualizer
+from chainerrl_visualizer import launch_visualizer
 
 
 class A3CFFGaussian(chainer.Chain, a3c.A3CModel):

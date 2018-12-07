@@ -1,2 +1,2 @@
-recursive-include chainerrlui/templates *
-recursive-include chainerrlui/static *
+recursive-include chainerrl_visualizer/templates *
+recursive-include chainerrl_visualizer/static *

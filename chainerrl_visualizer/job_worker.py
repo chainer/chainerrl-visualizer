@@ -3,7 +3,7 @@ from multiprocessing import Manager, Process
 import os
 import signal
 
-from chainerrlui.worker_jobs import rollout, create_and_save_saliency_images
+from chainerrl_visualizer.worker_jobs import rollout, create_and_save_saliency_images
 
 
 def job_worker(agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory):

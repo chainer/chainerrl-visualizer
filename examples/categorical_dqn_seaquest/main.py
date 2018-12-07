@@ -5,7 +5,7 @@ from chainerrl import misc
 from chainerrl import replay_buffer
 import numpy as np
 
-from chainerrlui import launch_visualizer
+from chainerrl_visualizer import launch_visualizer
 
 from chainerrl.wrappers import atari_wrappers
 
