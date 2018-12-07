@@ -56,7 +56,7 @@ opt.add_hook(chainer.optimizer.GradientClipping(40))
 agent = a3c.A3C(model, opt, t_max=5, gamma=0.99,
                 beta=1e-2, phi=phi)
 
-agent.load('results/243858/20180830T182043.661324/80000000_finish')
+agent.load('parameters')
 
 ACTION_MEANINGS = {
     0: 'NOOP',
