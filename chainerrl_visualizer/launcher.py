@@ -15,7 +15,7 @@ import gym
 
 
 def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002,
-                      action_meanings={}, raw_image_input=False, debug=False):
+                      action_meanings={}, raw_image_input=False, debug=False, contains_rnn=False):
     assert issubclass(type(agent), Agent), 'Agent object has to be ' \
                                            'subclass of chainerrl.agent.Agent'
 
@@ -30,7 +30,7 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     if isinstance(gymlike_env, gym.Env):
         modify_gym_env_render(gymlike_env)
 
-    profile = inspect_agent(agent, gymlike_env)
+    profile = inspect_agent(agent, gymlike_env, contains_rnn)
 
     job_queue = Queue()
     is_job_running = Value(c_bool, False)
@@ -84,9 +84,9 @@ def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
 
 
 # Create and return dict contains agent profile
-def inspect_agent(agent, gymlike_env):
+def inspect_agent(agent, gymlike_env, contains_rnn):
     profile = {
-        'contains_recurrent_model': False,
+        'contains_recurrent_model': contains_rnn,
         'state_value_returned': False,
         'distribution_type': None,
         'action_value_type': None,
@@ -101,7 +101,6 @@ def inspect_agent(agent, gymlike_env):
         xp = np
 
     if isinstance(model, chainerrl.recurrent.RecurrentChainMixin):
-        profile['contains_recurrent_model'] = True
         with model.state_kept():
             outputs = model(agent.batch_states([obs], xp, agent.phi))
     else:
