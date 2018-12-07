@@ -14,6 +14,17 @@ Supported and unsupported modules are listed below.
   - `MellowmaxDistribution` : unsupported
   - `GaussianDistribution` : supported
   - `ContinuousDeterministicDistribution` : unsupported
+  
+#### Bug workaround for MacOS
+If you use MacOS, you may encounter a crash message below when sending `rollout` or `saliency` command from UI.
+```
+objc[42564]: +[__NSCFConstantString initialize] may have been in progress in another thread when fork() was called. We cannot safely call it or ignore it in the fork() child process. Crashing instead. Set a breakpoint on objc_initializeAfterForkError to debug.
+```
+This behavior is due to a change in high Sierra. If you would like to know detail, see [here](https://bugs.python.org/issue33725).
+Workaround is to set environment variable `OBJC_DISABLE_INITIALIZE_FORK_SAFETY` to `YES` prior to executing python.
+```
+$ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+```
 
 ## Installation
 To install UI for ChainerRL from source.
