@@ -6,8 +6,8 @@ from scipy.misc import imresize
 from scipy.misc import imsave
 import jsonlines
 
-from chainerrlui.utils import generate_random_string
-from chainerrlui.config import (DISCRETE_ACTION_VALUE,
+from chainerrl_visualizer.utils import generate_random_string
+from chainerrl_visualizer.config import (DISCRETE_ACTION_VALUE,
                                 DISTRIBUTIONAL_DISCRETE_ACTION_VALUE,
                                 SOFTMAX_DISTRIBUTION)
 

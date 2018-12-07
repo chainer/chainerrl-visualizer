@@ -17,7 +17,7 @@ from chainerrl.action_value import (ActionValue,
                                     QuadraticActionValue,
                                     SingleActionValue)
 
-from chainerrlui.utils import generate_random_string
+from chainerrl_visualizer.utils import generate_random_string
 
 ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
 

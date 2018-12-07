@@ -9,7 +9,7 @@ from chainerrl import v_function
 
 from chainerrl.wrappers import atari_wrappers
 
-from chainerrlui import launch_visualizer
+from chainerrl_visualizer import launch_visualizer
 
 
 class A3CFF(chainer.ChainList, a3c.A3CModel):

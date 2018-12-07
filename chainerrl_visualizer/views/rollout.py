@@ -2,13 +2,13 @@ import os
 from flask.views import MethodView
 from flask import jsonify, current_app, request
 
-from chainerrlui.server_tasks import (prepare_rollout_dir,
+from chainerrl_visualizer.server_tasks import (prepare_rollout_dir,
                                       parse_rollout_log,
                                       rollout_log_last_updated,
                                       get_rollout_ids,
                                       get_latest_rollout_info)
-from chainerrlui.utils.jsonize_datetime import jsonize_datetime
-from chainerrlui.job_dispatchers import dispatch_rollout_job
+from chainerrl_visualizer.utils.jsonize_datetime import jsonize_datetime
+from chainerrl_visualizer.job_dispatchers import dispatch_rollout_job
 
 ROLLOUT_LOGFILE_NAME = 'rollout_log.jsonl'
 

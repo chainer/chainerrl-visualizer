@@ -1,4 +1,4 @@
-# UI for ChainerRL
+# ChainerRL Visualizer
 You can anaylize learned ChainerRL agent's behavior in well visualized way, making debug easier.
 
 #### NOTICE
@@ -37,9 +37,9 @@ $ pip install -e .
 ```
 
 ## Usage
-Just pass `agent` and `env` object to `chainerrlui.launch_visualizer` function.
+Just pass `agent` and `env` object to `chainerrl_visualizer.launch_visualizer` function.
 ```python
-from chainerrlui import launch_visualizer
+from chainerrl_visualizer import launch_visualizer
 
 # Prepare agent and env object here
 #
