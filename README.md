@@ -1,4 +1,4 @@
-# UI for ChainerRL
+# ChainerRL Visualizer
 You can anaylize learned ChainerRL agent's behavior in well visualized way, making debug easier.
 
 #### NOTICE
