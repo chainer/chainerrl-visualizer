@@ -39,6 +39,9 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
     done = False
     t = 0
 
+    # workaround: fp open closed periodically, so try..finally and with are not easy to use
+    error_msg = ''
+
     while not (t == step_count or done):
         rendered = gymlike_env.render()
         image_path = _save_env_render(rendered, rollout_dir)
@@ -78,15 +81,18 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
                 if isinstance(output, SoftmaxDistribution):
                     log_entries['action_probs'] = [float(v) for v in output.all_prob.data[0]]
                 elif isinstance(output, MellowmaxDistribution):
-                    raise Exception('Not implemented for MellowmaxDistribution yet')
+                    error_msg = 'Not implemented for MellowmaxDistribution yet'
+                    break
                 elif isinstance(output, GaussianDistribution):
                     log_entries['action_means'] = [float(v) for v in output.mean.data[0]]
                     log_entries['action_vars'] = [float(v) for v in output.var.data[0]]
                 elif isinstance(output, ContinuousDeterministicDistribution):
-                    raise Exception('Not implemented for ContinuousDeterministicDistribution yet')
+                    error_msg = 'Not implemented for ContinuousDeterministicDistribution yet'
+                    break
                 else:
-                    raise Exception('Output of model in passed agent contains unsupported '
-                                    'Distribution named {}'.format(type(output).__name__))
+                    error_msg = 'Output of model in passed agent contains' \
+                                'unsupported Distribution named {}'.format(type(output).__name__)
+                    break
 
             if isinstance(output, ActionValue):
                 if isinstance(output, DiscreteActionValue):
@@ -97,12 +103,15 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
                     log_entries['action_value_dist'] = [['%f' % float(v) for v in dist_row]
                                                         for dist_row in output.q_dist.data[0].T]
                 elif isinstance(output, QuadraticActionValue):
-                    raise Exception('Not implemented for QuadraticActionValue')
+                    error_msg = 'Not implemented for QuadraticActionValue'
+                    break
                 elif isinstance(output, SingleActionValue):
-                    raise Exception('Not implemented for SingleActionValue')
+                    error_msg = 'Not implemented for SingleActionValue'
+                    break
                 else:
-                    raise Exception('Output of model in passed agent contains unsupported '
-                                    'ActionValue named {}'.format(type(output).__name__))
+                    error_msg = 'Output of model in passed agent contains unsupported' \
+                                'ActionValue named {}'.format(type(output).__name__)
+                    break
 
         writer.write(log_entries)
         t += 1
@@ -119,6 +128,9 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
 
     writer.close()
     log_fp.close()
+
+    if error_msg != '':
+        raise Exception(error_msg)
 
 
 def _save_env_render(rendered, rollout_dir):
