@@ -1,10 +1,11 @@
+import signal
 from flask import Flask, render_template, send_file, request
 
 from chainerrl_visualizer.views import RolloutAPI, SaliencyAPI, ServerStateAPI, AgentProfileAPI
 
 
 def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings,
-               raw_image_input, job_queue, is_job_running, is_rollout_on_memory):
+               raw_image_input, job_queue, is_job_running, is_rollout_on_memory, debug):
     # is_job_running, is_rollout_on_memory :
     # <Synchronized wrapper for c_bool>, on shared memory, process safe
 
@@ -19,8 +20,30 @@ def web_server(agent, gymlike_env, profile, log_dir, host, port, action_meanings
         is_job_running=is_job_running,
         is_rollout_on_memory=is_rollout_on_memory)
 
-    app.config['ENV'] = 'development'
-    app.run(host=host, port=port, debug=True, threaded=True, use_reloader=False)
+    if debug:
+        app.config['ENV'] = 'development'
+        app.debug = True
+        from werkzeug.serving import run_simple
+        run_simple(host, port, app, use_reloader=False, use_debugger=True, threaded=True)
+    else:
+        app.config['ENV'] = 'production'
+        import gevent
+        from gevent.pywsgi import WSGIServer
+        socket_addr = '{}:{}'.format(host, port)
+        server = WSGIServer(socket_addr, application=app, log=None)
+
+        def stop_server():
+            if server.started:
+                server.stop()
+
+        gevent.signal(signal.SIGTERM, stop_server)
+        gevent.signal(signal.SIGINT, stop_server)
+        print(' * Running on http://{}/ (Press CTRL+C to quit)'.format(socket_addr))
+
+        try:
+            server.serve_forever()
+        except (KeyboardInterrupt, SystemExit):
+            stop_server()
 
 
 def create_app(agent, gymlike_env, profile, log_dir, action_meanings,

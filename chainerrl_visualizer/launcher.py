@@ -15,7 +15,7 @@ import gym
 
 
 def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002,
-                      action_meanings={}, raw_image_input=False):
+                      action_meanings={}, raw_image_input=False, debug=False):
     assert issubclass(type(agent), Agent), 'Agent object has to be ' \
                                            'subclass of chainerrl.agent.Agent'
 
@@ -38,7 +38,7 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
 
     server_process = Process(target=web_server, args=(
         agent, gymlike_env, profile, log_dir, host, port, action_meanings,
-        raw_image_input, job_queue, is_job_running, is_rollout_on_memory))
+        raw_image_input, job_queue, is_job_running, is_rollout_on_memory, debug))
 
     worker_process = Process(target=job_worker, args=(
         agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory))
