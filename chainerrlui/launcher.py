@@ -23,8 +23,6 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
-    os.environ['OBJC_DISABLE_INITIALIZE_FORK_SAFETY'] = 'YES'
-
     log_dir = os.path.join(os.getcwd(), log_dir)
     if not prepare_log_directory(log_dir):
         return
