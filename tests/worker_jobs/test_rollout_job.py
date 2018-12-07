@@ -76,6 +76,8 @@ def test_rollout(tmpdir, test_case, model_outs, act_outs):
     os.makedirs(os.path.join(tmpdir, 'images'))
     rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_list)
 
+    agent.stop_episode.assert_called_once()
+
     with jsonlines.open('{}/{}'.format(tmpdir, ROLLOUT_LOG_FILE_NAME)) as reader:
         lines_num = 0
         for log_line in reader.iter(type=dict):
