@@ -14,7 +14,7 @@ from chainerrl_visualizer.config import SUPPORTED_ACTION_VALUES, SUPPORTED_DISTR
 import gym
 
 
-def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost', port=5002,
+def launch_visualizer(agent, gymlike_env, log_dir='log_space', port=5002,
                       action_meanings={}, raw_image_input=False, debug=False, contains_rnn=False):
     assert issubclass(type(agent), Agent), 'Agent object has to be ' \
                                            'subclass of chainerrl.agent.Agent'
@@ -22,6 +22,8 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', host='localhost',
     assert hasattr(gymlike_env, 'render'), 'Env object must have `render` method'
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
+
+    host = 'localhost' # this app is assumed to run only on localhost
 
     log_dir = os.path.join(os.getcwd(), log_dir)
     if not prepare_log_directory(log_dir):
