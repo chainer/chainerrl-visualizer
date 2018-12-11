@@ -2,7 +2,7 @@
 You can analyze ChainerRL agent's behavior in well visualized way, making debug easier.
 
 ## Features
-![Demo](https://github.com/pfnet/i18-sykwer/blob/master/images/demo.gif)
+![Demo](images/demo.gif)
 
 You can easily inspect your ChainerRL agent's behavior from browser UI.
 
@@ -49,13 +49,12 @@ ACTION_MEANINGS = {
 launch_visualizer(
     agent,                           # required
     env,                             # required
-    action_meanings=ACTION_MEANINGS, # required
+    ACTION_MEANINGS,                 # required
     port=5002,                       # optional (default: 5002)
     log_dir='log_space',             # optional (default: 'log_space')
     raw_image_input=False,           # optional (default: False)
     contains_rnn=False,              # optional (default: False)
 )
-
 ```
 - `agent` object must be instance of [Agent class provided by ChainerRL](https://github.com/chainer/chainerrl/tree/master/chainerrl/agents), which extends `chainerrl.agent.Agent` class.
 - `env` object must implement three gym-like methods below. Of course, gym's env object is accepted.
@@ -113,7 +112,7 @@ If your agent's model returns unsupported one, this app will stop with error mes
   - `MellowmaxDistribution` : unsupported
   - `GaussianDistribution` : supported
   - `ContinuousDeterministicDistribution` : unsupported
-  
+
 ### Bug workaround for MacOS
 If you use MacOS, you may encounter a crash message below when sending `rollout` or `saliency` command from UI.
 ```bash

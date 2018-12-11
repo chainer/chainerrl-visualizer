@@ -66,7 +66,7 @@ agent = chainerrl.agents.CategoricalDQN(
 
 agent.load("parameters")
 
-ACTION_MEANING = {
+ACTION_MEANINGS = {
     0: "NOOP",
     1: "FIRE",
     2: "UP",
@@ -87,4 +87,4 @@ ACTION_MEANING = {
     17: "DOWNLEFTFIRE",
 }
 
-launch_visualizer(agent, env, action_meanings=ACTION_MEANING, raw_image_input=True)
+launch_visualizer(agent, env, ACTION_MEANINGS, raw_image_input=True)
