@@ -115,8 +115,8 @@ If your agent's model returns unsupported one, this app will stop with error mes
 
 ### Saliency map restriction
 For now, saliency map can be created only in situations below. This will be fixed in the future.
-- Distribution is `SoftmaxDistribution` and `StateValue` is returned and `contains_rnn=False`
-- ActionValue is `DiscreteActionValue` and `contains_run=False`
+- Distribution is `SoftmaxDistribution` && `StateValue` is returned && `contains_rnn=False`
+- (ActionValue is `DiscreteActionValue` or `DistributionalDiscreteActionValue`) && `contains_run=False`
 
 ### Bug workaround for MacOS
 If you use MacOS, you may encounter a crash message below when sending `rollout` or `saliency` command from UI.
