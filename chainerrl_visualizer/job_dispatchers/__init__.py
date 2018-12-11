@@ -1,2 +1,2 @@
-from chainerrl_visualizer.job_dispatchers.dispatch_rollout_job import dispatch_rollout_job # NOQA
-from chainerrl_visualizer.job_dispatchers.dispatch_saliency_job import dispatch_saliency_job # NOQA
+from chainerrl_visualizer.job_dispatchers.dispatch_rollout_job import dispatch_rollout_job  # NOQA
+from chainerrl_visualizer.job_dispatchers.dispatch_saliency_job import dispatch_saliency_job  # NOQA
