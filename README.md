@@ -113,6 +113,11 @@ If your agent's model returns unsupported one, this app will stop with error mes
   - `GaussianDistribution` : supported
   - `ContinuousDeterministicDistribution` : unsupported
 
+### Saliency map restriction
+For now, saliency map can be created only in situations below. This will be fixed in the future.
+- Distribution is `SoftmaxDistribution` && `StateValue` is returned && `contains_rnn=False`
+- (ActionValue is `DiscreteActionValue` or `DistributionalDiscreteActionValue`) && `contains_run=False`
+
 ### Bug workaround for MacOS
 If you use MacOS, you may encounter a crash message below when sending `rollout` or `saliency` command from UI.
 ```bash
@@ -123,3 +128,7 @@ Workaround is to set environment variable `OBJC_DISABLE_INITIALIZE_FORK_SAFETY` 
 ```bash
 $ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 ```
+
+## License
+
+[MIT License](LICENSE)
