@@ -42,6 +42,7 @@ def test_launch_visualizer(tmpdir, outs):
     agent = MockAgent()
     agent.model = MagicMock(side_effect=lambda *args: outs)
     gymlike_env = MagicMock(spec=gym.Env)
+    action_meanings = {0: 'hoge', 1: 'fuga'}
 
     # This assertion checks the instances is called correctly.
     # In the target luncher function, the instance is called from forked process internally,
@@ -74,7 +75,7 @@ def test_launch_visualizer(tmpdir, outs):
                 patch('chainerrl_visualizer.launcher.web_server', web_server), \
                 patch('chainerrl_visualizer.launcher.job_worker', job_worker), \
                 patch('chainerrl_visualizer.launcher.webbrowser', webbrowser):
-            launch_visualizer(agent, gymlike_env)
+            launch_visualizer(agent, gymlike_env, action_meanings)
             modify_gymenv.assert_called_once()
             assert os.path.exists(websrv_called_touch)
             assert os.path.exists(worker_called_touch)
@@ -83,11 +84,12 @@ def test_launch_visualizer(tmpdir, outs):
 def test_launch_visualizer_canceled(tmpdir):
     agent = MockAgent()
     gymlike_env = MagicMock()
+    action_meanings = {0: 'hoge', 1: 'fuga'}
     os.makedirs(os.path.join(tmpdir, 'log_space'))
     with change_execution_dir(tmpdir):
         with patch('chainerrl_visualizer.launcher.input', side_effect='n'), \
                 patch('chainerrl_visualizer.launcher.inspect_agent') as inspect_agent:
-            launch_visualizer(agent, gymlike_env)
+            launch_visualizer(agent, gymlike_env, action_meanings)
             inspect_agent.assert_not_called()
 
 
