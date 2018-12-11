@@ -17,7 +17,7 @@ def change_loop_count(limit=1):
         job_worker._WORKER_LOOP_LIMIT = default_limit
 
 
-def test_job_workder_rollout(tmpdir):
+def test_job_workder(tmpdir):
     agent, gymlike_env, profile, job_queue = MagicMock(), MagicMock(), MagicMock(), MagicMock()
     is_job_running, is_rollout_on_memory = MagicMock(), MagicMock()
 
