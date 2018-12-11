@@ -14,8 +14,8 @@ from chainerrl_visualizer.config import SUPPORTED_ACTION_VALUES, SUPPORTED_DISTR
 import gym
 
 
-def launch_visualizer(agent, gymlike_env, log_dir='log_space', port=5002,
-                      action_meanings={}, raw_image_input=False, debug=False, contains_rnn=False):
+def launch_visualizer(agent, gymlike_env, action_meanings,
+                      log_dir='log_space', port=5002, raw_image_input=False, debug=False, contains_rnn=False):
     assert issubclass(type(agent), Agent), 'Agent object has to be ' \
                                            'subclass of chainerrl.agent.Agent'
 
@@ -23,7 +23,9 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', port=5002,
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
-    host = 'localhost'  # this app is assumed to run only on localhost
+    validate_action_meanings(action_meanings)
+
+    host = 'localhost' # this app is assumed to run only on localhost
 
     log_dir = os.path.join(os.getcwd(), log_dir)
     if not prepare_log_directory(log_dir):
@@ -56,6 +58,21 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', port=5002,
     except(KeyboardInterrupt, SystemExit):
         os.kill(worker_process.pid, signal.SIGTERM)
         os.kill(server_process.pid, signal.SIGTERM)
+
+
+def validate_action_meanings(action_meanings):
+    if type(action_meanings) is not dict:
+        raise Exception('`action_meanings` has to be dictionary.')
+
+    if not len(action_meanings) > 0:
+        raise Exception('The number of entries in `action_meanings` is invalid')
+
+    key_idx = 0
+    for key, value in action_meanings.items():
+        if key is not key_idx:
+            raise Exception('Invalid key index in `action_meanings. '
+                            'See README for how to write valid `action_meanings` dictionary.')
+        key_idx += 1
 
 
 def modify_gym_env_render(gym_env):
