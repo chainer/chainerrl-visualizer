@@ -1,2 +1,3 @@
 recursive-include chainerrl_visualizer/templates *
 recursive-include chainerrl_visualizer/static *
+include requirements.txt
