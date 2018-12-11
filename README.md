@@ -123,3 +123,7 @@ Workaround is to set environment variable `OBJC_DISABLE_INITIALIZE_FORK_SAFETY` 
 ```bash
 $ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 ```
+
+## License
+
+[MIT License](LICENSE)
