@@ -93,6 +93,17 @@ def test_launch_visualizer_canceled(tmpdir):
             inspect_agent.assert_not_called()
 
 
+@pytest.mark.parametrize('act_list,err_kw', [
+    ((1, 'a'), 'to be dictionary'),
+    ({}, 'number of entries'),
+    ({0: 'a', 2: 'b'}, 'Invalid key index')
+])
+def test_validate_action_meanings(act_list, err_kw):
+    with pytest.raises(Exception) as excinfo:
+        launcher.validate_action_meanings(act_list)
+    assert err_kw in str(excinfo.value)
+
+
 def test_modify_gym_env_render():
     gym_env, render = MagicMock(), MagicMock()
     gym_env.render = render
