@@ -2,6 +2,8 @@
 You can analyze ChainerRL agent's behavior in well visualized way, making debug easier.
 
 ## Features
+![Demo](https://github.com/pfnet/i18-sykwer/blob/master/images/demo.gif)
+
 You can easily inspect your ChainerRL agent's behavior from browser UI.
 
 - Rollout one episode from UI
