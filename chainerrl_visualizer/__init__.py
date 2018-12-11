@@ -1,1 +1,1 @@
-from chainerrl_visualizer.launcher import launch_visualizer # NOQA
+from chainerrl_visualizer.launcher import launch_visualizer  # NOQA
