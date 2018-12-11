@@ -26,7 +26,7 @@ setup(
     },
     author="sykwer",
     author_email="sykwer@gmail.com",
-    description="UI tool for chainerrl",
+    description="Visualizer for ChainerRL",
     cmdclass={
         'sdist': chainerrl_visualizer_sdist
     },
