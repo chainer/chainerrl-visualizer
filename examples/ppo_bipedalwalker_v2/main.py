@@ -83,4 +83,4 @@ ACTION_MEANINGS = {
     3: 'Knee2(Torque/Velocity)',
 }
 
-launch_visualizer(agent, env, action_meanings=ACTION_MEANINGS)
+launch_visualizer(agent, env, ACTION_MEANINGS)
