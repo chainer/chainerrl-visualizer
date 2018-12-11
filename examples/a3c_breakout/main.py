@@ -65,4 +65,4 @@ ACTION_MEANINGS = {
     3: 'LEFT',
 }
 
-launch_visualizer(agent, env, action_meanings=ACTION_MEANINGS, raw_image_input=True)
+launch_visualizer(agent, env, ACTION_MEANINGS, raw_image_input=True)
