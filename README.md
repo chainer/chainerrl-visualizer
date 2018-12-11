@@ -118,7 +118,6 @@ For now, saliency map can be created only in situations below. This will be fixe
 - Distribution is `SoftmaxDistribution` and `StateValue` is returned and `contains_rnn=False`
 - ActionValue is `DiscreteActionValue` and `contains_run=False`
 
->>>>>>> master
 ### Bug workaround for MacOS
 If you use MacOS, you may encounter a crash message below when sending `rollout` or `saliency` command from UI.
 ```bash
