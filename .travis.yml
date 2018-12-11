@@ -1,0 +1,31 @@
+language: python
+python:
+  - "3.6"
+
+notifications:
+  email: false
+
+sudo: false
+
+before_install:
+  - pip install -U pytest pytest-cov
+  - pip install -r requirements-dev.txt
+  - npm install -g npm@6
+
+install:
+  - pushd frontend
+  - npm install && npm run build -- --progress=false --profile=false
+  - popd
+  - pip install -e .
+
+script:
+  # python style check
+  - flake8
+  - autopep8 -r . --global-config .pep8 --diff | tee check_autopep8
+  - test ! -s check_autopep8
+  # frontend style check
+  - pushd frontend
+  - npm run lint
+  - popd
+  # test
+  - pytest --cov=chainerrl_visualizer
