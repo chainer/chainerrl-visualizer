@@ -49,7 +49,7 @@ ACTION_MEANINGS = {
 launch_visualizer(
     agent,                           # required
     env,                             # required
-    ACTION_MEANINGS, # required
+    ACTION_MEANINGS,                 # required
     port=5002,                       # optional (default: 5002)
     log_dir='log_space',             # optional (default: 'log_space')
     raw_image_input=False,           # optional (default: False)
