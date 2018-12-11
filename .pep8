@@ -1,0 +1,5 @@
+[pep8]
+exclude=.eggs,*.egg,build,venv,node_modules
+
+[flake8]
+exclude=.eggs,*.egg,build,venv,node_modules
