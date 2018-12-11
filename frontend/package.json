@@ -5,7 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "build:watch": "webpack --progress --profile --watch --mode development",
-    "lint": "eslint --fix --ext .js,.jsx ."
+    "lint": "eslint --ext .js,.jsx ."
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
