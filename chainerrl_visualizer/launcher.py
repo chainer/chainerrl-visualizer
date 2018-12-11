@@ -23,7 +23,7 @@ def launch_visualizer(agent, gymlike_env, log_dir='log_space', port=5002,
     assert hasattr(gymlike_env, 'reset'), 'Env object must have `reset` method'
     assert hasattr(gymlike_env, 'step'), 'Env object must have `step` method'
 
-    host = 'localhost' # this app is assumed to run only on localhost
+    host = 'localhost'  # this app is assumed to run only on localhost
 
     log_dir = os.path.join(os.getcwd(), log_dir)
     if not prepare_log_directory(log_dir):
@@ -135,11 +135,11 @@ def inspect_agent(agent, gymlike_env, contains_rnn):
     if profile['action_value_type'] is not None \
             and profile['action_value_type'] not in SUPPORTED_ACTION_VALUES:
         raise Exception('ActionValue type {} is not supported for now'.format(
-                profile['action_value_type']))
+            profile['action_value_type']))
 
     if profile['distribution_type'] is not None \
             and profile['distribution_type'] not in SUPPORTED_DISTRIBUTIONS:
         raise Exception('Distribution type {} is not supported for now'.format(
-                profile['distribution_type']))
+            profile['distribution_type']))
 
     return profile
