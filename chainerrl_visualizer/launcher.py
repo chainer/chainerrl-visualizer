@@ -67,12 +67,9 @@ def validate_action_meanings(action_meanings):
     if not len(action_meanings) > 0:
         raise Exception('The number of entries in `action_meanings` is invalid')
 
-    key_idx = 0
-    for key, value in action_meanings.items():
-        if key is not key_idx:
-            raise Exception('Invalid key index in `action_meanings. '
-                            'See README for how to write valid `action_meanings` dictionary.')
-        key_idx += 1
+    if list(action_meanings.keys()) != list(range(len(action_meanings))):
+        raise Exception('Invalid key index in `action_meanings. '
+                        'See README for how to write valid `action_meanings` dictionary.')
 
 
 def modify_gym_env_render(gym_env):
