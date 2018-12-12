@@ -6,6 +6,9 @@ import signal
 from chainerrl_visualizer.worker_jobs import rollout, create_and_save_saliency_images
 
 
+_WORKER_LOOP_LIMIT = -1  # for test, -1 means eternal loop
+
+
 def job_worker(agent, gymlike_env, profile, job_queue, is_job_running, is_rollout_on_memory):
     # is_job_running, is_rollout_on_memory :
     # <Synchronized wrapper for c_bool>, on shared memory, process safe
@@ -15,7 +18,9 @@ def job_worker(agent, gymlike_env, profile, job_queue, is_job_running, is_rollou
 
     latest_rollout_id = None
 
-    while True:
+    count = 0
+    while _WORKER_LOOP_LIMIT < 0 or count < _WORKER_LOOP_LIMIT:
+        count += 1
         ipc_msg = job_queue.get()
 
         if ipc_msg['type'] == 'ROLLOUT':
