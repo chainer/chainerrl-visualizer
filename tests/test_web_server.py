@@ -1,6 +1,7 @@
 import datetime
 import json
 from mock import MagicMock
+from mock import patch
 import os
 
 import pytest
@@ -8,6 +9,48 @@ import pytest
 from chainerrl_visualizer.server_tasks.rollout_ids import timestamp_format
 from chainerrl_visualizer.views.rollout import ROLLOUT_LOGFILE_NAME
 from chainerrl_visualizer.web_server import create_app
+from chainerrl_visualizer.web_server import web_server
+
+
+def test_web_server_debug(tmpdir):
+    agent, gymlike_env = MagicMock(), MagicMock()
+    profile, action_meanings, raw_image_input = {}, {}, {}
+    job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
+
+    host = 'localhost'
+    port = 5002
+
+    mock_app = MagicMock()
+    mock_app_creator = MagicMock(return_value=mock_app)
+    with patch('werkzeug.serving.run_simple', MagicMock()) as f, \
+            patch('chainerrl_visualizer.web_server.create_app', mock_app_creator):
+        web_server(
+            agent, gymlike_env, profile, tmpdir, host, port, action_meanings, raw_image_input,
+            job_queue, is_job_running, is_rollout_on_memory, True)
+        assert mock_app.debug
+        f.assert_called_once()
+        f.assert_called_with(
+            host, port, mock_app, use_reloader=False, use_debugger=True, threaded=True)
+
+
+def test_web_server_production(tmpdir):
+    agent, gymlike_env = MagicMock(), MagicMock()
+    profile, action_meanings, raw_image_input = {}, {}, {}
+    job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
+
+    host = 'localhost'
+    port = 5002
+
+    mock_app = MagicMock()
+    mock_app_creator = MagicMock(return_value=mock_app)
+    mock_server = MagicMock()
+    mock_server_init = MagicMock(return_value=mock_server)
+    with patch('gevent.pywsgi.WSGIServer', mock_server_init), \
+            patch('chainerrl_visualizer.web_server.create_app', mock_app_creator):
+        web_server(
+            agent, gymlike_env, profile, tmpdir, host, port, action_meanings, raw_image_input,
+            job_queue, is_job_running, is_rollout_on_memory, False)
+        mock_server.serve_forever.assert_called_once()
 
 
 @pytest.fixture(scope='function')
