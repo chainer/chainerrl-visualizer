@@ -305,3 +305,38 @@ def test_api_get_rollouts_saliency(tmpdir, clicreator):
     assert job_queue.value['data']['to_step'] == 99
     assert job_queue.value['data']['intensity']
     assert job_queue.value['data']['intensity']['actor_intensity'] == 1
+
+
+def test_api_get_root(tmpdir, clicreator):
+    profile = {}
+    action_meanings = {0: 'RIGHT', 1: 'LEFT'}
+    raw_image_input = {}
+    job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
+
+    client = clicreator(
+        profile, tmpdir, action_meanings, raw_image_input, job_queue, is_job_running,
+        is_rollout_on_memory)
+
+    resp = client.get('/')
+    assert resp.status_code == 200
+    html = resp.data.decode()
+    assert html.startswith('<!DOCTYPE html>')
+    assert html.rstrip().endswith('</html>')
+
+
+def test_api_get_image(tmpdir, clicreator):
+    profile = {}
+    action_meanings = {0: 'RIGHT', 1: 'LEFT'}
+    raw_image_input = {}
+    job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
+
+    client = clicreator(
+        profile, tmpdir, action_meanings, raw_image_input, job_queue, is_job_running,
+        is_rollout_on_memory)
+
+    image_path = os.path.join(tmpdir, 'dummy.png')
+    with open(image_path, 'wb') as f:
+        f.write(b'dummy')
+    resp = client.get('/images?image_path=' + image_path)
+    assert resp.status_code == 200
+    assert resp.data == b'dummy'
