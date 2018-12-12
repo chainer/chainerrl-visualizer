@@ -14,7 +14,8 @@ from chainerrl_visualizer.web_server import web_server
 
 def test_web_server_debug(tmpdir):
     agent, gymlike_env = MagicMock(), MagicMock()
-    profile, action_meanings, raw_image_input = {}, {}, {}
+    profile, action_meanings = {}, {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     host = 'localhost'
@@ -35,7 +36,8 @@ def test_web_server_debug(tmpdir):
 
 def test_web_server_production(tmpdir):
     agent, gymlike_env = MagicMock(), MagicMock()
-    profile, action_meanings, raw_image_input = {}, {}, {}
+    profile, action_meanings = {}, {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     host = 'localhost'
@@ -81,7 +83,7 @@ def assert_resp_and_get_json_data(resp, status_code=200):
 def test_api_get_server_state(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
     is_job_running.value = True
     is_rollout_on_memory.value = False
@@ -101,7 +103,7 @@ def test_api_get_server_state(tmpdir, clicreator):
 def test_api_get_agent_profile(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {'dummy': 'image'}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     client = clicreator(
@@ -114,13 +116,13 @@ def test_api_get_agent_profile(tmpdir, clicreator):
     assert len(data) == 3
     assert data['agent_type'] == 'MagicMock'
     assert len(data['action_meanings']) == 2  # skip value check
-    assert len(data['raw_image_input']) == 1
+    assert not data['raw_image_input']
 
 
 def test_api_get_rollouts_all(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     client = clicreator(
@@ -149,7 +151,7 @@ def test_api_get_rollouts_all(tmpdir, clicreator):
 def test_api_get_rollouts_latest(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     client = clicreator(
@@ -182,7 +184,7 @@ def test_api_get_rollouts_latest(tmpdir, clicreator):
 def test_api_get_rollouts_id(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     client = clicreator(
@@ -223,7 +225,7 @@ class JobQueue(object):
 def test_api_post_rollouts(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue = JobQueue()
     is_job_running, is_rollout_on_memory = MagicMock(), MagicMock()
 
@@ -260,7 +262,7 @@ def test_api_post_rollouts(tmpdir, clicreator):
 def test_api_get_rollouts_saliency(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue = JobQueue()
     is_job_running, is_rollout_on_memory = MagicMock(), MagicMock()
 
@@ -310,7 +312,7 @@ def test_api_get_rollouts_saliency(tmpdir, clicreator):
 def test_api_get_root(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     client = clicreator(
@@ -327,7 +329,7 @@ def test_api_get_root(tmpdir, clicreator):
 def test_api_get_image(tmpdir, clicreator):
     profile = {}
     action_meanings = {0: 'RIGHT', 1: 'LEFT'}
-    raw_image_input = {}
+    raw_image_input = False
     job_queue, is_job_running, is_rollout_on_memory = MagicMock(), MagicMock(), MagicMock()
 
     client = clicreator(
