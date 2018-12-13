@@ -35,7 +35,7 @@ To install ChainerRL Visualizer from source.
 
 ```sh
 $ git clone https://github.com/chainer/chainerrl-visualizer.git
-$ cd i18-sykwer/frontend
+$ cd chainerrl-visualizer/frontend
 $ npm install && npm run build && cd ..
 $ pip install -e .
 ```
