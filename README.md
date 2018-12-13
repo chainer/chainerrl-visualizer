@@ -1,4 +1,7 @@
 # ChainerRL Visualizer
+
+[![Build Status](https://travis-ci.org/chainer/chainerrl-visualizer.svg?branch=master)](https://travis-ci.org/chainer/chainerrl-visualizer)
+
 You can analyze ChainerRL agent's behavior in well visualized way, making debug easier.
 
 ## Features
@@ -22,10 +25,16 @@ Follow instructions of each example.
 - [PPO at bipedalwalker-v2](examples/ppo_bipedalwalker_v2)
 
 ## Installation
+To install ChainerRL Visualizer, use `pip`.
+
+```sh
+$ pip install chainerrl-visualizer
+```
+
 To install ChainerRL Visualizer from source.
 
 ```sh
-$ git clone https://github.com/pfnet/i18-sykwer.git
+$ git clone https://github.com/chainer/chainerrl-visualizer.git
 $ cd i18-sykwer/frontend
 $ npm install && npm run build && cd ..
 $ pip install -e .
