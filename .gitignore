@@ -10,7 +10,7 @@ venv/
 htmlcov/
 
 # frontend
-chainerrlui/static/dist
+chainerrl_visualizer/static/dist
 
 # IDE
 .idea/
