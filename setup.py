@@ -14,7 +14,7 @@ class chainerrl_visualizer_sdist(sdist):
 
 setup(
     name='chainerrl_visualizer',
-    version='0.1',
+    version='0.1.0',
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=dependencies,
     include_package_data=True,
