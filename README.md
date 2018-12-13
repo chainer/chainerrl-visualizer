@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/chainer/chainerrl-visualizer.svg?branch=master)](https://travis-ci.org/chainer/chainerrl-visualizer)
 
-You can analyze ChainerRL agent's behavior in well visualized way, making debug easier.
+You can analyze ChainerRL agent's behavior in well visualized way, making debugging easier.
 
 ## Features
 ![Demo](images/demo.gif)
