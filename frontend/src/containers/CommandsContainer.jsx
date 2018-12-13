@@ -2,7 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Card, CardBody, CardTitle, Button, InputGroup, InputGroupAddon, InputGroupText, Input,
+  Card,
+  CardBody,
+  CardTitle,
+  Button,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Input,
+  Badge,
+  UncontrolledTooltip,
 } from 'reactstrap';
 
 import {
@@ -66,6 +75,12 @@ const CommandsContainer = (props) => {
           >
             Rollout 1 episode
           </Button>
+          <Badge id="rollout-help" color="secondary" style={{ 'margin-left': 15 }}>
+            ?
+          </Badge>
+          <UncontrolledTooltip placement="top" target="rollout-help">
+            This command triggers new episode of agent on server.
+          </UncontrolledTooltip>
           {
             rawImageInput && !containsRecurrentModel && ((stateValueReturned && distributionType === SOFTMAX_DISTRIBUTION)
               || [DISCRETE_ACTION_VALUE, DISTRIBUTIONAL_DISCRETE_ACTION_VALUE].includes(actionValueType)) && (
@@ -151,6 +166,13 @@ const CommandsContainer = (props) => {
                   >
                   Create saliency map
                   </Button>
+                  <Badge id="saliency-help" color="secondary" style={{ 'margin-left': 15 }}>
+                    ?
+                  </Badge>
+                  <UncontrolledTooltip placement="top" target="saliency-help">
+                    This command is time consuming. At first, try small step range.
+                    And this command is available after rollout command.
+                  </UncontrolledTooltip>
                 </div>
             )
           }
