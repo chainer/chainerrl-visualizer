@@ -9,7 +9,7 @@ const EnvRenderContainer = ({ imagePath }) => (
   <div>
     <Card style={{ marginTop: '5px', marginBottom: '10px' }}>
       <CardBody>
-        <CardTitle>Current environemnt</CardTitle>
+        <CardTitle>Current environment</CardTitle>
         {
           imagePath ? (
             <img
