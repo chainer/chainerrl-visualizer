@@ -145,7 +145,7 @@ def test_api_get_rollouts_all(tmpdir, clicreator):
     data = assert_resp_and_get_json_data(resp)
     assert data
     assert len(data) == 1
-    assert data['rollout_ids'][-1] == rollout_id
+    assert sorted(data['rollout_ids'])[-1] == rollout_id
 
 
 def test_api_get_rollouts_latest(tmpdir, clicreator):
