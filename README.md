@@ -2,12 +2,12 @@
 
 [![Build Status](https://travis-ci.org/chainer/chainerrl-visualizer.svg?branch=master)](https://travis-ci.org/chainer/chainerrl-visualizer)
 
-You can analyze ChainerRL agent's behavior in well visualized way, making debug easier.
+You can analyze ChainerRL agent's behavior in well visualized way, making debugging easier.
 
 ## Features
 ![Demo](images/demo.gif)
 
-You can easily inspect your ChainerRL agent's behavior from browser UI.
+You can easily inspect your ChainerRL agent's behavior from a browser UI.
 
 - Rollout one episode from UI
 - Tick timestep and env/agent behavior is well visualized
@@ -15,11 +15,11 @@ You can easily inspect your ChainerRL agent's behavior from browser UI.
 - Various ways of visualization are supported
 
 #### NOTICE
-- For now, even if input of agent's model is raw pixel image, saliency map cannot be created when your model includes RNN. This will be fixed.
-- If you use `gym` environment of [classic control](https://github.com/openai/gym/tree/master/gym/envs/classic_control), env window can appear on display when sending rollout command from UI.
+- For now, even if the input of an agent's model is a raw pixel image, the saliency map cannot be created when if the model includes RNN. This will be fixed.
+- If you use `gym` environment of [classic control](https://github.com/openai/gym/tree/master/gym/envs/classic_control), the env window can appear on display when sending rollout command from UI.
 
 ## Quick start
-Follow instructions of each example.
+Follow the instructions of each example.
 - [CategoricalDQN at seaquest](examples/categorical_dqn_seaquest)
 - [A3C at breakout](examples/a3c_breakout)
 - [PPO at bipedalwalker-v2](examples/ppo_bipedalwalker_v2)
@@ -31,7 +31,7 @@ To install ChainerRL Visualizer, use `pip`.
 $ pip install chainerrl-visualizer
 ```
 
-To install ChainerRL Visualizer from source.
+To install ChainerRL Visualizer from source:
 
 ```sh
 $ git clone https://github.com/chainer/chainerrl-visualizer.git
@@ -41,7 +41,7 @@ $ pip install -e .
 ```
 
 ## Usage
-Just pass `agent` and `env` object to `chainerrl_visualizer.launch_visualizer` function.
+Simply pass `agent` and `env` object to `chainerrl_visualizer.launch_visualizer` function.
 ```python
 from chainerrl_visualizer import launch_visualizer
 
