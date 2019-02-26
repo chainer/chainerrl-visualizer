@@ -102,7 +102,7 @@ export const mapAgentProfileToValuesPaneList = (profile) => {
 };
 
 export const VALUES_PANE_TO_TITLE = {
-  [DISCRETE_ACTION_VALUE_PANE]: 'QValues of next action',
+  [DISCRETE_ACTION_VALUE_PANE]: 'Q-values of next action',
   [QUADRATIC_ACTION_VALUE_PANE]: 'HOGE',
   [GAUSSIAN_DISTRIBUTION_PANE]: 'Distribution of next action',
   [SOFTMAX_DISTRIBUTION_PANE]: 'Probability of next action',
