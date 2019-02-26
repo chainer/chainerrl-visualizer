@@ -63,7 +63,7 @@ def _saliency_on_base_image(saliency, base_img, fudge_factor, channel=2, sigma=0
     saliency_max = saliency.max()
     saliency = imresize(saliency, size=size, interp="bilinear").astype(np.float32)
 
-    if sigma is not 0:
+    if sigma != 0:
         saliency = gaussian_filter(saliency, sigma=sigma)
 
     saliency -= saliency.min()
