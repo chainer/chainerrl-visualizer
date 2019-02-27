@@ -111,6 +111,13 @@ def inspect_agent(agent, gymlike_env, contains_rnn):
     obs = gymlike_env.reset()
 
     # workaround
+    # The author of this library (@sykwer) assumed that all agents have a `model` attribute and
+    # `model.__call__()` returns outputs of the model. However, DDPG, PGT and TRPO are exceptions
+    # for the assumption. This issue will be fixed soon.
+    if type(agent).__name__ in ['DDPG', 'PGT', 'TRPO']:
+        raise Exception('Agent type of {} is not supported for now'.format(type(agent).__name__))
+
+    # workaround
     if hasattr(agent, 'xp'):
         xp = agent.xp
     else:
