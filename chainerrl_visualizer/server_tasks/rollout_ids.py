@@ -16,12 +16,9 @@ def get_latest_rollout_info():
     if len(rollout_ids) == 0:
         return None, None
 
-    latest = datetime.strptime(rollout_ids[0], timestamp_format)
-    for rollout_id in rollout_ids[1:]:
-        now = datetime.strptime(rollout_id, timestamp_format)
-        if now > latest:
-            latest = now
-
-    latest_rollout_id = latest.strftime(timestamp_format)
+    timestamps = [datetime.strptime(r_id, timestamp_format) for r_id in rollout_ids]
+    # `rollout_ids[timestamps.index(max(timestamps))]` is safer but consumes O(n) time in `index()`,
+    # to reduce the cost, apply re-converting datetime -> str
+    latest_rollout_id = max(timestamps).strftime(timestamp_format)
 
     return latest_rollout_id, os.path.join(current_app.log_dir, 'rollouts', latest_rollout_id)
