@@ -27,10 +27,8 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
     render_img_list[:] = []  # Clear the shared render images list
 
     # workaround
-    if hasattr(agent, 'xp'):
-        xp = agent.xp
-    else:
-        xp = np
+    if not hasattr(agent, 'xp'):
+        agent.xp = np
 
     log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
     writer = jsonlines.Writer(log_fp)
@@ -50,17 +48,7 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
         obs_list.append(obs)
         render_img_list.append(rendered)
 
-        if isinstance(agent, chainerrl.recurrent.RecurrentChainMixin):
-            with agent.model.state_kept():
-                outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
-        else:
-            outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
-
-        if not isinstance(outputs, tuple):
-            outputs = tuple((outputs,))
-
-        action = agent.act(obs)
-        obs, r, done, info = gymlike_env.step(action)
+        obs, r, done, action, outputs = _step_agent(agent, gymlike_env, obs)
 
         log_entries = dict()
         log_entries['step'] = t
@@ -131,6 +119,22 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
 
     if error_msg != '':
         raise Exception(error_msg)
+
+
+def _step_agent(agent, gymlike_env, obs):
+    if isinstance(agent, chainerrl.recurrent.RecurrentChainMixin):
+        with agent.model.state_kept():
+            outputs = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+    else:
+        outputs = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+
+    if not isinstance(outputs, tuple):
+        outputs = tuple((outputs,))
+
+    action = agent.act(obs)
+    obs, r, done, _ = gymlike_env.step(action)
+
+    return obs, r, done, action, outputs
 
 
 def _save_env_render(rendered, rollout_dir):
