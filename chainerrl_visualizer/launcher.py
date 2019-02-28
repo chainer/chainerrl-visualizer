@@ -99,6 +99,21 @@ def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
     return True
 
 
+def validate_agent_profile(profile):
+    if profile['distribution_type'] is None and profile['action_value_type'] is None:
+        raise Exception('Outputs of model do not contain ActionValue nor DistributionType')
+
+    if profile['action_value_type'] is not None \
+            and profile['action_value_type'] not in SUPPORTED_ACTION_VALUES:
+        raise Exception('ActionValue type {} is not supported for now'.format(
+            profile['action_value_type']))
+
+    if profile['distribution_type'] is not None \
+            and profile['distribution_type'] not in SUPPORTED_DISTRIBUTIONS:
+        raise Exception('Distribution type {} is not supported for now'.format(
+            profile['distribution_type']))
+
+
 # workaround
 def inspect_exceptional_agent(agent, gymlike_env, contains_rnn):
     profile = {
@@ -125,7 +140,7 @@ def inspect_exceptional_agent(agent, gymlike_env, contains_rnn):
 
     profile['distribution_type'] = type(dist).__name__
 
-    print(profile)
+    validate_agent_profile(profile)
 
     return profile
 
@@ -179,18 +194,6 @@ def inspect_agent(agent, gymlike_env, contains_rnn):
         raise Exception(
             'Model output type of {} is not supported for now'.format(type(output).__name__))
 
-    # Validations
-    if profile['distribution_type'] is None and profile['action_value_type'] is None:
-        raise Exception('Outputs of model do not contain ActionValue nor DistributionType')
-
-    if profile['action_value_type'] is not None \
-            and profile['action_value_type'] not in SUPPORTED_ACTION_VALUES:
-        raise Exception('ActionValue type {} is not supported for now'.format(
-            profile['action_value_type']))
-
-    if profile['distribution_type'] is not None \
-            and profile['distribution_type'] not in SUPPORTED_DISTRIBUTIONS:
-        raise Exception('Distribution type {} is not supported for now'.format(
-            profile['distribution_type']))
+    validate_agent_profile(profile)
 
     return profile
