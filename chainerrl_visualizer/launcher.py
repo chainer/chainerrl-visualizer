@@ -99,8 +99,45 @@ def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
     return True
 
 
+# workaround
+def inspect_exceptional_agent(agent, gymlike_env, contains_rnn):
+    profile = {
+        'contains_recurrent_model': contains_rnn,
+        'state_value_returned': True,
+        'distribution_type': None,
+        'action_value_type': None,
+    }
+
+    obs = gymlike_env.reset()
+    policy = agent.policy
+
+    # workaround
+    if hasattr(agent, 'xp'):
+        xp = agent.xp
+    else:
+        xp = np
+
+    if isinstance(policy, chainerrl.recurrent.RecurrentChainMixin):
+        with policy.state_kept():
+            dist = policy(agent.batch_states([obs], xp, agent.phi))
+    else:
+        dist = policy(agent.batch_states([obs], xp, agent.phi))
+
+    profile['distribution_type'] = type(dist).__name__
+
+    print(profile)
+
+    return profile
+
+
 # Create and return dict contains agent profile
 def inspect_agent(agent, gymlike_env, contains_rnn):
+    # workaround
+    # These three agents are exceptional in that the other agents have `model` attribute
+    # and `model.__call__()` returns outputs of the model.
+    if type(agent).__name__ in ['TRPO', 'DDPG', 'PGT']:
+        return inspect_exceptional_agent(agent, gymlike_env, contains_rnn)
+
     profile = {
         'contains_recurrent_model': contains_rnn,
         'state_value_returned': False,
