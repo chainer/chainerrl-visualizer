@@ -34,6 +34,7 @@ def launch_visualizer(agent, gymlike_env, action_meanings, log_dir='log_space',
     if isinstance(gymlike_env, gym.Env):
         modify_gym_env_render(gymlike_env)
 
+    compensate_agent_lacked_method(agent)
     profile = inspect_agent(agent, gymlike_env, contains_rnn)
 
     job_queue = Queue()
@@ -97,6 +98,11 @@ def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
         os.makedirs(rollouts_dir)
 
     return True
+
+
+def compensate_agent_lacked_method(agent):
+    if not hasattr(agent, 'batch_states'):
+        agent.batch_states = chainerrl.misc.batch_states
 
 
 def validate_agent_profile(profile):
