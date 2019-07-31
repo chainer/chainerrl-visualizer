@@ -15,7 +15,7 @@ You can easily inspect your ChainerRL agent's behavior from a browser UI.
 - Various ways of visualization are supported
 
 #### NOTICE
-- For now, even if the input of an agent's model is a raw pixel image, the saliency map cannot be created when if the model includes RNN. This will be fixed.
+- For now, even if the input of an agent's model is a raw pixel image, the saliency map cannot be created when the model includes an RNN. This will be fixed.
 - If you use `gym` environment of [classic control](https://github.com/openai/gym/tree/master/gym/envs/classic_control), the env window can appear on display when sending rollout command from UI.
 
 ## Quick start
