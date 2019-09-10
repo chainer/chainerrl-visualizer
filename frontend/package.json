@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bootstrap": "^4.1.3",
+    "bootstrap": "^4.3.1",
     "distinct-colors": "^1.0.4",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
