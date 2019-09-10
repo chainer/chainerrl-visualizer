@@ -19,10 +19,10 @@ setup(
     install_requires=dependencies,
     include_package_data=True,
     package_data={
-        'chainerrl_visualizer': {
+        'chainerrl_visualizer': [
             'templates/*',
             'static/**/*',
-        }
+        ]
     },
     author='sykwer',
     author_email='sykwer@gmail.com',
