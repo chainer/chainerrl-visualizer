@@ -8,7 +8,7 @@ notifications:
 sudo: false
 
 before_install:
-  - pip install -U pytest pytest-cov
+  - pip install -U 'pytest<5.0.0' pytest-cov
   - pip install -r requirements-dev.txt
   - npm install -g npm@6
 
