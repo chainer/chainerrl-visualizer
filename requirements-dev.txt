@@ -1,6 +1,6 @@
 -r requirements.txt
 flake8
 autopep8
-pytest
+pytest<5.0.0
 pytest-cov
 mock
