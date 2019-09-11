@@ -28,7 +28,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "distinct-colors": "^1.0.4",
     "prop-types": "^15.6.2",
