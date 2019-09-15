@@ -96,7 +96,7 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
 
             if isinstance(output, ActionValue):
                 if isinstance(output, DiscreteActionValue):
-                    log_entries['action_values'] = output.q_values.data[0]
+                    log_entries['action_values'] = output.q_values.data[0].tolist()
                 elif isinstance(output, DistributionalDiscreteActionValue):
                     log_entries['action_values'] = [float(v) for v in output.q_values.data[0]]
                     log_entries['z_values'] = [float('%.2f' % float(v)) for v in output.z_values]
