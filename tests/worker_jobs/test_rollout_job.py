@@ -39,6 +39,14 @@ ROLLOUT_LOG_FILE_NAME = 'rollout_log.jsonl'
         ),
         np.random.rand(4),  # randomly select action for each dimension
     ),
+    # DQN example
+    # DiscreteActionValue, (2, 2) shape
+    (
+        'DQN',
+        chainerrl.action_value.DiscreteActionValue(
+            chainer.Variable(np.array([[1, 3]], dtype=np.float32))),
+        2,  # always select index-2 action
+    ),
     # CategoricalDQN example
     #
     # DistributionalDiscreteActionValue
