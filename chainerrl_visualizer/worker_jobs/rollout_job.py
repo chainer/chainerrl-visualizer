@@ -27,10 +27,8 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
     render_img_list[:] = []  # Clear the shared render images list
 
     # workaround
-    if hasattr(agent, 'xp'):
-        xp = agent.xp
-    else:
-        xp = np
+    if not hasattr(agent, 'xp'):
+        agent.xp = np
 
     log_fp = open(os.path.join(rollout_dir, ROLLOUT_LOG_FILE_NAME), 'a')
     writer = jsonlines.Writer(log_fp)
@@ -50,17 +48,13 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
         obs_list.append(obs)
         render_img_list.append(rendered)
 
-        if isinstance(agent, chainerrl.recurrent.RecurrentChainMixin):
-            with agent.model.state_kept():
-                outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
+        # workaround
+        # These three agents are exceptional in that the other agents have `model` attribute
+        # and `model.__call__()` returns outputs of the model.
+        if type(agent).__name__ in ['TRPO', 'DDPG', 'PGT']:
+            obs, r, done, action, outputs = _step_exceptional_agent(agent, gymlike_env, obs)
         else:
-            outputs = agent.model(agent.batch_states([obs], xp, agent.phi))
-
-        if not isinstance(outputs, tuple):
-            outputs = tuple((outputs,))
-
-        action = agent.act(obs)
-        obs, r, done, info = gymlike_env.step(action)
+            obs, r, done, action, outputs = _step_agent(agent, gymlike_env, obs)
 
         log_entries = dict()
         log_entries['step'] = t
@@ -131,6 +125,79 @@ def rollout(agent, gymlike_env, rollout_dir, step_count, obs_list, render_img_li
 
     if error_msg != '':
         raise Exception(error_msg)
+
+
+def _step_agent(agent, gymlike_env, obs):
+    if isinstance(agent, chainerrl.recurrent.RecurrentChainMixin):
+        with agent.model.state_kept():
+            outputs = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+    else:
+        outputs = agent.model(agent.batch_states([obs], agent.xp, agent.phi))
+
+    if not isinstance(outputs, tuple):
+        outputs = tuple((outputs,))
+
+    action = agent.act(obs)
+    obs, r, done, _ = gymlike_env.step(action)
+
+    return obs, r, done, action, outputs
+
+
+def _step_exceptional_agent(agent, gymlike_env, obs):
+    policy = agent.policy
+    agent_type = type(agent).__name__
+    b_state = agent.batch_states([obs], agent.xp, agent.phi)
+
+    if agent_type in ['DDPG', 'PGT']:
+        if isinstance(policy, chainerrl.recurrent.RecurrentChainMixin):
+            with policy.state_kept():
+                action_dist = policy(b_state)
+        else:
+            action_dist = policy(b_state)
+
+        # workaround
+        # If `agent.act()` called when `agent.q_function` has LSTM,
+        # the params of the model will change. So, we have to directly get `action`
+        # from `action_dist`. `action` is needed for parameter of `q_function()`.
+        if agent_type == 'DDPG':
+            action = action_dist.sample()
+        else:  # PGT
+            if agent.act_deterministically:
+                action = action_dist.most_probable
+            else:
+                action = action_dist.sample()
+
+        q_function = agent.q_function
+        if isinstance(q_function, chainerrl.recurrent.RecurrentChainMixin):
+            with q_function.state_kept():
+                q_value = q_function(b_state, action)
+        else:
+            q_value = q_function(b_state, action)
+
+        outputs = (action_dist, q_value)
+
+    elif agent_type == 'TRPO':
+        if isinstance(policy, chainerrl.recurrent.RecurrentChainMixin):
+            with policy.state_kept():
+                action_dist = policy(b_state)
+        else:
+            action_dist = policy(b_state)
+
+        value_function = agent.vf
+        if isinstance(value_function, chainerrl.recurrent.RecurrentChainMixin):
+            with value_function.state_kept():
+                state_value = value_function(b_state)
+        else:
+            state_value = value_function(b_state)
+
+        outputs = (action_dist, state_value)
+    else:
+        raise Exception('{} is not one of the exceptional agent types'.format(agent_type))
+
+    action = agent.act(obs)
+    obs, r, done, _ = gymlike_env.step(action)
+
+    return obs, r, done, action, outputs
 
 
 def _save_env_render(rendered, rollout_dir):

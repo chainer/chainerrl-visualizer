@@ -34,6 +34,7 @@ def launch_visualizer(agent, gymlike_env, action_meanings, log_dir='log_space',
     if isinstance(gymlike_env, gym.Env):
         modify_gym_env_render(gymlike_env)
 
+    compensate_agent_lacked_method(agent)
     profile = inspect_agent(agent, gymlike_env, contains_rnn)
 
     job_queue = Queue()
@@ -99,8 +100,65 @@ def prepare_log_directory(log_dir):  # log_dir is assumed to be full path
     return True
 
 
+def compensate_agent_lacked_method(agent):
+    if not hasattr(agent, 'batch_states'):
+        agent.batch_states = chainerrl.misc.batch_states
+
+
+def validate_agent_profile(profile):
+    if profile['distribution_type'] is None and profile['action_value_type'] is None:
+        raise Exception('Outputs of model do not contain ActionValue nor DistributionType')
+
+    if profile['action_value_type'] is not None \
+            and profile['action_value_type'] not in SUPPORTED_ACTION_VALUES:
+        raise Exception('ActionValue type {} is not supported for now'.format(
+            profile['action_value_type']))
+
+    if profile['distribution_type'] is not None \
+            and profile['distribution_type'] not in SUPPORTED_DISTRIBUTIONS:
+        raise Exception('Distribution type {} is not supported for now'.format(
+            profile['distribution_type']))
+
+
+# workaround
+def inspect_exceptional_agent(agent, gymlike_env, contains_rnn):
+    profile = {
+        'contains_recurrent_model': contains_rnn,
+        'state_value_returned': True,
+        'distribution_type': None,
+        'action_value_type': None,
+    }
+
+    obs = gymlike_env.reset()
+    policy = agent.policy
+
+    # workaround
+    if hasattr(agent, 'xp'):
+        xp = agent.xp
+    else:
+        xp = np
+
+    if isinstance(policy, chainerrl.recurrent.RecurrentChainMixin):
+        with policy.state_kept():
+            dist = policy(agent.batch_states([obs], xp, agent.phi))
+    else:
+        dist = policy(agent.batch_states([obs], xp, agent.phi))
+
+    profile['distribution_type'] = type(dist).__name__
+
+    validate_agent_profile(profile)
+
+    return profile
+
+
 # Create and return dict contains agent profile
 def inspect_agent(agent, gymlike_env, contains_rnn):
+    # workaround
+    # These three agents are exceptional in that the other agents have `model` attribute
+    # and `model.__call__()` returns outputs of the model.
+    if type(agent).__name__ in ['TRPO', 'DDPG', 'PGT']:
+        return inspect_exceptional_agent(agent, gymlike_env, contains_rnn)
+
     profile = {
         'contains_recurrent_model': contains_rnn,
         'state_value_returned': False,
@@ -142,18 +200,6 @@ def inspect_agent(agent, gymlike_env, contains_rnn):
         raise Exception(
             'Model output type of {} is not supported for now'.format(type(output).__name__))
 
-    # Validations
-    if profile['distribution_type'] is None and profile['action_value_type'] is None:
-        raise Exception('Outputs of model do not contain ActionValue nor DistributionType')
-
-    if profile['action_value_type'] is not None \
-            and profile['action_value_type'] not in SUPPORTED_ACTION_VALUES:
-        raise Exception('ActionValue type {} is not supported for now'.format(
-            profile['action_value_type']))
-
-    if profile['distribution_type'] is not None \
-            and profile['distribution_type'] not in SUPPORTED_DISTRIBUTIONS:
-        raise Exception('Distribution type {} is not supported for now'.format(
-            profile['distribution_type']))
+    validate_agent_profile(profile)
 
     return profile
