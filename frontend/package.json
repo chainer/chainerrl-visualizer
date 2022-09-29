@@ -36,7 +36,7 @@
     "react-dom": "^16.6.3",
     "react-redux": "^5.1.1",
     "reactstrap": "^6.5.0",
-    "recharts": "^1.4.1",
+    "recharts": "^2.1.14",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2"
   }
