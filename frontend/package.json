@@ -25,7 +25,7 @@
     "file-loader": "^2.0.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.26.0",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "axios": "^0.18.1",
